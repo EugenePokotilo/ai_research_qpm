@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Features in Project Management Tools — Competitor Research</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=IBM+Plex+Sans:wght@300;400;500&family=IBM+Plex+Mono:wght@400&display=swap');
+
+  :root {
+    --bg: #0f0f0f;
+    --surface: #161616;
+    --surface2: #1e1e1e;
+    --border: #2a2a2a;
+    --border2: #383838;
+    --text: #e8e8e4;
+    --muted: #888884;
+    --accent: #c8ff00;
+    --accent2: #00d4ff;
+    --accent3: #ff6b35;
+    --accent4: #a78bfa;
+    --red: #ff4444;
+    --green: #00d97e;
+    --amber: #fbbf24;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 48px 32px 96px;
+  }
+
+  /* Typography */
+  h1 { font-family: 'Playfair Display', serif; font-size: 42px; font-weight: 600; line-height: 1.15; color: var(--text); }
+  h2 { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 400; color: var(--text); margin: 48px 0 20px; }
+  h3 { font-family: 'IBM Plex Sans', sans-serif; font-size: 16px; font-weight: 500; color: var(--text); margin: 28px 0 10px; letter-spacing: 0.02em; }
+  h4 { font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 400; letter-spacing: 0.08em; color: var(--muted); text-transform: uppercase; margin: 20px 0 8px; }
+  p { margin-bottom: 12px; color: #c8c8c4; }
+  a { color: var(--accent2); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  code { font-family: 'IBM Plex Mono', monospace; font-size: 12px; background: var(--surface2); padding: 2px 6px; border-radius: 3px; color: var(--accent); }
+  ul { padding-left: 20px; margin-bottom: 12px; }
+  li { color: #c8c8c4; margin-bottom: 5px; }
+  strong { color: var(--text); font-weight: 500; }
+
+  /* Header */
+  .header {
+    border-bottom: 1px solid var(--border2);
+    padding-bottom: 36px;
+    margin-bottom: 48px;
+  }
+  .header-meta {
+    display: flex; gap: 24px; margin-bottom: 20px;
+    font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--muted); letter-spacing: 0.06em;
+  }
+  .tag { background: var(--surface2); border: 1px solid var(--border2); border-radius: 3px; padding: 3px 10px; }
+
+  /* TOC */
+  .toc {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 24px 28px;
+    margin: 32px 0 48px;
+  }
+  .toc h4 { margin-top: 0; }
+  .toc ol { padding-left: 20px; }
+  .toc li { margin: 4px 0; font-size: 14px; }
+  .toc a { color: var(--muted); }
+  .toc a:hover { color: var(--accent2); }
+
+  /* Section divider */
+  .section-label {
+    font-family: 'IBM Plex Mono', monospace; font-size: 11px;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 8px;
+  }
+
+  /* Cards */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin-bottom: 16px;
+  }
+  .card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+  @media (max-width: 700px) { .card-grid { grid-template-columns: 1fr; } }
+
+  /* Tool header */
+  .tool-header {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    flex-wrap: wrap; gap: 12px;
+    border-bottom: 1px solid var(--border); padding-bottom: 16px; margin-bottom: 20px;
+  }
+  .tool-name { font-size: 20px; font-weight: 500; font-family: 'Playfair Display', serif; }
+  .tool-brand { font-size: 12px; font-family: 'IBM Plex Mono', monospace; color: var(--muted); margin-top: 3px; }
+  .tool-ai-name {
+    font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 0.04em;
+    border: 1px solid; border-radius: 4px; padding: 4px 12px; white-space: nowrap;
+  }
+
+  /* Color-coded tools */
+  .jira .tool-ai-name  { color: #4a9eff; border-color: #1a4a80; background: #0a1f3a; }
+  .clickup .tool-ai-name { color: #c084fc; border-color: #5b21b6; background: #1e0a3a; }
+  .monday .tool-ai-name { color: var(--accent); border-color: #4a6000; background: #1a2200; }
+  .linear .tool-ai-name { color: #fb7185; border-color: #881337; background: #2a0a14; }
+  .asana .tool-ai-name { color: #f97316; border-color: #7c2d12; background: #2a0f05; }
+  .notion .tool-ai-name { color: #a3e635; border-color: #3a5500; background: #0f1a00; }
+  .plane .tool-ai-name { color: var(--accent2); border-color: #0e4f63; background: #031920; }
+
+  .jira-bar { border-left: 3px solid #4a9eff; padding-left: 16px; }
+  .clickup-bar { border-left: 3px solid #c084fc; padding-left: 16px; }
+  .monday-bar { border-left: 3px solid var(--accent); padding-left: 16px; }
+  .linear-bar { border-left: 3px solid #fb7185; padding-left: 16px; }
+  .asana-bar { border-left: 3px solid #f97316; padding-left: 16px; }
+  .notion-bar { border-left: 3px solid #a3e635; padding-left: 16px; }
+  .plane-bar { border-left: 3px solid var(--accent2); padding-left: 16px; }
+
+  /* Feature pills */
+  .pill-list { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
+  .pill {
+    font-family: 'IBM Plex Mono', monospace; font-size: 11px;
+    background: var(--surface2); border: 1px solid var(--border2);
+    border-radius: 100px; padding: 3px 12px; color: var(--muted);
+    letter-spacing: 0.03em;
+  }
+  .pill.yes { background: #0a2a14; border-color: #1a5a28; color: var(--green); }
+  .pill.partial { background: #2a1e00; border-color: #5a3800; color: var(--amber); }
+  .pill.planned { background: #0a1e2a; border-color: #1a4060; color: var(--accent2); }
+  .pill.no { background: #1a0a0a; border-color: #400a0a; color: var(--red); }
+
+  /* Big comparison table */
+  .table-wrap { overflow-x: auto; margin: 24px 0; border: 1px solid var(--border); border-radius: 8px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 900px; }
+  th {
+    background: var(--surface2); color: var(--muted); font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 400;
+    padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border2);
+    position: sticky; top: 0; z-index: 1;
+  }
+  td { padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: top; color: #c0c0bc; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--surface); }
+  .feat-yes { color: var(--green); font-weight: 500; }
+  .feat-partial { color: var(--amber); }
+  .feat-no { color: var(--red); opacity: 0.6; }
+  .feat-planned { color: var(--accent2); font-style: italic; }
+  .tool-col { font-weight: 500; color: var(--text); font-family: 'Playfair Display', serif; font-size: 14px; white-space: nowrap; }
+  .doc-link { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--accent2); display: block; margin-top: 4px; }
+
+  /* Strategy vector */
+  .vector-card {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+  .vector-header {
+    padding: 14px 20px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .vector-body { padding: 16px 20px; }
+  .vector-body p { margin-bottom: 8px; }
+  .vector-label {
+    font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.06em;
+    text-transform: uppercase; padding: 3px 10px; border-radius: 3px;
+  }
+
+  /* Steps */
+  .steps { counter-reset: step; margin: 16px 0; }
+  .step {
+    display: flex; gap: 16px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .step:last-child { border-bottom: none; }
+  .step-num {
+    font-family: 'IBM Plex Mono', monospace; font-size: 11px;
+    min-width: 28px; height: 28px;
+    border: 1px solid var(--border2); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--muted); flex-shrink: 0; margin-top: 2px;
+  }
+  .step-content h3 { margin: 0 0 6px; font-size: 15px; }
+  .step-content p { margin: 0; font-size: 14px; color: var(--muted); }
+
+  /* Tips */
+  .tips-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 16px 0; }
+  @media (max-width: 700px) { .tips-grid { grid-template-columns: 1fr; } }
+  .tip {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; padding: 16px 18px;
+  }
+  .tip-icon { font-size: 16px; margin-bottom: 8px; }
+  .tip h3 { font-size: 14px; margin: 0 0 6px; }
+  .tip p { font-size: 13px; color: var(--muted); margin: 0; }
+
+  /* Callout */
+  .callout {
+    border-left: 3px solid var(--accent);
+    background: #0d1400;
+    padding: 14px 18px;
+    border-radius: 0 6px 6px 0;
+    margin: 20px 0;
+  }
+  .callout.blue { border-color: var(--accent2); background: #001a20; }
+  .callout.orange { border-color: var(--accent3); background: #1a0a00; }
+  .callout p { margin: 0; font-size: 14px; }
+
+  /* User sentiment */
+  .sentiment { display: flex; gap: 10px; margin: 8px 0; align-items: center; font-size: 13px; }
+  .sentiment-bar-wrap { flex: 1; height: 4px; background: var(--surface2); border-radius: 2px; }
+  .sentiment-bar { height: 4px; border-radius: 2px; }
+  .sentiment-label { min-width: 80px; color: var(--muted); font-family: 'IBM Plex Mono', monospace; font-size: 11px; }
+  .sentiment-val { min-width: 32px; text-align: right; font-family: 'IBM Plex Mono', monospace; font-size: 11px; }
+
+  hr { border: none; border-top: 1px solid var(--border2); margin: 48px 0; }
+
+  .footnote { font-size: 12px; color: var(--muted); font-style: italic; margin-top: 4px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-meta">
+    <span class="tag">COMPETITIVE RESEARCH</span>
+    <span class="tag">AI FEATURES</span>
+    <span class="tag">PM TOOLS</span>
+    <span>April 2026</span>
+  </div>
+  <h1>AI in Project Management Tools</h1>
+  <p style="font-size: 18px; color: var(--muted); margin-top: 16px; font-weight: 300;">
+    Deep competitive analysis: current features, strategic vectors, user adoption, and collection methodology.
+    Covers Jira, ClickUp, Monday.com, Linear, Asana, Notion, Plane.
+  </p>
+</div>
+
+<div class="toc">
+  <h4>Contents</h4>
+  <ol>
+    <li value="0"><a href="#approach">Research approach &amp; principles</a></li>
+    <li><a href="#q1">Current AI features — per tool deep dives</a></li>
+    <li><a href="#q2">AI strategy vectors: 3–6–12 month direction</a></li>
+    <li><a href="#q3">User sentiment & adoption reality</a></li>
+    <li><a href="#q4">Feature comparison table with documentation refs</a></li>
+    <li><a href="#methodology">Methodology: how to collect this data yourself</a></li>
+    <li><a href="#user-feedback">How to collect user feedback on competitors</a></li>
+    <li><a href="#tips">Best practices for this type of analysis</a></li>
+    <li><a href="#strategy-intel">How to track AI strategy at the executive level</a></li>
+  </ol>
+</div>
+
+<!-- ================================ SECTION 00 APPROACH ================================ -->
+<hr>
+<div class="section-label">Section 00</div>
+<h2 id="approach">Research Approach &amp; Principles</h2>
+
+<div class="callout orange">
+  <p>Don't drop everything to rush AI feature implementation. Pick a clear research methodology first — execute it, monitor competitors continuously, and choose only what fits. Analyze competitor signals to understand what actually works versus what's just words.</p>
+</div>
+
+<h3>Research Methodology</h3>
+
+<div class="steps">
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-content">
+      <h3>Review existing features — test them</h3>
+      <p>Realistic estimation of our own capabilities before any comparison.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-content">
+      <h3>AI pricing models</h3>
+      <p>Pricing model change = strategy signal.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-content">
+      <h3>Changelog monitoring — weekly</h3>
+      <p>What ships and when is ground truth.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">4</div>
+    <div class="step-content">
+      <h3>Public roadmaps</h3>
+      <p>Screenshot monthly. Quietly removed items are as revealing as what's live.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">5</div>
+    <div class="step-content">
+      <h3>Earnings calls &amp; investor materials — weekly</h3>
+      <p>CPOs say in earnings what never makes it onto product pages.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">6</div>
+    <div class="step-content">
+      <h3>Job postings as a signal</h3>
+      <p>AI engineering hiring surge → major feature 6–12 months out. Track delta month-over-month.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">7</div>
+    <div class="step-content">
+      <h3>Conference talks &amp; demo videos</h3>
+      <p>Keynotes reveal the next 6–12 months roadmap in demo form before the blog post exists.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">8</div>
+    <div class="step-content">
+      <h3>News alerts + weekly news agent</h3>
+      <p>Automated monitoring, reviewed weekly, tagged by category.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">9</div>
+    <div class="step-content">
+      <h3>Dev API &amp; SDK releases</h3>
+      <p>MCP server and API releases signal ecosystem bets. GitHub stars and forks measure real traction.</p>
+    </div>
+  </div>
+</div>
+
+<div class="card" style="margin: 32px 0; border-color: var(--border2);">
+  <div style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; letter-spacing: 0.08em; color: var(--accent); padding-bottom: 16px; border-bottom: 1px solid var(--border); margin-bottom: 20px; text-align: center;">
+    Marketing AI &nbsp;&nbsp;≠&nbsp;&nbsp; Product AI &nbsp;&nbsp;≠&nbsp;&nbsp; Adopted AI
+  </div>
+  <div class="card-grid" style="margin: 0;">
+    <div>
+      <h4>Announcements vs Shipped</h4>
+      <p style="font-size:14px;">Log: Feature | Announced | Shipped | GA | Removed? The gap between announcement and GA is a signal. What gets quietly removed matters as much as what ships.</p>
+    </div>
+    <div>
+      <h4>50 → 10 → 2 adoption funnel</h4>
+      <p style="font-size:14px;">50 features → 10 work well → 2 adopted. Validate adoption via published usage numbers, not capability counts.</p>
+    </div>
+    <div>
+      <h4>Pain → Feature MAP</h4>
+      <p style="font-size:14px;">For every AI feature, identify which manual pain it replaces. Build a heat map: which pain points are contested, which are uncontested.</p>
+    </div>
+    <div>
+      <h4>What is not done yet?</h4>
+      <p style="font-size:14px;">The gap list is the opportunity map. Document what no competitor can do — that's the differentiation space.</p>
+    </div>
+  </div>
+</div>
+
+<h3>Strategy Monitoring</h3>
+
+<div class="tips-grid">
+  <div class="tip">
+    <div class="tip-icon">👤</div>
+    <h3>C-level accounts — X / LinkedIn</h3>
+    <p>CPOs and CTOs telegraph strategy 3–6 months before product launches.</p>
+  </div>
+  <div class="tip">
+    <div class="tip-icon">📄</div>
+    <h3>Investor presentations &amp; earnings</h3>
+    <p>10-K, 10-Q filings and earnings transcripts contain 12-month AI strategy context that marketing never shares.</p>
+  </div>
+  <div class="tip">
+    <div class="tip-icon">🔀</div>
+    <h3>Acquisition activity &amp; partnerships</h3>
+    <p>Acquisitions reveal strategic gaps. What a company buys tells you where they know they're weak.</p>
+  </div>
+  <div class="tip">
+    <div class="tip-icon">🤝</div>
+    <h3>AI provider partnerships</h3>
+    <p>Which LLM a company commits to constrains their roadmap. Partnership = coupled direction.</p>
+  </div>
+  <div class="tip" style="grid-column: 1 / -1;">
+    <div class="tip-icon">📊</div>
+    <h3>Quarterly "AI bet scorecard"</h3>
+    <p>Per competitor: (1) What is their single biggest AI bet? (2) Evidence it's working? (3) Evidence it's not? (4) What do they likely ship next quarter? Tracking bets beats tracking individual features.</p>
+  </div>
+</div>
+
+<!-- ================================ Q1 CURRENT FEATURES ================================ -->
+<hr>
+<div class="section-label">Section 01</div>
+<h2 id="q1">Current AI Features — Per Tool</h2>
+
+<!-- JIRA -->
+<div class="card jira">
+  <div class="tool-header">
+    <div>
+      <div class="tool-name">Jira / Atlassian</div>
+      <div class="tool-brand">atlassian.com/software/jira/ai</div>
+    </div>
+    <div class="tool-ai-name">Atlassian Intelligence + Rovo</div>
+  </div>
+  <div class="jira-bar">
+    <h4>Core features as of Q1 2026</h4>
+    <div class="pill-list">
+      <span class="pill yes">AI work breakdown</span>
+      <span class="pill yes">Rovo Chat / Search</span>
+      <span class="pill yes">Rovo Agents (out-of-box)</span>
+      <span class="pill yes">Natural language JQL</span>
+      <span class="pill yes">AI summaries</span>
+      <span class="pill yes">AI triage (JSM)</span>
+      <span class="pill yes">Virtual service agent</span>
+      <span class="pill yes">AI post-incident review</span>
+      <span class="pill yes">Alert grouping (AIOps)</span>
+      <span class="pill yes">Work creation from Slack</span>
+      <span class="pill yes">Rovo Dev (code gen)</span>
+      <span class="pill planned">Similar issues surface (beta)</span>
+      <span class="pill planned">Related Confluence pages</span>
+      <span class="pill planned">JQL fixer</span>
+    </div>
+    <ul style="margin-top:14px;">
+      <li><strong>Teamwork Graph</strong> — a unified data layer connecting Jira, Confluence, Bitbucket, Slack, Splunk and 50+ external apps. Powers all AI context. Rovo Search is 78% more accurate vs legacy search per Atlassian claims.</li>
+      <li><strong>Rovo Agents</strong> — specialized out-of-box agents: Ops Guide Agent (incident mgmt), Brainstorm Agent, Sprint Planner, and custom agents via no-code builder. Agents can update issues, create pages, coordinate work autonomously.</li>
+      <li><strong>Collections strategy</strong> — 4 bundles (Teamwork, Software, Service, Strategy), each embedding Rovo with domain-specific agents. AI is priced into the collection, not standalone.</li>
+      <li><strong>JSM AI</strong> — bulk triage, AI-suggested request types, virtual service agent across Slack, Teams, email, web widget. PIR auto-generation. Alert clustering from monitoring tools.</li>
+      <li><strong>Rovo Dev</strong> — turn Jira issues into code; targeted at engineering teams in the Software Collection.</li>
+      <li><strong>Privacy control gap</strong> — community feedback shows enterprise blockers: no per-project LLM access restriction (was on Q3 2025 roadmap, then silently removed). Significant adoption friction for sensitive tenants.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- CLICKUP -->
+<div class="card clickup">
+  <div class="tool-header">
+    <div>
+      <div class="tool-name">ClickUp</div>
+      <div class="tool-brand">clickup.com/brain</div>
+    </div>
+    <div class="tool-ai-name">ClickUp Brain</div>
+  </div>
+  <div class="clickup-bar">
+    <h4>Core features as of Q1 2026</h4>
+    <div class="pill-list">
+      <span class="pill yes">AI Knowledge Manager</span>
+      <span class="pill yes">Autopilot Agents</span>
+      <span class="pill yes">AI Project Manager</span>
+      <span class="pill yes">AI Notetaker (meetings)</span>
+      <span class="pill yes">SyncUps video calls</span>
+      <span class="pill yes">Multi-model access</span>
+      <span class="pill yes">Enterprise search</span>
+      <span class="pill yes">AI custom fields</span>
+      <span class="pill yes">Codegen agent</span>
+      <span class="pill yes">MCP server (native)</span>
+      <span class="pill yes">Talk-to-text</span>
+      <span class="pill yes">Brain MAX desktop</span>
+    </div>
+    <ul style="margin-top:14px;">
+      <li><strong>Multi-model</strong> — unique differentiator. Users toggle between GPT-5, Claude Opus 4.1, o3, o1-mini per task. No other PM tool does this at this breadth. Replaces $50+/month in separate subscriptions.</li>
+      <li><strong>Autopilot Agents</strong> — no-code agents that can answer questions from workspace knowledge, deliver standups, create tasks from meetings, send emails, update statuses on triggers. "Answers Agent" is always-on Q&A bot.</li>
+      <li><strong>AI Project Manager</strong> — auto-assigns tasks based on workload/skills/history, generates AI standups, autofills task properties (priority, assignee, status).</li>
+      <li><strong>AI Notetaker</strong> — joins Zoom/Teams/SyncUps, transcribes, generates summary + action items. Every meeting becomes searchable workspace knowledge.</li>
+      <li><strong>MCP server</strong> — native official MCP server for ClickUp data. Lets Claude Code, Cursor, ChatGPT access workspace. Forward-thinking integration layer.</li>
+      <li><strong>Enterprise search</strong> — indexes tasks, docs, comments, external tools (Google Drive, Teams, Salesforce, GitHub). Natural language Q&A across the whole org graph.</li>
+      <li><strong>Codegen</strong> — external AI dev agent that codes, builds features, answers code questions from issues. Similar to Rovo Dev concept.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- MONDAY -->
+<div class="card monday">
+  <div class="tool-header">
+    <div>
+      <div class="tool-name">Monday.com</div>
+      <div class="tool-brand">monday.com/w/ai</div>
+    </div>
+    <div class="tool-ai-name">monday AI (Magic / Vibe / Sidekick)</div>
+  </div>
+  <div class="monday-bar">
+    <h4>Core features as of Q1 2026</h4>
+    <div class="pill-list">
+      <span class="pill yes">AI Blocks (extract/classify/translate/summarize)</span>
+      <span class="pill yes">monday magic (AI workflow gen)</span>
+      <span class="pill yes">monday sidekick (AI assistant)</span>
+      <span class="pill yes">monday vibe (AI app builder)</span>
+      <span class="pill yes">monday agents (custom agents)</span>
+      <span class="pill yes">Digital Workers (autonomous agents)</span>
+      <span class="pill yes">SDR Expert agent</span>
+      <span class="pill yes">AI Service Agent 2.0</span>
+      <span class="pill partial">Resource allocation AI</span>
+      <span class="pill planned">Risk management AI (Q4)</span>
+      <span class="pill planned">Agent Marketplace</span>
+    </div>
+    <ul style="margin-top:14px;">
+      <li><strong>3 pillars strategy</strong> — AI Blocks (modular actions), Product Power-ups (domain AI in CRM, PM, Service), Digital Workforce (autonomous agents that do work end-to-end). Publicly announced Jan 2025.</li>
+      <li><strong>monday magic</strong> — describe a workflow in plain English, AI builds the full board with columns, automations, and structure. Lowers onboarding time dramatically.</li>
+      <li><strong>monday vibe</strong> — "vibe coding" for non-developers. Build custom dashboards, views, workflows in natural language on top of mondayDB. Key differentiator for SMBs.</li>
+      <li><strong>monday sidekick</strong> — AI assistant with "Skills" marketplace. Skills connect to Gmail, Slack, Google Calendar, etc. Sidekick can send emails, schedule meetings, create tasks from conversations.</li>
+      <li><strong>AI Blocks</strong> — modular actions: sentiment detection, entity extraction from PDFs, categorization, translation, custom AI prompt. Each block is a step in any automation. 10M+ AI actions in Q4 2024, 26M+ by Q1 2025 (150% QoQ growth).</li>
+      <li><strong>Pricing model</strong> — credit-based: 500 free credits/month per account, then usage-based tiers. First in PM market to commoditize AI with consumption pricing. No per-user AI seat charge.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- LINEAR -->
+<div class="card linear">
+  <div class="tool-header">
+    <div>
+      <div class="tool-name">Linear</div>
+      <div class="tool-brand">linear.app/ai</div>
+    </div>
+    <div class="tool-ai-name">Product Intelligence + AI Agents</div>
+  </div>
+  <div class="linear-bar">
+    <h4>Core features as of Q1 2026</h4>
+    <div class="pill-list">
+      <span class="pill yes">Triage Intelligence</span>
+      <span class="pill yes">Product Intelligence (Aug 2025)</span>
+      <span class="pill yes">AI Agents (deploy + delegate)</span>
+      <span class="pill yes">Structural diffs for agent output</span>
+      <span class="pill yes">Duplicate issue detection</span>
+      <span class="pill yes">AI assignee suggestions</span>
+      <span class="pill yes">AI label suggestions</span>
+      <span class="pill yes">AI project suggestions</span>
+      <span class="pill yes">Semantic search</span>
+      <span class="pill yes">Customer feedback → issues</span>
+      <span class="pill yes">Slack/email intake AI</span>
+    </div>
+    <ul style="margin-top:14px;">
+      <li><strong>Product Intelligence</strong> (Aug 2025) — analyzes new work items, triages them, suggests which team picks it up, based on historical patterns. Community reaction: "could replace a chunk of PM work." Tech preview, not GA.</li>
+      <li><strong>Triage Intelligence</strong> — proactively suggests assignees, teams, labels, projects based on issue content and team history. Detects and links duplicates. Surfaces tribal knowledge.</li>
+      <li><strong>AI Agents</strong> — Linear positions itself as "designed for workflows shared by humans and agents." Agents can be deployed to work on issues end-to-end or collaboratively. Structural diffs show what agent changed for code review flow.</li>
+      <li><strong>Data philosophy</strong> — explicitly states: "your information is never used to train AI models." Strong privacy positioning vs competitors.</li>
+      <li><strong>Scope and intentionality</strong> — Linear deliberately does not try to be a broad platform. AI features are narrow, deep, and developer-workflow-specific. No content generation, no meeting AI, no general LLM chat. Speed and quality of suggestions over breadth.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ASANA -->
+<div class="card asana">
+  <div class="tool-header">
+    <div>
+      <div class="tool-name">Asana</div>
+      <div class="tool-brand">asana.com/product/ai</div>
+    </div>
+    <div class="tool-ai-name">AI Studio + AI Teammates</div>
+  </div>
+  <div class="asana-bar">
+    <h4>Core features as of Q1 2026</h4>
+    <div class="pill-list">
+      <span class="pill yes">AI Studio (no-code workflow builder)</span>
+      <span class="pill yes">Smart Workflow Gallery</span>
+      <span class="pill yes">AI Teammates (beta → GA Q1 FY27)</span>
+      <span class="pill yes">AI risk reports</span>
+      <span class="pill yes">Multilingual semantic search</span>
+      <span class="pill yes">MS Copilot integration</span>
+      <span class="pill yes">AI summary / smart fields</span>
+      <span class="pill yes">Work Graph context</span>
+      <span class="pill yes">21 prebuilt Teammates</span>
+    </div>
+    <ul style="margin-top:14px;">
+      <li><strong>AI Studio</strong> — no-code builder embedding AI nodes into existing Asana workflows. Handles intake, triage, compliance checks, prioritization. Shareable across the org. Teams use it for campaign mgmt, IT kanban, goal-setting.</li>
+      <li><strong>AI Teammates</strong> — 21 prebuilt agents (Campaign Brief Writer, Sprint Coach, Bug Investigator, Compliance Specialist, etc.) + custom teammates. Key differentiator: they live in Asana projects (not a private chat tab), assigned tasks like humans, operate with checkpoints and human review.</li>
+      <li><strong>Work Graph</strong> — Asana's context layer. Teammates know organizational goals, workflow history, team structure. Memory persists across projects. 93% of teams granted Teammates full edit access (not just view).</li>
+      <li><strong>Results data</strong> — tasks managed by Teammates were 3.2× more likely to have a clear owner, 2.6× more likely to have a defined deadline. Teams finished work 2× faster.</li>
+      <li><strong>Governance emphasis</strong> — "context, checkpoints, controls" is Asana's safety brand. Explicitly addresses the stat that autonomous agents fail 70% of basic tasks (TheAgentCompany benchmark) by keeping humans in the loop.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- NOTION -->
+<div class="card notion">
+  <div class="tool-header">
+    <div>
+      <div class="tool-name">Notion</div>
+      <div class="tool-brand">notion.com — Notion AI / Notion 3.0</div>
+    </div>
+    <div class="tool-ai-name">Notion AI 3.0 + Autonomous Agents</div>
+  </div>
+  <div class="notion-bar">
+    <h4>Core features as of Q1 2026</h4>
+    <div class="pill-list">
+      <span class="pill yes">Autonomous AI Agents (Sept 2025)</span>
+      <span class="pill yes">Multi-model (GPT-5, Claude Opus 4.1, o3)</span>
+      <span class="pill yes">AI Meeting Notes</span>
+      <span class="pill yes">AI Search across workspace</span>
+      <span class="pill yes">AI write / edit / summarize</span>
+      <span class="pill yes">Database row-level permissions</span>
+      <span class="pill yes">Notion Mail integration</span>
+      <span class="pill yes">Slack/Google context</span>
+    </div>
+    <ul style="margin-top:14px;">
+      <li><strong>Notion 3.0 Agents</strong> — autonomous agents run for up to 20 minutes, execute 10+ sequential steps, build project plans, compile feedback from hundreds of pages, update databases at scale. "AI that executes, not suggests."</li>
+      <li><strong>Multi-model</strong> — same multi-LLM play as ClickUp: GPT-5, Claude Opus 4.1, o3. Toggle per task.</li>
+      <li><strong>Not a PM tool by default</strong> — Notion is a workspace/knowledge tool. PM capability requires user-built databases. AI context is excellent when data is structured in Notion; weak when data lives in other tools.</li>
+      <li><strong>Pricing shift</strong> — AI features moved to Business plan ($20/user/month) in May 2025. AI is no longer available on Plus plan. Significant friction for SMBs.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- PLANE -->
+<div class="card plane">
+  <div class="tool-header">
+    <div>
+      <div class="tool-name">Plane</div>
+      <div class="tool-brand">plane.so — AI-native PM</div>
+    </div>
+    <div class="tool-ai-name">Plane AI (native MCP + Slack AI)</div>
+  </div>
+  <div class="plane-bar">
+    <h4>Core features as of Q1 2026</h4>
+    <div class="pill-list">
+      <span class="pill yes">Native MCP server</span>
+      <span class="pill yes">Slack AI intake (@Plane)</span>
+      <span class="pill yes">Self-hosted option</span>
+      <span class="pill yes">Auto-routing / labeling</span>
+      <span class="pill yes">Real-time dashboards (auto)</span>
+      <span class="pill yes">Open source base</span>
+    </div>
+    <ul style="margin-top:14px;">
+      <li><strong>MCP-native positioning</strong> — one of the only PM tools that ships a native MCP server for AI agent integration. Lets Claude Code, Cursor, any MCP client operate on Plane data out-of-the-box.</li>
+      <li><strong>Slack intake AI</strong> — @Plane in any Slack channel, describe work, Plane creates, assigns, routes issues and syncs the thread back. Zero context switching.</li>
+      <li><strong>Self-hosted + compliance</strong> — SOC 2, ISO 27001, GDPR, CCPA. Appeals to regulated industries and privacy-first teams. Single-command install/upgrade.</li>
+      <li><strong>Positioning</strong> — explicitly markets itself as the Jira/Linear/ClickUp/Monday migration path. Targets teams tired of complexity. AI is operational and infra-focused rather than generative.</li>
+    </ul>
+  </div>
+</div>
+
+
+<!-- ================================ Q2 AI STRATEGY VECTORS ================================ -->
+<hr>
+<div class="section-label">Section 02</div>
+<h2 id="q2">AI Strategy Vectors — 3–6–12 Month</h2>
+
+<p>Based on earnings calls, product announcements, roadmaps, blog posts, and investor communications (all dated materials from 2025–2026).</p>
+
+<!-- JIRA VECTOR -->
+<div class="vector-card">
+  <div class="vector-header" style="background: #0a1f3a;">
+    <div class="tool-name" style="color: #4a9eff;">Atlassian / Jira</div>
+    <div>
+      <span class="vector-label" style="background: #1a4a80; color: #4a9eff;">Agentic ecosystem play</span>
+    </div>
+  </div>
+  <div class="vector-body">
+    <p><strong>3 months:</strong> Complete rollout of Rovo Agents across all Collections. General availability of Related Confluence Pages and Similar Issues surface in Jira. JQL fixer GA. Rovo Dev expansion beyond code generation.</p>
+    <p><strong>6 months:</strong> Strategy Collection AI — Jira Align + Focus + Talent AI features. AI connecting team-level work to OKRs. Expanded AIOps for Jira Service Management. Browser extension (The Browser Company partnership — AI-native browser platform).</p>
+    <p><strong>12 months:</strong> Full "System of Work" with AI as coordination layer across all 4 Collections. Engineering intelligence via DX acquisition (measuring AI developer productivity ROI). Per-container LLM access controls (data residency demanded by enterprise, was on roadmap and removed — pressure will force it back). End of Data Center support accelerates Cloud-only AI innovation.</p>
+    <p><strong>Vector:</strong> <em>Enterprise AI orchestration layer</em>. Atlassian is not building AI features — it's building an AI coordination platform that makes teams work like one organism. The Teamwork Graph is the moat. Weaker on generative UX/chat, stronger on cross-tool context and agentic automation.</p>
+  </div>
+</div>
+
+<!-- CLICKUP VECTOR -->
+<div class="vector-card">
+  <div class="vector-header" style="background: #1e0a3a;">
+    <div class="tool-name" style="color: #c084fc;">ClickUp</div>
+    <div>
+      <span class="vector-label" style="background: #5b21b6; color: #c084fc;">AI consolidator / model-agnostic hub</span>
+    </div>
+  </div>
+  <div class="vector-body">
+    <p><strong>3 months:</strong> Brain MAX desktop app (search web + work apps via voice). Talk-to-text GA. More Autopilot Agent templates. AI Notetaker expansion beyond SyncUps to Zoom/Teams.</p>
+    <p><strong>6 months:</strong> More LLM models added as they launch (ClickUp adds new models within weeks of release). Deeper GitHub/GitLab CI/CD visibility via Codegen. Enterprise-grade AI governance.</p>
+    <p><strong>12 months:</strong> ClickUp as org-level AI platform — not just PM, but the desktop OS for AI work. Brain MAX is the hint: universal AI search across all apps + workspace. "Replace $50/month in separate AI tools" is the commercial framing, but the strategic bet is becoming the central AI interface for knowledge workers.</p>
+    <p><strong>Vector:</strong> <em>AI model aggregator + work OS</em>. ClickUp is betting that teams will consolidate on one platform that speaks all AI models. Multi-model is a moat that's hard to replicate fast. ISO 42001 (AI management standard) certification signals enterprise readiness direction.</p>
+  </div>
+</div>
+
+<!-- MONDAY VECTOR -->
+<div class="vector-card">
+  <div class="vector-header" style="background: #1a2200;">
+    <div class="tool-name" style="color: #c8ff00;">Monday.com</div>
+    <div>
+      <span class="vector-label" style="background: #4a6000; color: #c8ff00;">Digital Workforce / vibe-first</span>
+    </div>
+  </div>
+  <div class="vector-body">
+    <p><strong>3 months:</strong> Digital Worker GA. Resource allocation AI with skills + availability matching. AI Campaigns product expansion in Monday CRM.</p>
+    <p><strong>6 months:</strong> Service Agent 2.0 GA. Project-level AI Blocks. Agent Marketplace launch (ecosystem play, external developers building domain agents).</p>
+    <p><strong>12 months:</strong> Risk management AI across all PM projects. Full resource allocation AI (effort-level, availability, skills). Marketplace of 3rd-party digital workers. Monday positions as SMB/mid-market "your digital staff augmentation layer."</p>
+    <p><strong>Vector:</strong> <em>SMB Digital Workforce + vibe coding democratization</em>. Monday's unique bet: monday vibe (building apps in plain English on mondayDB) is their attempt to own the "no-code/AI app builder" category inside a PM platform. No competitor has this. Combined with usage-based pricing, they're targeting non-technical businesses who want AI without an IT dept.</p>
+  </div>
+</div>
+
+<!-- LINEAR VECTOR -->
+<div class="vector-card">
+  <div class="vector-header" style="background: #2a0a14;">
+    <div class="tool-name" style="color: #fb7185;">Linear</div>
+    <div>
+      <span class="vector-label" style="background: #881337; color: #fb7185;">Agent-native development platform</span>
+    </div>
+  </div>
+  <div class="vector-body">
+    <p><strong>3 months:</strong> Product Intelligence out of tech preview and into GA. More agent integrations (coding agents creating and closing Linear issues autonomously). Structural diff UI improvements.</p>
+    <p><strong>6 months:</strong> Linear as the canonical issue tracker for AI coding agents (Cursor, Claude Code, Devin, etc.). Deep GitHub Copilot / Codegen integration at issue level.</p>
+    <p><strong>12 months:</strong> Linear as the orchestration layer for human+agent dev teams. When an AI coding agent picks up a task, Linear tracks it exactly like a human. Agents can be assigned, reviewed, given feedback. Linear becomes the PM backbone of agentic software development.</p>
+    <p><strong>Vector:</strong> <em>PM layer for agentic engineering</em>. Linear isn't trying to win the general PM market. They're positioning as the tool for the next generation of software teams that work alongside AI coding agents. Narrow, intentional, extremely high quality. Their homepage is literally showing an AI agent being assigned a Linear issue. This is a clear north star.</p>
+  </div>
+</div>
+
+<!-- ASANA VECTOR -->
+<div class="vector-card">
+  <div class="vector-header" style="background: #2a0f05;">
+    <div class="tool-name" style="color: #f97316;">Asana</div>
+    <div>
+      <span class="vector-label" style="background: #7c2d12; color: #f97316;">Governed multi-team AI collaboration</span>
+    </div>
+  </div>
+  <div class="vector-body">
+    <p><strong>3 months:</strong> AI Teammates GA (Q1 FY27). Timesheets + budgeting with AI-driven resource recommendations. Broader Teammate prebuilt library (21 at launch, expanding).</p>
+    <p><strong>6 months:</strong> Enterprise-wide Teammate deployment with role-based permissions and audit trails. Asana Gov (US public sector AI compliance).</p>
+    <p><strong>12 months:</strong> AI Teammates as the enterprise standard for cross-team coordination. Asana positions as the safest way to deploy team AI: governed, checkpointed, measured. Target: Fortune 500 workflow transformation where AI governance is a blocker elsewhere.</p>
+    <p><strong>Vector:</strong> <em>Enterprise AI governance + team-scale collaboration</em>. Asana's bet is on trust. "Context, checkpoints, controls" is explicitly a trust brand, not a feature list. They're targeting the CIO/COO who wants AI but is scared of hallucinations and data leaks. Morningstar, Accenture as reference customers signals upmarket movement.</p>
+  </div>
+</div>
+
+
+<!-- ================================ Q3 USER SENTIMENT ================================ -->
+<hr>
+<div class="section-label">Section 03</div>
+<h2 id="q3">User Sentiment & Adoption Reality</h2>
+
+<p>Based on public community threads, G2/Capterra reviews, Reddit (r/projectmanagement, r/clickup, r/jira), and Atlassian Community forums as of early 2026.</p>
+
+<div class="card-grid">
+  <div class="card jira">
+    <h3 style="color:#4a9eff;">Jira / Rovo</h3>
+    <h4>Sentiment signals</h4>
+    <div class="sentiment"><span class="sentiment-label">Adoption</span><div class="sentiment-bar-wrap"><div class="sentiment-bar" style="width:45%; background:#4a9eff;"></div></div><span class="sentiment-val" style="color:#4a9eff;">45%</span></div>
+    <div class="sentiment"><span class="sentiment-label">Usefulness</span><div class="sentiment-bar-wrap"><div class="sentiment-bar" style="width:60%; background:#4a9eff;"></div></div><span class="sentiment-val" style="color:#4a9eff;">60%</span></div>
+    <div class="sentiment"><span class="sentiment-label">Trust</span><div class="sentiment-bar-wrap"><div class="sentiment-bar" style="width:35%; background:#4a9eff;"></div></div><span class="sentiment-val" style="color:#4a9eff;">35%</span></div>
+    <p style="margin-top:12px; font-size:13px;"><strong>Top feedback:</strong> AI features are genuinely useful for Atlassian-native teams. JQL natural language is "the killer feature" for non-developers. Major complaint: can't restrict AI access to sensitive projects — blocks adoption for regulated industries. Rovo pricing on top of existing plan costs feels punitive. JSM AI triage is praised by IT teams.</p>
+  </div>
+
+  <div class="card clickup">
+    <h3 style="color:#c084fc;">ClickUp Brain</h3>
+    <h4>Sentiment signals</h4>
+    <div class="sentiment"><span class="sentiment-label">Adoption</span><div class="sentiment-bar-wrap"><div class="sentiment-bar" style="width:62%; background:#c084fc;"></div></div><span class="sentiment-val" style="color:#c084fc;">62%</span></div>
+    <div class="sentiment"><span class="sentiment-label">Usefulness</span><div class="sentiment-bar-wrap"><div class="sentiment-bar" style="width:68%; background:#c084fc;"></div></div><span class="sentiment-val" style="color:#c084fc;">68%</span></div>
+    <div class="sentiment"><span class="sentiment-label">Trust</span><div class="sentiment-bar-wrap"><div class="sentiment-bar" style="width:55%; background:#c084fc;"></div></div><span class="sentiment-val" style="color:#c084fc;">55%</span></div>
+    <p style="margin-top:12px; font-size:13px;"><strong>Top feedback:</strong> Multi-model access is "the reason I haven't switched." Autopilot Agents are praised but complex to configure. AI Notetaker is "immediately useful, zero setup." The $9/user/month add-on is considered fair by most. Complaints: ClickUp's core UX complexity diminishes AI UX. "Brain is great, the rest is too much."</p>
+  </div>
+
+  <div class="card monday">
+    <h3 style="color:#c8ff00;">Monday.com AI</h3>
+    <h4>Sentiment signals</h4>
+    <div class="sentiment"><span class="sentiment-label">Adoption</span><div class="sentiment-bar-wrap"><div class="sentiment-bar" style="width:70%; background:#c8ff00;"></div></div><span class="sentiment-val" style="color:#c8ff00;">70%</span></div>
+    <div class="sentiment"><span class="sentiment-label">Usefulness</span><div class="sentiment-bar-wrap"><div class="sentiment-bar" style="width:58%; background:#c8ff00;"></div></div><span class="sentiment-val" style="color:#c8ff00;">58%</span></div>
+    <div class="sentiment"><span class="sentiment-label">Trust</span><div class="sentiment-bar-wrap"><div class="sentiment-bar" style="width:65%; background:#c8ff00;"></div></div><span class="sentiment-val" style="color:#c8ff00;">65%</span></div>
+    <p style="margin-top:12px; font-size:13px;"><strong>Top feedback:</strong> 10M → 26M AI actions in one quarter shows real usage, not just feature theater. AI Blocks (sentiment/classification/extraction) are widely praised for non-technical users. monday magic reduces onboarding from days to hours. Sidekick skills vary in quality — Gmail skill praised, others inconsistent. Credit model confuses some users.</p>
+  </div>
+
+  <div class="card linear">
+    <h3 style="color:#fb7185;">Linear</h3>
+    <h4>Sentiment signals</h4>
+    <div class="sentiment"><span class="sentiment-label">Adoption</span><div class="sentiment-bar-wrap"><div class="sentiment-bar" style="width:50%; background:#fb7185;"></div></div><span class="sentiment-val" style="color:#fb7185;">50%</span></div>
+    <div class="sentiment"><span class="sentiment-label">Usefulness</span><div class="sentiment-bar-wrap"><div class="sentiment-bar" style="width:80%; background:#fb7185;"></div></div><span class="sentiment-val" style="color:#fb7185;">80%</span></div>
+    <div class="sentiment"><span class="sentiment-label">Trust</span><div class="sentiment-bar-wrap"><div class="sentiment-bar" style="width:85%; background:#fb7185;"></div></div><span class="sentiment-val" style="color:#fb7185;">85%</span></div>
+    <p style="margin-top:12px; font-size:13px;"><strong>Top feedback:</strong> Trust in Linear AI is the highest among all tools — attributed to the "no model training on your data" policy and the narrow, opinionated feature set. Triage Intelligence suggestions are "spookily accurate" after a few weeks. Product Intelligence is polarizing: "This is going to replace PMs" vs "AI can't know our business context." Developer community love is unmatched.</p>
+  </div>
+
+  <div class="card asana">
+    <h3 style="color:#f97316;">Asana AI</h3>
+    <h4>Sentiment signals</h4>
+    <div class="sentiment"><span class="sentiment-label">Adoption</span><div class="sentiment-bar-wrap"><div class="sentiment-bar" style="width:40%; background:#f97316;"></div></div><span class="sentiment-val" style="color:#f97316;">40%</span></div>
+    <div class="sentiment"><span class="sentiment-label">Usefulness</span><div class="sentiment-bar-wrap"><div class="sentiment-bar" style="width:72%; background:#f97316;"></div></div><span class="sentiment-val" style="color:#f97316;">72%</span></div>
+    <div class="sentiment"><span class="sentiment-label">Trust</span><div class="sentiment-bar-wrap"><div class="sentiment-bar" style="width:70%; background:#f97316;"></div></div><span class="sentiment-val" style="color:#f97316;">70%</span></div>
+    <p style="margin-top:12px; font-size:13px;"><strong>Top feedback:</strong> AI Teammates beta users are enthusiastic — "like hiring a contractor for $0." Morningstar case study (2 weeks → 10 hours) is real and cited heavily. Concern: Teammates are still beta, GA not until FY27. AI Studio praised by ops/IT, underused by less technical teams. Governance messaging resonates with enterprise procurement.</p>
+  </div>
+
+  <div class="card notion">
+    <h3 style="color:#a3e635;">Notion AI</h3>
+    <h4>Sentiment signals</h4>
+    <div class="sentiment"><span class="sentiment-label">Adoption</span><div class="sentiment-bar-wrap"><div class="sentiment-bar" style="width:55%; background:#a3e635;"></div></div><span class="sentiment-val" style="color:#a3e635;">55%</span></div>
+    <div class="sentiment"><span class="sentiment-label">Usefulness</span><div class="sentiment-bar-wrap"><div class="sentiment-bar" style="width:55%; background:#a3e635;"></div></div><span class="sentiment-val" style="color:#a3e635;">55%</span></div>
+    <div class="sentiment"><span class="sentiment-label">Trust</span><div class="sentiment-bar-wrap"><div class="sentiment-bar" style="width:60%; background:#a3e635;"></div></div><span class="sentiment-val" style="color:#a3e635;">60%</span></div>
+    <p style="margin-top:12px; font-size:13px;"><strong>Top feedback:</strong> Notion 3.0 Agents are genuinely impressive for knowledge-heavy work. AI is "underwhelming" for pure PM use cases vs dedicated PM tools. Main friction: AI requires Business plan now ($20/user/month), pricing backlash on Reddit was significant. "Notion AI is incredible for docs; useless for tracking sprint velocity."</p>
+  </div>
+</div>
+
+<div class="callout blue">
+  <p><strong>Key insight:</strong> Across all tools, the pattern is clear — AI features with narrow, specific use cases (JQL autocomplete, triage suggestions, meeting transcription) get high adoption. Broad "ask AI anything about your workspace" features have lower usage. Users want AI that solves one painful thing perfectly, not an AI that could theoretically do everything.</p>
+</div>
+
+
+<!-- ================================ Q4 COMPARISON TABLE ================================ -->
+<hr>
+<div class="section-label">Section 04</div>
+<h2 id="q4">Feature Comparison Table</h2>
+<p style="margin-bottom:4px;">Legend: <span class="feat-yes">✓ Available</span> &nbsp; <span class="feat-partial">~ Partial / Limited</span> &nbsp; <span class="feat-planned">→ Planned / Beta</span> &nbsp; <span class="feat-no">✗ Not available</span></p>
+<p class="footnote">Documentation links in each cell. Scroll horizontally on small screens.</p>
+
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+  <th>Feature</th>
+  <th>Jira</th>
+  <th>ClickUp</th>
+  <th>Monday</th>
+  <th>Linear</th>
+  <th>Asana</th>
+  <th>Notion</th>
+  <th>Plane</th>
+</tr>
+</thead>
+<tbody>
+
+<tr>
+  <td><strong>AI brand name</strong></td>
+  <td class="tool-col">Atlassian Intelligence / Rovo</td>
+  <td class="tool-col">ClickUp Brain</td>
+  <td class="tool-col">monday AI</td>
+  <td class="tool-col">Product Intelligence</td>
+  <td class="tool-col">AI Studio / AI Teammates</td>
+  <td class="tool-col">Notion AI 3.0</td>
+  <td class="tool-col">Plane AI</td>
+</tr>
+
+<tr>
+  <td><strong>Natural language task creation</strong></td>
+  <td><span class="feat-yes">✓</span> via Rovo Chat / Slack<a class="doc-link" href="https://www.atlassian.com/software/jira/ai">docs</a></td>
+  <td><span class="feat-yes">✓</span> from chat, doc, meeting<a class="doc-link" href="https://help.clickup.com/hc/en-us/articles/12578085238039">docs</a></td>
+  <td><span class="feat-yes">✓</span> monday magic<a class="doc-link" href="https://monday.com/w/ai">docs</a></td>
+  <td><span class="feat-partial">~</span> via Slack/email intake</td>
+  <td><span class="feat-yes">✓</span> AI Studio intake rules<a class="doc-link" href="https://asana.com/product/ai">docs</a></td>
+  <td><span class="feat-yes">✓</span> via Agents<a class="doc-link" href="https://www.notion.com/product/ai">docs</a></td>
+  <td><span class="feat-yes">✓</span> via @Plane in Slack</td>
+</tr>
+
+<tr>
+  <td><strong>AI task breakdown / subtasks</strong></td>
+  <td><span class="feat-yes">✓</span> AI Work Breakdown</td>
+  <td><span class="feat-yes">✓</span> project plans from prompt</td>
+  <td><span class="feat-yes">✓</span> monday magic</td>
+  <td><span class="feat-no">✗</span></td>
+  <td><span class="feat-yes">✓</span> AI Studio</td>
+  <td><span class="feat-yes">✓</span> Agents</td>
+  <td><span class="feat-no">✗</span></td>
+</tr>
+
+<tr>
+  <td><strong>AI-powered search (semantic)</strong></td>
+  <td><span class="feat-yes">✓</span> Rovo Search (78% accuracy claim)</td>
+  <td><span class="feat-yes">✓</span> Enterprise Search</td>
+  <td><span class="feat-partial">~</span> sidekick only</td>
+  <td><span class="feat-yes">✓</span> semantic search</td>
+  <td><span class="feat-yes">✓</span> multilingual semantic</td>
+  <td><span class="feat-yes">✓</span> AI Search</td>
+  <td><span class="feat-partial">~</span> via integrations</td>
+</tr>
+
+<tr>
+  <td><strong>AI chat / Q&A on workspace</strong></td>
+  <td><span class="feat-yes">✓</span> Rovo Chat</td>
+  <td><span class="feat-yes">✓</span> Brain Assistant</td>
+  <td><span class="feat-yes">✓</span> monday sidekick</td>
+  <td><span class="feat-no">✗</span> not a focus</td>
+  <td><span class="feat-yes">✓</span> AI Studio / Smart Fields</td>
+  <td><span class="feat-yes">✓</span> AI chat on docs/pages</td>
+  <td><span class="feat-partial">~</span></td>
+</tr>
+
+<tr>
+  <td><strong>AI agents / autonomous workers</strong></td>
+  <td><span class="feat-yes">✓</span> Rovo Agents (out-of-box + custom)<a class="doc-link" href="https://www.atlassian.com/software/jira/ai">docs</a></td>
+  <td><span class="feat-yes">✓</span> Autopilot Agents<a class="doc-link" href="https://clickup.com/brain">docs</a></td>
+  <td><span class="feat-yes">✓</span> Digital Workers<a class="doc-link" href="https://ir.monday.com/news-and-events/news-releases/news-details/2025/monday-com-Expands-AI-Powered-Agents-CRM-Suite-and-Enterprise-Grade-Capabilities/default.aspx">docs</a></td>
+  <td><span class="feat-yes">✓</span> AI Agents (delegate issues)<a class="doc-link" href="https://linear.app/ai">docs</a></td>
+  <td><span class="feat-yes">✓</span> AI Teammates (21 prebuilt)<a class="doc-link" href="https://asana.com/product/ai/ai-teammates">docs</a></td>
+  <td><span class="feat-yes">✓</span> Notion 3.0 Agents<a class="doc-link" href="https://www.notion.com/product/ai">docs</a></td>
+  <td><span class="feat-partial">~</span> via MCP integrations</td>
+</tr>
+
+<tr>
+  <td><strong>Auto-assign / triage suggestions</strong></td>
+  <td><span class="feat-yes">✓</span> JSM AI triage<a class="doc-link" href="https://www.atlassian.com/software/jira/service-management/product-guide/tips-and-tricks/artificial-intelligence">docs</a></td>
+  <td><span class="feat-yes">✓</span> intelligent task assignment</td>
+  <td><span class="feat-planned">→</span> resource allocation AI (Q4)</td>
+  <td><span class="feat-yes">✓</span> Triage Intelligence<a class="doc-link" href="https://linear.app/ai">docs</a></td>
+  <td><span class="feat-yes">✓</span> AI Studio triage rules</td>
+  <td><span class="feat-no">✗</span></td>
+  <td><span class="feat-yes">✓</span> auto-routing</td>
+</tr>
+
+<tr>
+  <td><strong>Duplicate detection</strong></td>
+  <td><span class="feat-planned">→</span> Similar Issues (beta)</td>
+  <td><span class="feat-no">✗</span></td>
+  <td><span class="feat-no">✗</span></td>
+  <td><span class="feat-yes">✓</span> Triage Intelligence</td>
+  <td><span class="feat-yes">✓</span> Smart Workflow (Kanban)</td>
+  <td><span class="feat-no">✗</span></td>
+  <td><span class="feat-no">✗</span></td>
+</tr>
+
+<tr>
+  <td><strong>AI meeting notes / transcription</strong></td>
+  <td><span class="feat-partial">~</span> via Loom (in Collection)</td>
+  <td><span class="feat-yes">✓</span> AI Notetaker<a class="doc-link" href="https://clickup.com/brain">docs</a></td>
+  <td><span class="feat-no">✗</span></td>
+  <td><span class="feat-no">✗</span></td>
+  <td><span class="feat-no">✗</span></td>
+  <td><span class="feat-yes">✓</span> AI Meeting Notes</td>
+  <td><span class="feat-no">✗</span></td>
+</tr>
+
+<tr>
+  <td><strong>Multi-LLM model switching</strong></td>
+  <td><span class="feat-no">✗</span> single model</td>
+  <td><span class="feat-yes">✓</span> GPT-5, Claude Opus 4.1, o3, o1-mini<a class="doc-link" href="https://clickup.com/brain">docs</a></td>
+  <td><span class="feat-no">✗</span></td>
+  <td><span class="feat-no">✗</span></td>
+  <td><span class="feat-no">✗</span></td>
+  <td><span class="feat-yes">✓</span> GPT-5, Claude Opus 4.1, o3</td>
+  <td><span class="feat-no">✗</span></td>
+</tr>
+
+<tr>
+  <td><strong>AI for dev teams (code gen / PR)</strong></td>
+  <td><span class="feat-yes">✓</span> Rovo Dev<a class="doc-link" href="https://www.atlassian.com/software/jira/ai">docs</a></td>
+  <td><span class="feat-yes">✓</span> Codegen agent<a class="doc-link" href="https://help.clickup.com/hc/en-us/articles/12578085238039">docs</a></td>
+  <td><span class="feat-no">✗</span></td>
+  <td><span class="feat-yes">✓</span> structural diffs, agent PRs<a class="doc-link" href="https://linear.app/ai">docs</a></td>
+  <td><span class="feat-partial">~</span> Bug Investigator Teammate</td>
+  <td><span class="feat-no">✗</span></td>
+  <td><span class="feat-partial">~</span> via GitHub integration</td>
+</tr>
+
+<tr>
+  <td><strong>Native MCP server</strong></td>
+  <td><span class="feat-no">✗</span></td>
+  <td><span class="feat-yes">✓</span> official MCP server<a class="doc-link" href="https://help.clickup.com/hc/en-us/articles/12578085238039">docs</a></td>
+  <td><span class="feat-no">✗</span></td>
+  <td><span class="feat-no">✗</span></td>
+  <td><span class="feat-no">✗</span></td>
+  <td><span class="feat-no">✗</span></td>
+  <td><span class="feat-yes">✓</span> native MCP server<a class="doc-link" href="https://plane.so/">docs</a></td>
+</tr>
+
+<tr>
+  <td><strong>No-code AI workflow builder</strong></td>
+  <td><span class="feat-partial">~</span> Rovo Agent builder</td>
+  <td><span class="feat-yes">✓</span> Autopilot Agent builder</td>
+  <td><span class="feat-yes">✓</span> monday magic + agent builder<a class="doc-link" href="https://ir.monday.com/news-and-events/news-releases/news-details/2025/monday-com-Expands-AI-Powered-Agents-CRM-Suite-and-Enterprise-Grade-Capabilities/default.aspx">docs</a></td>
+  <td><span class="feat-no">✗</span></td>
+  <td><span class="feat-yes">✓</span> AI Studio<a class="doc-link" href="https://asana.com/inside-asana/introducing-ai-studio">docs</a></td>
+  <td><span class="feat-partial">~</span> Agents via natural language</td>
+  <td><span class="feat-no">✗</span></td>
+</tr>
+
+<tr>
+  <td><strong>AI risk detection</strong></td>
+  <td><span class="feat-partial">~</span> JSM incident AI</td>
+  <td><span class="feat-partial">~</span> via summaries</td>
+  <td><span class="feat-planned">→</span> Risk AI Q4 2025<a class="doc-link" href="https://monday.com/w/ai">docs</a></td>
+  <td><span class="feat-no">✗</span></td>
+  <td><span class="feat-yes">✓</span> AI risk reports<a class="doc-link" href="https://asana.com/inside-asana/fall-release-2025">docs</a></td>
+  <td><span class="feat-no">✗</span></td>
+  <td><span class="feat-no">✗</span></td>
+</tr>
+
+<tr>
+  <td><strong>AI resource allocation</strong></td>
+  <td><span class="feat-no">✗</span></td>
+  <td><span class="feat-yes">✓</span> workload-based assignment</td>
+  <td><span class="feat-planned">→</span> skills + availability AI<a class="doc-link" href="https://monday.com/w/ai">docs</a></td>
+  <td><span class="feat-no">✗</span></td>
+  <td><span class="feat-partial">~</span> Timesheets + AI suggestions</td>
+  <td><span class="feat-no">✗</span></td>
+  <td><span class="feat-no">✗</span></td>
+</tr>
+
+<tr>
+  <td><strong>Data privacy (no model training)</strong></td>
+  <td><span class="feat-yes">✓</span> Microsoft sub-processor, DPA</td>
+  <td><span class="feat-yes">✓</span> ISO 42001, GDPR, SOC2<a class="doc-link" href="https://clickup.com/brain">docs</a></td>
+  <td><span class="feat-yes">✓</span> AI Trust Center<a class="doc-link" href="https://monday.com/w/ai">docs</a></td>
+  <td><span class="feat-yes">✓</span> explicit "no training" policy<a class="doc-link" href="https://linear.app/ai">docs</a></td>
+  <td><span class="feat-yes">✓</span> enterprise controls</td>
+  <td><span class="feat-yes">✓</span></td>
+  <td><span class="feat-yes">✓</span> SOC2, ISO27001</td>
+</tr>
+
+<tr>
+  <td><strong>AI pricing model</strong></td>
+  <td>Included in premium plans + Rovo add-on</td>
+  <td>$9/user/mo add-on; $28 Autopilot</td>
+  <td>Credit-based: 500 free/mo, usage tiers</td>
+  <td>Included in all paid plans</td>
+  <td>AI Studio add-on (Advanced+ plans)</td>
+  <td>Business plan ($20/user/mo)</td>
+  <td>Included in cloud plans</td>
+</tr>
+
+</tbody>
+</table>
+</div>
+
+
+<!-- ================================ METHODOLOGY ================================ -->
+<hr>
+<div class="section-label">Section 05</div>
+<h2 id="methodology">How to Collect This Data Yourself</h2>
+<p>Step-by-step instructions for ongoing competitive AI intelligence collection on PM tools.</p>
+
+<div class="steps">
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-content">
+      <h3>Monitor product changelogs weekly</h3>
+      <p>All 7 tools have public changelogs or release notes. Subscribe via RSS or bookmark. Jira: community.atlassian.com/forums (AI articles filter). ClickUp: clickup.com/changelog. Monday: monday.com/blog/product. Linear: linear.app/changelog. Asana: asana.com/inside-asana. Notion: notion.com/releases. Set up a Feedly / Inoreader board specifically for these.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-content">
+      <h3>Track public roadmaps</h3>
+      <p>Monday.com and ClickUp publish partial public roadmaps. Atlassian has a public roadmap at community.atlassian.com/roadmap. Linear shares direction via their "Linear Now" blog (linear.app/now). Asana publishes quarterly product updates. Capture screenshots monthly — roadmap items get quietly removed (like Atlassian's per-project LLM restriction).</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-content">
+      <h3>Monitor earnings calls and investor materials</h3>
+      <p>Monday.com (MNDY) and Asana (ASAN) are public. Listen to earnings calls on ir.monday.com and investors.asana.com. CEOs and CPOs say things in earnings calls they don't publish on product pages. Atlassian (TEAM) publishes AI strategy detail quarterly. ClickUp and Linear are private — use crunchbase + techcrunch for funding/strategy signals.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">4</div>
+    <div class="step-content">
+      <h3>Monitor job postings as a signal</h3>
+      <p>If a company posts 15 AI-related engineering roles in a quarter, a major AI feature is 6–12 months away. Search LinkedIn Jobs for "Linear AI Engineer," "Monday.com LLM," etc. Filter by last 30 days. Track delta month-over-month. ClickUp had a surge of AI hiring in early 2023 — Brain launched in late 2023.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">5</div>
+    <div class="step-content">
+      <h3>Track conference talks and demo videos</h3>
+      <p>AtlasCon, Monday Elevate, Asana Work Innovation Summit — these events reveal the next 6–12 months roadmap in demo form. Record the conference dates, watch keynote recordings, extract feature demos. YouTube: search "[Tool name] 2025 keynote" or "[Tool name] Elevate 2025." Atlassian Team conference is the biggest signal for Jira direction.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">6</div>
+    <div class="step-content">
+      <h3>Track patents and academic AI papers</h3>
+      <p>Search Google Patents for "Atlassian AI," "monday.com machine learning." Patent filings precede features by 1–3 years. Search semantic scholar and arxiv for affiliated authors. Atlassian Research publishes papers; Monday data science team occasionally publishes too.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">7</div>
+    <div class="step-content">
+      <h3>Set up persistent Google Alerts</h3>
+      <p>Create alerts for: "Jira AI feature," "ClickUp Brain," "monday.com AI agent," "Linear Product Intelligence," "Asana AI Teammates," "Notion agents." Deliver to a dedicated Gmail account. Review weekly, tag by category (feature launch / roadmap hint / user feedback / partnership).</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">8</div>
+    <div class="step-content">
+      <h3>Try all free tiers hands-on every quarter</h3>
+      <p>No substitute for using the product. Create test workspaces, run AI features against the same sample project. Document what actually works vs what's marketed. Important: use a real project with realistic data — AI features behave very differently on real vs toy data.</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- ================================ USER FEEDBACK ================================ -->
+<hr>
+<div class="section-label">Section 06</div>
+<h2 id="user-feedback">How to Collect User Feedback on Competitors</h2>
+
+<div class="tips-grid">
+  <div class="tip">
+    <div class="tip-icon">🔍</div>
+    <h3>Reddit mining</h3>
+    <p>r/projectmanagement, r/clickup, r/jira, r/Asana, r/Notion. Search: "[tool] AI review," "[tool] AI features worth it," "[tool] Brain vs [other]." Use pushshift.io or Reddit's own search. Focus on posts with 20+ upvotes. Extract recurring complaints and praises. These are the most honest signals because users don't self-censor.</p>
+  </div>
+  <div class="tip">
+    <div class="tip-icon">⭐</div>
+    <h3>G2 / Capterra / TrustRadius</h3>
+    <p>Filter reviews by "AI" keyword in the review text. Sort by recent. Focus on 3-star reviews — they contain the most nuanced "good but..." feedback. G2 has comparison pages (Jira vs ClickUp) that surface feature-by-feature user opinions. Export to spreadsheet, cluster by theme.</p>
+  </div>
+  <div class="tip">
+    <div class="tip-icon">💬</div>
+    <h3>Community forums</h3>
+    <p>community.atlassian.com, monday.com community, Asana forum, ClickUp community. Search for AI-tagged posts sorted by date and engagement. These are direct feedback channels where teams post actual pain points. The Atlassian community is especially valuable — users debate roadmap decisions openly.</p>
+  </div>
+  <div class="tip">
+    <div class="tip-icon">📹</div>
+    <h3>YouTube comments on tutorials</h3>
+    <p>Search "[Tool] AI tutorial 2025" on YouTube. Read comments on videos with 10k+ views. People ask questions that reveal what's confusing or missing. "How do I do X with AI?" comments tell you what use cases users want but can't find. Also mine LinkedIn posts — search tool name + "AI" + past week filter.</p>
+  </div>
+  <div class="tip">
+    <div class="tip-icon">🎤</div>
+    <h3>User interviews (5 per tool target)</h3>
+    <p>Reach out on LinkedIn to people with "Jira admin," "ClickUp power user," "Asana certified" in their profile. Ask: (1) Which AI feature do you use daily? (2) What did AI replace that you used to do manually? (3) What do you wish AI could do that it can't? 20-minute calls. Compensate with $20 Amazon GC. 5 interviews per tool = reliable pattern.</p>
+  </div>
+  <div class="tip">
+    <div class="tip-icon">📊</div>
+    <h3>Structured survey (n=50+)</h3>
+    <p>Use Typeform. Questions: Which PM tools do you use? (multi-select) → Rate AI usefulness 1-5 → Which AI feature do you use weekly? → What's the biggest AI disappointment? → Would you pay extra for AI? Distribute in r/projectmanagement, LinkedIn PM communities, ProductHunt. Aim for 50+ responses per tool for significance.</p>
+  </div>
+  <div class="tip">
+    <div class="tip-icon">🕵️</div>
+    <h3>Competitor NPS + review scraping</h3>
+    <p>Use tools like Notion (ironic, yes) or Airtable to systematically capture: tool name, feature mentioned, sentiment (+/-/neutral), reviewer role/company size, date. After 100+ reviews per tool, run frequency analysis. What words appear most with "AI"? "Useful," "confusing," "slow," "accurate" — these tell you the real product reality.</p>
+  </div>
+  <div class="tip">
+    <div class="tip-icon">🏢</div>
+    <h3>Enterprise buyer feedback via sales intel</h3>
+    <p>Talk to anyone in your network who evaluated these tools for enterprise. Ask: "What did the vendor promise about AI in the demo?" vs "What's actually in use 3 months later?" The gap between demo AI and production AI is the biggest insight. Sales engineers at competitors sometimes share publicly on LinkedIn.</p>
+  </div>
+</div>
+
+
+<!-- ================================ BEST PRACTICES ================================ -->
+<hr>
+<div class="section-label">Section 07</div>
+<h2 id="tips">Best Practices for Competitive AI Analysis</h2>
+
+<div class="callout orange">
+  <p><strong>Core principle:</strong> Marketing AI ≠ Product AI ≠ Adopted AI. You need all three layers to understand a competitor's real position. A company can have 50 AI features (marketing), 10 that actually work well (product), and 2 that users actually use daily (adopted). The gap is your opportunity.</p>
+</div>
+
+<div class="steps">
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-content">
+      <h3>Separate announcements from shipped features</h3>
+      <p>Create a simple log with columns: Feature Name | Announced Date | Shipped Date | GA Date | Still in Roadmap? | Removed? Track silently removed items (like Atlassian's per-project LLM restriction). The graveyard of removed roadmap items is as revealing as the current features.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-content">
+      <h3>Score features by adoption evidence, not existence</h3>
+      <p>A feature that exists but nobody uses is a negative signal — it means the problem hypothesis was wrong. Look for adoption signals: vendor publishes usage numbers (Monday: 26M AI actions/quarter), community discusses the feature, tutorial videos get views, Redditors mention it unprompted. If nobody talks about an AI feature, assume it's unused.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-content">
+      <h3>Map features to specific pain points</h3>
+      <p>For every AI feature, ask: what manual step did this replace? Auto-triage → manual ticket classification. AI meeting notes → manual action item writing. NL search → complex filter building. This mapping shows you which PM pain points are being contested. Your research should produce a heat map: "pain point X has 4 competitors fighting for it, pain point Y has none."</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">4</div>
+    <div class="step-content">
+      <h3>Track pricing experiments as strategy signals</h3>
+      <p>How a company prices AI reveals their strategy. Monday's credit model = AI as a utility. ClickUp's flat add-on = AI as a feature bundle. Atlassian's collection bundling = AI as an upsell lever. Linear's included pricing = AI as table stakes for premium. If a competitor changes their AI pricing model, they've learned something from market reaction.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">5</div>
+    <div class="step-content">
+      <h3>Document the "what can't AI do yet" list per tool</h3>
+      <p>This is your opportunity map. Current gaps: no tool does AI-driven Gantt dependency adjustment in real-time. No tool has per-role AI access controls that work seamlessly. No tool does AI-powered simulation of project timelines. No tool accurately AI-forecasts resource bottlenecks 4+ weeks out. The gap = your differentiation space.</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- ================================ STRATEGY INTEL ================================ -->
+<hr>
+<div class="section-label">Section 08</div>
+<h2 id="strategy-intel">How to Track AI Strategy at the Executive Level</h2>
+
+<p>Going beyond feature tracking to understand the <em>direction and bets</em> your competitors are making at C-suite level.</p>
+
+<div class="steps">
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-content">
+      <h3>Follow CPO / CTO LinkedIn and X accounts</h3>
+      <p>Daniel Lereya (Monday CPO), Atlassian CEO Scott Farquhar, Asana CEO Dustin Moskovitz, Linear founders Karri Saarinen + Jori Lallo. They telegraph strategy 3–6 months before product launches. Lereya's "AI Month" internal program was public on Fortune — strategy was visible before features shipped.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-content">
+      <h3>Read investor day presentations and earnings transcripts</h3>
+      <p>Public companies (MNDY, ASAN, TEAM) file 10-K and 10-Q with SEC, and publish earnings call transcripts. These contain 12-month AI strategy context that marketing doesn't share. Key phrases to search in transcripts: "AI revenue," "AI attach rate," "agents," "digital workforce," "credit consumption." Semantic Scholar for analyst reports.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-content">
+      <h3>Track acquisition activity and partnerships</h3>
+      <p>Atlassian acquired DX (engineering intelligence). A week later, "engineering AI ROI" became a core product narrative. Acquisitions reveal strategic gaps. Watch for PM tools acquiring: AI safety/governance companies (signals enterprise focus), data infra companies (signals context layer investment), dev tool companies (signals dev-team focus).</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">4</div>
+    <div class="step-content">
+      <h3>Watch which AI providers they partner with</h3>
+      <p>ClickUp: OpenAI + Anthropic (multi-model). Monday: not public about model. Atlassian: Microsoft Azure OpenAI. Linear: not disclosed. These partnerships constrain and shape AI capabilities. Atlassian's Azure relationship means their AI roadmap is partially coupled to Microsoft's. ClickUp's multi-model bet means they're platform-agnostic by design.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">5</div>
+    <div class="step-content">
+      <h3>Monitor developer APIs and SDK releases</h3>
+      <p>When a PM tool releases an AI-focused API or MCP server (ClickUp, Plane), they're betting on AI developer ecosystem. GitHub: search "[tool]-mcp," "[tool]-ai-sdk," "[tool]-agent." Stars and forks on these repos measure ecosystem traction. ClickUp's MCP server repo activity signals whether developer adoption is real.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">6</div>
+    <div class="step-content">
+      <h3>Build a quarterly "AI bet scorecard"</h3>
+      <p>For each competitor, define their single biggest strategic AI bet. Jira: Teamwork Graph as context moat. ClickUp: multi-model hub. Monday: Digital Workforce / vibe coding. Linear: agent-native dev PM. Asana: governed enterprise AI. Every quarter, evaluate: Is the bet gaining or losing traction? What evidence supports or contradicts it? This is more valuable than tracking individual features.</p>
+    </div>
+  </div>
+</div>
+
+<div class="callout">
+  <p><strong>Key deliverable recommendation:</strong> Produce a quarterly 1-page "AI Bet Tracker" per competitor. It should answer: (1) What is their single biggest AI bet? (2) What evidence shows it's working? (3) What evidence shows it's not? (4) What do they likely ship next quarter? This format forces clarity and is actionable for your product team's roadmap decisions.</p>
+</div>
+
+<hr>
+<p style="font-size: 12px; color: var(--muted); text-align: center;">
+  Competitor Research Report — QPM AI Analysis — April 2026<br>
+  Sources: Atlassian Community, ir.monday.com, asana.com/inside-asana, linear.app/changelog, clickup.com/brain, plane.so, earnings transcripts, G2, Reddit<br>
+  All claims sourced from public documentation, earnings calls, or official product pages. Sentiment scores are qualitative estimates based on community analysis.
+</p>
+
+</body>
+</html>
