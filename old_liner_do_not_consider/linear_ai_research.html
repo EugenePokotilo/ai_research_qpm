@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Linear AI — Research Notes</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap');
+:root {
+  --bg:#fafaf8; --surface:#fff; --surface2:#f4f3ef; --surface3:#eeecea;
+  --border:#e8e6e0; --border2:#d0cdc5;
+  --text:#1a1916; --muted:#7a7870; --faint:#b0ada6;
+  --blue:#0052cc; --blue-bg:#e8f0fe; --blue-border:#aec6f0; --blue-dark:#003d99;
+  --green:#006644; --green-bg:#e3f5ec; --green-border:#a3d9b8;
+  --amber:#974400; --amber-bg:#fff3e0; --amber-border:#fcd08a;
+  --red:#c0392b; --red-bg:#fde8e6; --red-border:#f5aba3;
+  --purple:#5243aa; --purple-bg:#ede8fb; --purple-border:#c3b7f2;
+  --teal:#006475; --teal-bg:#e0f5f8; --teal-border:#95d8e4;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:14.5px;line-height:1.7;max-width:1080px;margin:0 auto;padding:56px 36px 120px;}
+h1{font-family:'Syne',sans-serif;font-size:40px;font-weight:800;line-height:1.1;letter-spacing:-.5px;}
+h2{font-family:'Syne',sans-serif;font-size:22px;font-weight:700;color:var(--text);margin:52px 0 18px;padding-top:8px;}
+h3{font-family:'Inter',sans-serif;font-size:15px;font-weight:500;color:var(--text);margin:20px 0 8px;}
+h4{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin:18px 0 8px;font-weight:400;}
+p{color:#3d3b36;margin-bottom:10px;}
+a{color:var(--blue);text-decoration:none;}a:hover{text-decoration:underline;}
+code{font-family:'JetBrains Mono',monospace;font-size:12px;background:var(--surface2);padding:1px 6px;border-radius:3px;color:var(--purple);}
+pre{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:16px 18px;font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.6;overflow-x:auto;margin:12px 0;}
+ul,ol{padding-left:20px;margin-bottom:10px;}
+li{color:#3d3b36;margin-bottom:5px;}
+strong{color:var(--text);font-weight:500;}
+hr{border:none;border-top:1px solid var(--border2);margin:52px 0;}
+
+/* Header */
+.header-meta{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;align-items:center;}
+.badge{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:3px 11px;border-radius:3px;border:1px solid;display:inline-block;}
+.badge-blue{color:var(--blue);border-color:var(--blue-border);background:var(--blue-bg);}
+.badge-green{color:var(--green);border-color:var(--green-border);background:var(--green-bg);}
+.badge-amber{color:var(--amber);border-color:var(--amber-border);background:var(--amber-bg);}
+.badge-red{color:var(--red);border-color:var(--red-border);background:var(--red-bg);}
+.badge-purple{color:var(--purple);border-color:var(--purple-border);background:var(--purple-bg);}
+.badge-gray{color:var(--muted);border-color:var(--border2);background:var(--surface2);}
+
+/* Section label */
+.section-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--blue);margin-bottom:6px;display:block;}
+
+/* Callouts */
+.callout{border-radius:8px;padding:14px 18px;margin:18px 0;border:1px solid;}
+.callout p{margin:0;font-size:13.5px;}
+.callout-blue{background:var(--blue-bg);border-color:var(--blue-border);} .callout-blue p{color:#1a3a6e;}
+.callout-amber{background:var(--amber-bg);border-color:var(--amber-border);} .callout-amber p{color:#5a2800;}
+.callout-green{background:var(--green-bg);border-color:var(--green-border);} .callout-green p{color:#003320;}
+.callout-red{background:var(--red-bg);border-color:var(--red-border);} .callout-red p{color:#6b1000;}
+.callout-gray{background:var(--surface2);border-color:var(--border2);} .callout-gray p{color:var(--muted);}
+
+/* Concept box */
+.cb{border-left:4px solid;padding:16px 20px;border-radius:0 8px 8px 0;margin-bottom:14px;background:var(--surface);border-top:1px solid var(--border);border-right:1px solid var(--border);border-bottom:1px solid var(--border);}
+.cb h3{margin:0 0 8px;font-size:16px;font-family:'Syne',sans-serif;font-weight:700;}
+.cb-tag{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:3px;display:inline-block;margin-bottom:10px;}
+.cb-blue{border-left-color:var(--blue);} .cb-blue h3{color:var(--blue);} .cb-blue .cb-tag{background:var(--blue-bg);color:var(--blue);}
+.cb-purple{border-left-color:var(--purple);} .cb-purple h3{color:var(--purple);} .cb-purple .cb-tag{background:var(--purple-bg);color:var(--purple);}
+.cb-teal{border-left-color:var(--teal);} .cb-teal h3{color:var(--teal);} .cb-teal .cb-tag{background:var(--teal-bg);color:var(--teal);}
+.cb-green{border-left-color:var(--green);} .cb-green h3{color:var(--green);} .cb-green .cb-tag{background:var(--green-bg);color:var(--green);}
+.cb-amber{border-left-color:var(--amber);} .cb-amber h3{color:var(--amber);} .cb-amber .cb-tag{background:var(--amber-bg);color:var(--amber);}
+.cb-red{border-left-color:var(--red);} .cb-red h3{color:var(--red);} .cb-red .cb-tag{background:var(--red-bg);color:var(--red);}
+
+/* Cards */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:18px 22px;margin-bottom:14px;}
+.card-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0;}
+.card-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin:14px 0;}
+@media(max-width:760px){.card-grid,.card-grid-3{grid-template-columns:1fr;}}
+
+/* Steps */
+.steps{margin:12px 0;}
+.step{display:flex;gap:14px;padding:12px 0;border-bottom:1px solid var(--border);}
+.step:last-child{border-bottom:none;}
+.step-n{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--blue-border);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--blue);flex-shrink:0;margin-top:2px;}
+.step-c h3{margin:0 0 4px;font-size:14px;}
+.step-c p{margin:0;font-size:13.5px;color:var(--muted);}
+
+/* Tags */
+.plan-tag{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;padding:2px 7px;border-radius:3px;letter-spacing:.04em;white-space:nowrap;}
+.plan-all{background:var(--purple-bg);color:var(--purple);}
+.plan-b{background:var(--blue-bg);color:var(--blue);}
+.plan-e{background:#1a1916;color:#e8e6e0;}
+.plan-beta{background:var(--amber-bg);color:var(--amber);}
+.feat-ga{color:var(--green);font-family:'JetBrains Mono',monospace;font-size:11px;}
+.feat-beta{color:var(--amber);font-family:'JetBrains Mono',monospace;font-size:11px;}
+.feat-planned{color:var(--blue);font-family:'JetBrains Mono',monospace;font-size:11px;}
+
+/* Table */
+.tbl-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:8px;margin:18px 0;}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:700px;}
+thead th{background:var(--surface2);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;font-weight:400;color:var(--muted);padding:10px 14px;text-align:left;border-bottom:1px solid var(--border2);white-space:nowrap;}
+tbody td{padding:10px 14px;border-bottom:1px solid var(--border);vertical-align:top;color:#3d3b36;}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr:hover td{background:var(--surface2);}
+.fn{font-weight:500;color:var(--text);}
+
+/* TOC */
+.toc{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:20px 24px;margin:28px 0 44px;}
+.toc h4{margin-top:0;}
+.toc ol{padding-left:18px;}
+.toc li{margin:4px 0;font-size:13px;}
+.toc a{color:var(--muted);}
+.toc a:hover{color:var(--blue);}
+
+/* Anatomy grid */
+.anatomy{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:14px 0;}
+@media(max-width:760px){.anatomy{grid-template-columns:1fr;}}
+.anatomy-block{border:1px solid var(--border);border-radius:8px;padding:14px 16px;background:var(--surface);}
+.anatomy-label{font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;}
+.anatomy-desc{font-size:12.5px;color:var(--muted);line-height:1.5;}
+
+/* MCP highlight */
+.mcp-box{background:#0a1f3a;border:2px solid #4a9eff;border-radius:10px;padding:24px 28px;margin:22px 0;}
+.mcp-box h3{color:#4a9eff;font-family:'Syne',sans-serif;font-size:18px;font-weight:700;margin-bottom:10px;}
+.mcp-box p{color:#b8d4f8;margin-bottom:8px;font-size:13.5px;}
+.mcp-pill{display:inline-block;background:#1a3a6e;border:1px solid #4a9eff;border-radius:4px;padding:3px 10px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#7ab8ff;margin:3px;}
+
+/* Highlight box */
+.highlight-box{background:var(--purple-bg);border:1px solid var(--purple-border);border-left:4px solid var(--purple);border-radius:0 8px 8px 0;padding:16px 20px;margin:18px 0;}
+.highlight-box h3{color:var(--purple);margin-top:0;}
+.highlight-box p{margin:0 0 6px;color:#3d3b36;font-size:13.5px;}
+.highlight-box p:last-child{margin:0;}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div style="margin-bottom:52px;border-bottom:1px solid var(--border2);padding-bottom:40px;">
+  <div class="header-meta">
+    <span class="badge badge-blue">Research Notes</span>
+    <span class="badge badge-purple">Linear</span>
+    <span class="badge badge-teal">AI · Agent · MCP · Context</span>
+    <span class="badge badge-gray">QPM / SA — May 2026</span>
+  </div>
+  <h1>Linear AI</h1>
+  <p style="font-size:17px;color:var(--muted);margin-top:14px;font-weight:300;max-width:700px;">
+    Personal research notes on Linear Agent, Triage Intelligence, Code Intelligence, and Linear's vision for AI-native product development. Includes deep dives into architecture, MCP integration, and execution vectors.
+  </p>
+  <p style="margin-top:12px;font-size:13px;color:var(--faint);">Sources: Linear Changelog, Docs, Blog (linear.app/now), CEO Letter, and official product pages</p>
+</div>
+
+<!-- TOC -->
+<div class="toc">
+  <h4>Contents</h4>
+  <ol>
+    <li><a href="#vision">Linear's AI Vision: Context → Execution</a></li>
+    <li><a href="#linear-agent">Linear Agent — the core AI product</a></li>
+    <li><a href="#agent-anatomy">Agent Anatomy: Chat, Skills, Automations, MCP</a></li>
+    <li><a href="#triage-intelligence">Triage Intelligence — automated issue processing</a></li>
+    <li><a href="#code-intelligence">Code Intelligence — codebase awareness</a></li>
+    <li><a href="#coding-agents">Integration with external coding agents</a></li>
+    <li><a href="#linear-asks">Linear Asks — feedback collection</a></li>
+    <li><a href="#mcp-ecosystem">MCP Ecosystem — 16+ integrations</a></li>
+    <li><a href="#pricing-availability">Pricing & Availability</a></li>
+    <li><a href="#vector">Linear's AI Development Vector</a></li>
+  </ol>
+</div>
+
+<!-- ===== 1. VISION ===== -->
+<span class="section-label" id="vision">01</span>
+<h2>Linear's AI Vision: Context → Execution</h2>
+
+<div class="highlight-box">
+  <h3>Issue Tracking is Dead</h3>
+  <p><strong>Karri Saarinen, CEO (March 24, 2026):</strong> "Issue tracking was built for a handoff model of software development... Linear is becoming: a shared product system that turns context into execution."</p>
+  <p style="margin-top:12px;">Linear's thesis: Traditional issue tracking creates overhead and process. Agents compress this by absorbing procedural work. People spend more time on intent, judgment, and taste — less time managing mechanics.</p>
+</div>
+
+<p style="margin-top:16px;"><strong>Evidence of agent adoption:</strong></p>
+<ul>
+  <li>Coding agents installed in 75%+ of Linear enterprise workspaces</li>
+  <li>In last 3 months: volume of work completed by agents grew 5x</li>
+  <li>Agents authored nearly 25% of new issues in those workspaces</li>
+  <li>Example: Ramp's internal coding agent now writes 60%+ of merged PRs</li>
+  <li>Example: Coinbase deleted IDEs for 2 weeks — all work via agents in Linear</li>
+</ul>
+
+<div class="card-grid">
+  <div class="cb cb-blue" style="margin:0;margin-top:16px;">
+    <span class="cb-tag">System Design Shift</span>
+    <h3>From Handoffs to Context</h3>
+    <p style="font-size:13.5px;">Old model: PM → scope → hand off → Eng → implement → hand off → QA. Each handoff loses context.</p>
+    <p style="font-size:13.5px;margin-top:8px;color:var(--muted);">New model: Shared product context (feedback, decisions, plans, code) → humans + agents work from same system → agents handle procedural work → execution moves faster.</p>
+  </div>
+  <div class="cb cb-purple" style="margin:0;margin-top:16px;">
+    <span class="cb-tag">Who's building this</span>
+    <h3>Linear as Platform</h3>
+    <p style="font-size:13.5px;">Linear is the "shared product system" that holds:</p>
+    <ul style="font-size:13.5px;margin:8px 0;padding-left:16px;">
+      <li>Customer feedback (Linear Asks, Customer Requests)</li>
+      <li>Strategic intent (projects, initiatives, milestones)</li>
+      <li>Execution plans (issues, cycles, dependencies)</li>
+      <li>Implementation evidence (code, PRs, releases)</li>
+    </ul>
+    <p style="font-size:13.5px;color:var(--muted);margin-top:8px;">Agents read all of it. Humans decide what to build; agents build it.</p>
+  </div>
+</div>
+
+<!-- ===== 2. LINEAR AGENT ===== -->
+<hr>
+<span class="section-label" id="linear-agent">02</span>
+<h2>Linear Agent — The Core AI Product</h2>
+
+<p><strong>Status:</strong> <span class="feat-ga">Public beta, March 2026</span> · Included on all plans (base chat) · Automations/Code Intelligence on Business+ · <strong>Free during beta.</strong></p>
+
+<p style="margin-top:12px;"><strong>What it is:</strong> A conversational AI teammate that lives inside Linear. It understands your workspace context (issues, projects, history, decisions) and can take action on your behalf. Available:</p>
+<ul>
+  <li>In dedicated chat: <code>⌘/Ctrl + J</code> from app</li>
+  <li>Inline in comments: <code>@Linear</code> mention</li>
+  <li>In Slack: <code>@Linear</code> in any channel</li>
+  <li>In Microsoft Teams: <code>@Linear</code> in Teams channels</li>
+</ul>
+
+<div class="card-grid">
+  <div class="cb cb-teal" style="margin:0;">
+    <span class="cb-tag">Chat surface</span>
+    <h3>Dedicated Agent Chat</h3>
+    <p style="font-size:13.5px;">Main conversational interface. Persistent chat history grouped by recency. Can open multiple tabs for multi-tasking. Shows agent reasoning in real time as it works.</p>
+    <p style="font-size:13.5px;margin-top:8px;color:var(--muted);">Example prompts:<br/>"Summarize project progress with risks and next steps"<br/>"Which issues are at risk of rolling over?"<br/>"Draft a stakeholder update on outcomes"</p>
+  </div>
+  <div class="cb cb-green" style="margin:0;">
+    <span class="cb-tag">Inline surface</span>
+    <h3>@Linear in Comments</h3>
+    <p style="font-size:13.5px;">When drafting a comment, mention @Linear to co-author. Useful for status updates, summaries, decision recaps — results live on issue for team visibility.</p>
+    <p style="font-size:13.5px;margin-top:8px;color:var(--muted);">Example: Writing an issue comment, ask Linear to "Turn these notes into a weekly update"</p>
+  </div>
+</div>
+
+<!-- ===== 3. AGENT ANATOMY ===== -->
+<hr>
+<span class="section-label" id="agent-anatomy">03</span>
+<h2>Agent Anatomy: Chat, Skills, Automations, MCP</h2>
+
+<div class="anatomy">
+  <div class="anatomy-block">
+    <div class="anatomy-label" style="color:var(--blue);">Base Capabilities</div>
+    <div class="anatomy-desc">Read workspace data, answer questions, create/update issues, post comments. Works on all plans.</div>
+  </div>
+  <div class="anatomy-block">
+    <div class="anatomy-label" style="color:var(--purple);">Skills (reusable workflows)</div>
+    <div class="anatomy-desc">Save successful agent interactions as skills. Trigger manually with / or let agent auto-apply when relevant. Repeatable, focused workflows.</div>
+  </div>
+  <div class="anatomy-block">
+    <div class="anatomy-label" style="color:var(--teal);">Automations</div>
+    <div class="anatomy-desc">Run agent workflows automatically when issues enter triage. Define open-ended instructions. Business+ only.</div>
+  </div>
+  <div class="anatomy-block">
+    <div class="anatomy-label" style="color:var(--green);">Guidance</div>
+    <div class="anatomy-desc">Set workspace/team/personal instructions. Tell agent how to write issues, what fields to include, tone preferences.</div>
+  </div>
+  <div class="anatomy-block">
+    <div class="anatomy-label" style="color:var(--amber);">MCP Servers</div>
+    <div class="anatomy-desc">Connect external tools (Slack, GitHub, Notion, Datadog, etc.) so agent can access data beyond Linear.</div>
+  </div>
+  <div class="anatomy-block">
+    <div class="anatomy-label" style="color:var(--red);">Permissions</div>
+    <div class="anatomy-desc">Agent respects existing workspace permissions. Can only read/change what the user can access.</div>
+  </div>
+</div>
+
+<h3 style="margin-top:28px;">Skills — Reusable Agent Workflows</h3>
+
+<p><strong>How it works:</strong> After a successful agent conversation, ask Linear to save it as a skill. Skills are:</p>
+<ul>
+  <li><strong>Personal:</strong> Only you can use them (default)</li>
+  <li><strong>Repeatable:</strong> Invoke with slash command or auto-trigger</li>
+  <li><strong>Focused:</strong> One job well. Can have multiple steps, but shouldn't pack too much.</li>
+  <li><strong>Refineable:</strong> Ask Linear to optimize — remove unnecessary steps</li>
+</ul>
+
+<p style="margin-top:12px;"><strong>Out-of-box Linear-suggested skills:</strong></p>
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>Skill</th><th>Example Use</th></tr></thead>
+<tbody>
+<tr><td class="fn">My weekly focus areas</td><td>Review assigned issues, projects, deadlines. Recommend focus based on blockers/priority.</td></tr>
+<tr><td class="fn">New project update</td><td>Draft concise update. Call out scope changes, risks, evidence-based progress.</td></tr>
+<tr><td class="fn">Project creation from PRD</td><td>Turn a PRD into project structure. Create issues, organize into milestones.</td></tr>
+<tr><td class="fn">Split into sub-issues</td><td>Break down a large issue into actionable sub-tasks.</td></tr>
+<tr><td class="fn">Weekly standup summary</td><td>Synthesize team activity into standup notes.</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3 style="margin-top:28px;">Automations — Trigger Agents on Triage</h3>
+
+<p><strong>Status:</strong> <span class="feat-beta">Public beta, available on Business+ plans</span></p>
+
+<p style="margin-top:12px;">Run agent workflows automatically when an issue enters triage. Define open-ended instructions:</p>
+<ul>
+  <li>Agent reads the incoming issue</li>
+  <li>Applies your automation instruction</li>
+  <li>Takes action (add summary, classify, attach docs, etc.)</li>
+  <li>No human prompt needed</li>
+</ul>
+
+<p style="margin-top:12px;"><strong>Example automation:</strong> "If this issue mentions 'SSO', attach our SSO troubleshooting guide and assign to the Security team."</p>
+
+<p style="margin-top:12px;"><strong>Configure in:</strong> Team Settings → Triage → Agent behavior. Scope to specific issue types or apply workspace-wide.</p>
+
+<h3 style="margin-top:28px;">Guidance — Shape Agent Behavior</h3>
+
+<p>Set instructions at three levels:</p>
+<div class="card-grid">
+  <div class="card">
+    <h4>Workspace Guidance</h4>
+    <p style="font-size:13.5px;">Applies to everyone. Admin controls who can edit. Examples: "Keep all summaries to 100 words", "Use [Style Guide]", "Always mention customer impact".</p>
+  </div>
+  <div class="card">
+    <h4>Team Guidance</h4>
+    <p style="font-size:13.5px;">Team-specific instructions. Reference in workspace guidance. Useful for teams with unique processes.</p>
+  </div>
+  <div class="card">
+    <h4>Personal Guidance</h4>
+    <p style="font-size:13.5px;">Individual preferences (Settings → Agent personalization). Overrides workspace guidance for that user.</p>
+  </div>
+</div>
+
+<!-- ===== 4. TRIAGE INTELLIGENCE ===== -->
+<hr>
+<span class="section-label" id="triage-intelligence">04</span>
+<h2>Triage Intelligence — Automated Issue Processing</h2>
+
+<p><strong>Status:</strong> <span class="feat-ga">Public beta, September 2025</span> · Business+ plans · <span class="feat-beta">Technology preview</span></p>
+
+<p style="margin-top:12px;"><strong>What it solves:</strong> Organizing a backlog is manual work that doesn't scale. Product teams struggle with: duplicate detection, missing properties, inconsistent classification. Triage Intelligence automates this.</p>
+
+<h3 style="margin-top:20px;">Architecture: Better Search + Agentic Reasoning</h3>
+
+<div class="card">
+  <h4>The Problem: Small Models Couldn't Handle Nuance</h4>
+  <p style="font-size:13.5px;margin-bottom:8px;">Initial approach used small models (GPT-4o mini, Gemini 2.0 Flash) with rigid prompts. They worked for straightforward cases but failed on context-sensitive decisions. If something important was missing, they had no way to retrieve it.</p>
+</div>
+
+<div class="card" style="border-top:3px solid var(--green);">
+  <h4>The Solution: Agentic Architecture with Frontier Models</h4>
+  <p style="font-size:13.5px;margin-bottom:8px;"><strong>Shift to larger models:</strong> GPT-5 + Gemini 2.5 Pro. These can handle complex reasoning AND dynamically pull context.</p>
+  <p style="font-size:13.5px;"><strong>How it works:</strong></p>
+  <ul style="font-size:13.5px;margin-top:6px;">
+    <li>New issue enters triage</li>
+    <li>Search engine finds candidate related issues (via vector similarity)</li>
+    <li>Agent model reasons: duplicate? related? new?</li>
+    <li>If uncertain, agent pulls additional context from workspace</li>
+    <li>Model evaluates, suggests: links, labels, assignee</li>
+    <li>Explains reasoning in plain language</li>
+  </ul>
+</div>
+
+<h3 style="margin-top:20px;">Triage Intelligence Output</h3>
+
+<div class="card-grid">
+  <div class="cb cb-blue" style="margin:0;">
+    <span class="cb-tag">Detection</span>
+    <h3>Duplicate Detection</h3>
+    <p style="font-size:13.5px;">Identifies when incoming issue is likely duplicate of existing work.</p>
+  </div>
+  <div class="cb cb-purple" style="margin:0;">
+    <span class="cb-tag">Linking</span>
+    <h3>Related Issues</h3>
+    <p style="font-size:13.5px;">Suggests related issues in backlog. Helps see connected work at a glance.</p>
+  </div>
+  <div class="cb cb-teal" style="margin:0;">
+    <span class="cb-tag">Classification</span>
+    <h3>Property Suggestions</h3>
+    <p style="font-size:13.5px;">Recommends labels, assignee, project based on similar issues in history.</p>
+  </div>
+</div>
+
+<h3 style="margin-top:20px;">Design for Trust & Transparency</h3>
+
+<p>Larger models are slower than Linear's usual deterministic systems. Linear designed UI to make that acceptable:</p>
+
+<ul style="margin-top:12px;">
+  <li><strong>Visible reasoning:</strong> Hover over suggestion → see full explanation + alternatives</li>
+  <li><strong>Thinking state:</strong> Shows progress indicator + timer so system doesn't feel idle</li>
+  <li><strong>Thinking panel:</strong> Deep dive view showing all context the model pulled in, decisions made, how guidance shaped outcome</li>
+  <li><strong>Additional Guidance:</strong> Fine-tune at workspace/team level with plain language prompts. Steer suggestions toward your priorities.</li>
+</ul>
+
+<div class="callout callout-blue" style="margin-top:16px;">
+  <p><strong>Principle:</strong> "Build trust, keep reasoning transparent, make it feel like part of Linear." — Linear team's Agent Interaction Guidelines</p>
+</div>
+
+<!-- ===== 5. CODE INTELLIGENCE ===== -->
+<hr>
+<span class="section-label" id="code-intelligence">05</span>
+<h2>Code Intelligence — Codebase Awareness</h2>
+
+<p><strong>Status:</strong> <span class="feat-beta">Public beta, May 14, 2026</span> · Business+ plans · <span class="feat-beta">Free during beta</span></p>
+
+<p style="margin-top:12px;"><strong>What it is:</strong> Gives Linear Agent controlled read access to your codebase. Agent can understand implementation details, architecture, recent changes — without digging through GitHub.</p>
+
+<h3 style="margin-top:20px;">What Linear Agent Can Do with Code Intelligence</h3>
+
+<ul>
+  <li><strong>Answer technical questions:</strong> "How does the payments service handle failed transactions?"</li>
+  <li><strong>Non-technical → technical:</strong> PMs ask "How is this feature implemented?" without finding an engineer</li>
+  <li><strong>Root cause analysis:</strong> "What changed in the auth flow recently? Could it cause this bug?"</li>
+  <li><strong>Spec writing:</strong> PMs write sharper specs informed by current implementation</li>
+  <li><strong>Support/Sales:</strong> Answer customer questions about product behavior with more confidence</li>
+</ul>
+
+<h3 style="margin-top:20px;">Setup</h3>
+
+<div class="steps">
+  <div class="step">
+    <div class="step-n">1</div>
+    <div class="step-c">
+      <h3>Install GitHub integration</h3>
+      <p>Workspace admin enables GitHub integration in Linear settings. Authorize Linear to read repository content.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-n">2</div>
+    <div class="step-c">
+      <h3>Enable Code Intelligence</h3>
+      <p>Go to Settings → AI → Code Intelligence. Turn it on.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-n">3</div>
+    <div class="step-c">
+      <h3>Choose repositories</h3>
+      <p>Admin selects which repos agent can access. Choose whether all workspace members can query or only those with GitHub access.</p>
+    </div>
+  </div>
+</div>
+
+<div class="callout callout-amber" style="margin-top:16px;">
+  <p><strong>Scope:</strong> Code Intelligence respects existing GitHub permissions. If a workspace admin restricts to "only users with GitHub access", the agent only gives code answers to those users.</p>
+</div>
+
+<!-- ===== 6. EXTERNAL CODING AGENTS ===== -->
+<hr>
+<span class="section-label" id="coding-agents">06</span>
+<h2>Integration with External Coding Agents</h2>
+
+<p>Linear's vision isn't to build its own code-writing AI. Instead, it's become the integration layer for best-in-class coding agents. You can assign Linear issues directly to:</p>
+
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>Agent</th><th>What it does</th><th>How to trigger</th></tr></thead>
+<tbody>
+<tr><td class="fn">Cursor</td><td>Turns issues into pull requests</td><td>Open issue in Cursor with full context</td></tr>
+<tr><td class="fn">GitHub Copilot</td><td>Converts Linear issues to GitHub PRs</td><td>Direct integration via settings</td></tr>
+<tr><td class="fn">OpenAI Codex</td><td>Answers Qs, fixes bugs, explores ideas</td><td>Open in coding tool menu</td></tr>
+<tr><td class="fn">Devin</td><td>Scopes issues and drafts PRs</td><td>Assign to agent in Linear</td></tr>
+<tr><td class="fn">Sentry Seer</td><td>Root cause analysis and fixes</td><td>Triggered on error alerts</td></tr>
+<tr><td class="fn">ChatPRD</td><td>Writes requirements, gives feedback</td><td>Manual or automation-triggered</td></tr>
+<tr><td class="fn">Warp</td><td>Investigates bugs, suggests fixes</td><td>Open issue in Warp CLI</td></tr>
+<tr><td class="fn">Factory</td><td>Codes, tests, creates PRs</td><td>Assign issue to agent</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3 style="margin-top:20px;">How It Works: Deep-link + Context</h3>
+
+<p><strong>The problem:</strong> Developers used to manually copy issue text → paste into their editor → lose context → rewrite spec → implement.</p>
+
+<p style="margin-top:12px;"><strong>Linear's solution:</strong> Press <code>⌘ Option .</code> (Mac) or <code>Ctrl Alt .</code> (Windows) on any issue → launches your configured coding tool with:</p>
+
+<ul style="margin-top:8px;">
+  <li>Full issue ID + title</li>
+  <li>Description + all comments</li>
+  <li>Linked references (related issues, docs)</li>
+  <li>Issue images + attachments</li>
+  <li>Custom prompt template (editable per workspace)</li>
+</ul>
+
+<p style="margin-top:12px;"><strong>Supported tools (15+):</strong> Claude Code, Codex, Cursor, GitHub Copilot, Devin, Lovable, Replit, v0, Zed, Amp, Conductor, OpenCode, Warp, Windsurf, Netlify Agent Runners, and custom launchers.</p>
+
+<h3 style="margin-top:20px;">Mobile Agent Sessions</h3>
+
+<p>After delegating an issue to a coding agent, you can see the agent's session on mobile:</p>
+<ul>
+  <li>View agent's chain of thought in real time</li>
+  <li>See how agent is reasoning through the problem</li>
+  <li>Review completed sessions asynchronously</li>
+  <li>Send follow-up messages to steer work on the go</li>
+</ul>
+
+<!-- ===== 7. LINEAR ASKS ===== -->
+<hr>
+<span class="section-label" id="linear-asks">07</span>
+<h2>Linear Asks — Feedback Collection</h2>
+
+<p><strong>Status:</strong> <span class="feat-ga">General Availability</span> · Enterprise feature (web forms) · Slack/email always available</p>
+
+<p style="margin-top:12px;"><strong>What it is:</strong> System to capture internal and external requests. Convert unstructured input (Slack, email, web form) into structured Linear issues.</p>
+
+<h3 style="margin-top:20px;">Input Channels</h3>
+
+<div class="card-grid">
+  <div class="card">
+    <h4>Slack / Teams integration</h4>
+    <p style="font-size:13.5px;">Mention @Linear in Slack → "file a bug" or "create a feature request". Linear creates issue in triage.</p>
+  </div>
+  <div class="card">
+    <h4>Email capture</h4>
+    <p style="font-size:13.5px;">Forward emails to Linear inbox. Auto-convert to issue. Submitter stays in email loop.</p>
+  </div>
+  <div class="card">
+    <h4>Custom web forms</h4>
+    <p style="font-size:13.5px;"><strong>Enterprise only.</strong> Teams create Asks page with custom forms (bug reports, feature requests, HR, IT tasks). Anyone in company can submit without Linear account.</p>
+  </div>
+</div>
+
+<p style="margin-top:16px;"><strong>Key feature: Triage Intelligence routing</strong></p>
+<p>When Asks are submitted, they go into triage where Triage Intelligence can:</p>
+<ul style="margin-top:8px;">
+  <li>Detect duplicates automatically</li>
+  <li>Suggest the right team</li>
+  <li>Apply labels + properties</li>
+  <li>Link related work</li>
+</ul>
+
+<!-- ===== 8. MCP ECOSYSTEM ===== -->
+<hr>
+<span class="section-label" id="mcp-ecosystem">08</span>
+<h2>MCP Ecosystem — 16+ Integrations</h2>
+
+<p><strong>Status:</strong> <span class="feat-ga">Public Beta, April 23, 2026</span> · Workspace-level admin setup</p>
+
+<p style="margin-top:12px;"><strong>What it is:</strong> Linear Agent can connect to MCP servers to access tools and data outside Linear. Bring external context into workflows.</p>
+
+<div class="mcp-box">
+  <h3>Available MCP Servers (16+)</h3>
+  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;">
+    <span class="mcp-pill">Amplitude</span>
+    <span class="mcp-pill">Attio</span>
+    <span class="mcp-pill">Better Stack</span>
+    <span class="mcp-pill">Datadog</span>
+    <span class="mcp-pill">GitHub</span>
+    <span class="mcp-pill">Glean</span>
+    <span class="mcp-pill">Granola</span>
+    <span class="mcp-pill">HubSpot</span>
+    <span class="mcp-pill">incident.io</span>
+    <span class="mcp-pill">Intercom</span>
+    <span class="mcp-pill">Jam</span>
+    <span class="mcp-pill">Notion</span>
+    <span class="mcp-pill">PostHog</span>
+    <span class="mcp-pill">Sentry</span>
+    <span class="mcp-pill">Slack</span>
+    <span class="mcp-pill">Stripe</span>
+  </div>
+  <p style="color:#7ab8ff;margin-top:14px;font-size:13px;">+ Custom MCP servers via HTTPS URL</p>
+</div>
+
+<h3 style="margin-top:28px;">Use Case Examples</h3>
+
+<ul>
+  <li><strong>Granola:</strong> "Pull meeting takeaways from my last 3 standup notes and create follow-up issues"</li>
+  <li><strong>Glean:</strong> "Look up the enterprise context for this customer request and write a more complete spec"</li>
+  <li><strong>Notion:</strong> "Find all interview notes about [feature]. Turn them into customer requests."</li>
+  <li><strong>PostHog:</strong> "Check user data — is this feature actually being used? Validate the hypothesis before we prioritize it."</li>
+  <li><strong>GitHub:</strong> "Find the PR that introduced this change. What was the original intent?"</li>
+  <li><strong>Datadog:</strong> "Are there recent errors in production related to this workflow?"</li>
+  <li><strong>Sentry:</strong> "Investigate this crash. Summarize the likely root cause."</li>
+  <li><strong>Slack:</strong> "Create issues from the discussion in #customer-feedback"</li>
+</ul>
+
+<h3 style="margin-top:20px;">Admin Setup</h3>
+
+<div class="steps">
+  <div class="step">
+    <div class="step-n">1</div>
+    <div class="step-c">
+      <h3>Enable MCP in workspace</h3>
+      <p>Settings → AI & Agents → Enable MCP servers toggle</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-n">2</div>
+    <div class="step-c">
+      <h3>Approve allowed servers</h3>
+      <p>Admin chooses which MCP servers users can connect to. Restrict to approved list or allow custom servers.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-n">3</div>
+    <div class="step-c">
+      <h3>Users connect their accounts</h3>
+      <p>Settings → Agent personalization → Add server. Complete OAuth if needed.</p>
+    </div>
+  </div>
+</div>
+
+<div class="callout callout-green" style="margin-top:16px;">
+  <p><strong>Permission model:</strong> Agent can only call MCP servers that the user has connected. If you haven't authenticated with Notion, Linear Agent can't access your Notion workspace — even if workspace admin enabled Notion.</p>
+</div>
+
+<!-- ===== 9. PRICING ===== -->
+<hr>
+<span class="section-label" id="pricing-availability">09</span>
+<h2>Pricing & Availability</h2>
+
+<h3 style="margin-top:20px;">Feature Matrix by Plan</h3>
+
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>Feature</th><th>Starter</th><th>Pro</th><th>Business</th><th>Enterprise</th></tr></thead>
+<tbody>
+<tr><td class="fn">Linear Agent (chat/comments)</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td></tr>
+<tr><td class="fn">Skills (reusable workflows)</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td></tr>
+<tr><td class="fn">Triage Intelligence</td><td>—</td><td>—</td><td>✓</td><td>✓</td></tr>
+<tr><td class="fn">Code Intelligence</td><td>—</td><td>—</td><td>✓ Beta</td><td>✓ Beta</td></tr>
+<tr><td class="fn">Agent Automations</td><td>—</td><td>—</td><td>✓</td><td>✓</td></tr>
+<tr><td class="fn">MCP Servers</td><td>—</td><td>—</td><td>✓</td><td>✓</td></tr>
+<tr><td class="fn">Web forms for Asks</td><td>—</td><td>—</td><td>—</td><td>✓</td></tr>
+<tr><td class="fn">Releases</td><td>—</td><td>—</td><td>✓ (up to 15)</td><td>✓ (unlimited)</td></tr>
+</tbody>
+</table>
+</div>
+
+<p style="margin-top:16px;"><strong>Pricing strategy (Linear's commitment):</strong></p>
+<ul>
+  <li><strong>During beta:</strong> All features free</li>
+  <li><strong>General availability:</strong> Base chat functionality remains in seat price</li>
+  <li><strong>High-compute features:</strong> Automations + Code Intelligence may move to usage-based pricing (per-token after threshold)</li>
+  <li><strong>No surprise pricing:</strong> Clear 30-day advance notice before changes</li>
+</ul>
+
+<!-- ===== 10. VECTOR ===== -->
+<hr>
+<span class="section-label" id="vector">10</span>
+<h2>Linear's AI Development Vector</h2>
+
+<p>Based on CEO letter (March 2026), roadmap, and recent releases, Linear's AI strategy is:</p>
+
+<div class="card-grid-3" style="margin-top:16px;">
+  <div class="cb cb-blue" style="margin:0;">
+    <span class="cb-tag">Near-term (shipped/beta)</span>
+    <h3>Context Compression</h3>
+    <p style="font-size:13.5px;">Linear Agent reads all your workspace data and gives synthesized answers. Triage Intelligence organizes incoming issues automatically. Code Intelligence brings codebase into loop.</p>
+  </div>
+  <div class="cb cb-purple" style="margin:0;">
+    <span class="cb-tag">Next (coming 2026)</span>
+    <h3>Agentic Workflows</h3>
+    <p style="font-size:13.5px;">More agents take autonomous action. Automations expand beyond triage. Code-writing agent (Linear Coding Agent) coming. Agents collaborate with humans as first-class team members.</p>
+  </div>
+  <div class="cb cb-teal" style="margin:0;">
+    <span class="cb-tag">Long-term vision</span>
+    <h3>Self-driving SaaS</h3>
+    <p style="font-size:13.5px;">Agents don't just answer questions — they proactively move work forward. No constant human input needed. Product development becomes: context → execution (agents handle it).</p>
+  </div>
+</div>
+
+<h3 style="margin-top:28px;">Announced Roadmap Items</h3>
+
+<div class="card">
+  <h4 style="margin-top:0;">Code Diffs</h4>
+  <p style="font-size:13.5px;">Modern code review interface built for humans + agents. AI can understand code changes and participate in review process.</p>
+</div>
+
+<div class="card">
+  <h4>Linear Coding Agent</h4>
+  <p style="font-size:13.5px;">Native Linear agent that writes code directly. Powered by frontier models + Linear context + native tools. Integrated agent session shows chain of thought.</p>
+</div>
+
+<div class="card">
+  <h4>Releases Integration</h4>
+  <p style="font-size:13.5px;">Track deployments directly from Linear. Link issues to releases. Auto-generate release notes with Linear Agent. Know what's live vs. merged.</p>
+</div>
+
+<div class="card">
+  <h4>Multi-level Context Awareness</h4>
+  <p style="font-size:13.5px;">Agents understand full system architecture, customer feedback loops, product strategy, code implementation. All in one "Teamwork Graph".</p>
+</div>
+
+<h3 style="margin-top:28px;">Competitive Positioning vs. JIRA/Asana/ClickUp</h3>
+
+<div class="callout callout-blue">
+  <p><strong>Linear's bet:</strong> "Issue tracking is dead." Don't be the best issue tracker. Be the fastest context-to-execution system for AI-native teams.</p>
+  <p style="margin-top:10px;"><strong>How that shows up:</strong></p>
+  <ul style="font-size:13.5px;margin-top:8px;">
+    <li>Agent-first UI (not bolt-on chat in sidebar)</li>
+    <li>Deep codebase integration (Code Intelligence)</li>
+    <li>Emphasis on coding agent partnerships (Cursor, Codex, GitHub Copilot)</li>
+    <li>Speed as first principle (even with LLM reasoning)</li>
+    <li>No workflow builder required — agents handle automation</li>
+  </ul>
+</div>
+
+<h3 style="margin-top:28px;">Evidence of Traction</h3>
+
+<p><strong>Customer adoption of agents:</strong></p>
+<ul>
+  <li><strong>Coinbase:</strong> "Delete your IDEs" experiment — all software development via agents in Linear for 2 weeks</li>
+  <li><strong>Ramp:</strong> Internal coding agent writes 60%+ of merged PRs. Linear is the issue + context system.</li>
+  <li><strong>Cars24:</strong> Migrated from Jira. Reason: Linear's AI-native approach vs. Jira's bolt-on features</li>
+  <li><strong>Mercury:</strong> 6-month journey building with Linear + agents documented on blog</li>
+  <li><strong>Cursor:</strong> Direct integration so issues can be assigned to Cursor agent</li>
+</ul>
+
+<p style="margin-top:16px;"><strong>Linear's own dogfooding:</strong> Using Linear Agent internally in CX, Product, Engineering with specific workflows that proved useful.</p>
+
+<!-- ===== SUMMARY ===== -->
+<hr>
+<h2 style="margin-top:52px;">Summary: Linear's AI Architecture</h2>
+
+<div class="card">
+  <h4 style="margin-top:0;margin-bottom:12px;">Core Thesis</h4>
+  <p style="margin:0;font-size:13.5px;">Issue tracking created overhead. Agents + rich context can eliminate that overhead. Linear = the shared product system where context lives + agents execute.</p>
+</div>
+
+<div class="card" style="border-top:3px solid var(--blue);">
+  <h4 style="margin-top:0;margin-bottom:12px;">Three Pillars of AI</h4>
+  <ul style="font-size:13.5px;margin:0;">
+    <li><strong>1. Linear Agent:</strong> Conversational interface. Read workspace, take action, learn skills.</li>
+    <li><strong>2. Triage Intelligence:</strong> Automatic issue organization. Detect duplicates, link related, classify.</li>
+    <li><strong>3. Code Intelligence:</strong> Codebase awareness. Agents understand implementation, architecture, changes.</li>
+  </ul>
+</div>
+
+<div class="card" style="border-top:3px solid var(--purple);">
+  <h4 style="margin-top:0;margin-bottom:12px;">Execution Vectors</h4>
+  <ul style="font-size:13.5px;margin:0;">
+    <li><strong>MCP Integration:</strong> Bring external context (Slack, GitHub, Notion, Datadog, etc.) into Linear workflows</li>
+    <li><strong>Coding Agent Partnerships:</strong> Deep links + context hand-off to Cursor, Codex, GitHub Copilot</li>
+    <li><strong>Automations at Triage:</strong> Agent workflows trigger on issue arrival, not manual prompts</li>
+    <li><strong>Releases Tracking:</strong> Know what's actually live to customers (not just merged)</li>
+  </ul>
+</div>
+
+<div class="card" style="border-top:3px solid var(--teal);">
+  <h4 style="margin-top:0;margin-bottom:12px;">Where Linear Differs from Competitors</h4>
+  <ul style="font-size:13.5px;margin:0;">
+    <li>Agent is first-class UI element, not an addon in sidebar</li>
+    <li>Deep code access (Code Intelligence) — not just issue text</li>
+    <li>Emphasis on "self-driving" workflows — agents move work forward autonomously</li>
+    <li>MCP ecosystem for any external tool (not pre-built integrations only)</li>
+    <li>Speed + simplicity over feature richness</li>
+  </ul>
+</div>
+
+</body>
+</html>

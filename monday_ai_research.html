@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>monday.com AI — Research Notes</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap');
+:root {
+  --bg:#fafaf8; --surface:#fff; --surface2:#f4f3ef; --surface3:#eeecea;
+  --border:#e8e6e0; --border2:#d0cdc5;
+  --text:#1a1916; --muted:#7a7870; --faint:#b0ada6;
+  --blue:#0052cc; --blue-bg:#e8f0fe; --blue-border:#aec6f0; --blue-dark:#003d99;
+  --green:#006644; --green-bg:#e3f5ec; --green-border:#a3d9b8;
+  --amber:#974400; --amber-bg:#fff3e0; --amber-border:#fcd08a;
+  --red:#c0392b; --red-bg:#fde8e6; --red-border:#f5aba3;
+  --purple:#5243aa; --purple-bg:#ede8fb; --purple-border:#c3b7f2;
+  --teal:#006475; --teal-bg:#e0f5f8; --teal-border:#95d8e4;
+  --lime:#4a6300; --lime-bg:#eef4d6; --lime-border:#c5d68a;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:14.5px;line-height:1.7;max-width:1080px;margin:0 auto;padding:56px 36px 120px;}
+h1{font-family:'Syne',sans-serif;font-size:40px;font-weight:800;line-height:1.1;letter-spacing:-.5px;}
+h2{font-family:'Syne',sans-serif;font-size:22px;font-weight:700;color:var(--text);margin:52px 0 18px;padding-top:8px;}
+h3{font-family:'Inter',sans-serif;font-size:15px;font-weight:500;color:var(--text);margin:20px 0 8px;}
+h4{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin:18px 0 8px;font-weight:400;}
+p{color:#3d3b36;margin-bottom:10px;}
+a{color:var(--blue);text-decoration:none;}a:hover{text-decoration:underline;}
+code{font-family:'JetBrains Mono',monospace;font-size:12px;background:var(--surface2);padding:1px 6px;border-radius:3px;color:var(--lime);}
+pre{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:16px 18px;font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.6;overflow-x:auto;margin:12px 0;}
+ul,ol{padding-left:20px;margin-bottom:10px;}
+li{color:#3d3b36;margin-bottom:5px;}
+strong{color:var(--text);font-weight:500;}
+hr{border:none;border-top:1px solid var(--border2);margin:52px 0;}
+
+.header-meta{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;align-items:center;}
+.badge{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:3px 11px;border-radius:3px;border:1px solid;display:inline-block;}
+.badge-blue{color:var(--blue);border-color:var(--blue-border);background:var(--blue-bg);}
+.badge-green{color:var(--green);border-color:var(--green-border);background:var(--green-bg);}
+.badge-amber{color:var(--amber);border-color:var(--amber-border);background:var(--amber-bg);}
+.badge-purple{color:var(--purple);border-color:var(--purple-border);background:var(--purple-bg);}
+.badge-lime{color:var(--lime);border-color:var(--lime-border);background:var(--lime-bg);}
+.badge-gray{color:var(--muted);border-color:var(--border2);background:var(--surface2);}
+
+.section-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--lime);margin-bottom:6px;display:block;}
+
+.callout{border-radius:8px;padding:14px 18px;margin:18px 0;border:1px solid;}
+.callout p{margin:0;font-size:13.5px;}
+.callout-blue{background:var(--blue-bg);border-color:var(--blue-border);} .callout-blue p{color:#1a3a6e;}
+.callout-amber{background:var(--amber-bg);border-color:var(--amber-border);} .callout-amber p{color:#5a2800;}
+.callout-green{background:var(--green-bg);border-color:var(--green-border);} .callout-green p{color:#003320;}
+.callout-red{background:var(--red-bg);border-color:var(--red-border);} .callout-red p{color:#6b1000;}
+.callout-lime{background:var(--lime-bg);border-color:var(--lime-border);} .callout-lime p{color:#2c3a00;}
+.callout-gray{background:var(--surface2);border-color:var(--border2);} .callout-gray p{color:var(--muted);}
+
+.cb{border-left:4px solid;padding:16px 20px;border-radius:0 8px 8px 0;margin-bottom:14px;background:var(--surface);border-top:1px solid var(--border);border-right:1px solid var(--border);border-bottom:1px solid var(--border);}
+.cb h3{margin:0 0 8px;font-size:16px;font-family:'Syne',sans-serif;font-weight:700;}
+.cb-tag{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:3px;display:inline-block;margin-bottom:10px;}
+.cb-blue{border-left-color:var(--blue);} .cb-blue h3{color:var(--blue);} .cb-blue .cb-tag{background:var(--blue-bg);color:var(--blue);}
+.cb-purple{border-left-color:var(--purple);} .cb-purple h3{color:var(--purple);} .cb-purple .cb-tag{background:var(--purple-bg);color:var(--purple);}
+.cb-teal{border-left-color:var(--teal);} .cb-teal h3{color:var(--teal);} .cb-teal .cb-tag{background:var(--teal-bg);color:var(--teal);}
+.cb-green{border-left-color:var(--green);} .cb-green h3{color:var(--green);} .cb-green .cb-tag{background:var(--green-bg);color:var(--green);}
+.cb-amber{border-left-color:var(--amber);} .cb-amber h3{color:var(--amber);} .cb-amber .cb-tag{background:var(--amber-bg);color:var(--amber);}
+.cb-lime{border-left-color:var(--lime);} .cb-lime h3{color:var(--lime);} .cb-lime .cb-tag{background:var(--lime-bg);color:var(--lime);}
+
+.card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:18px 22px;margin-bottom:14px;}
+.card-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0;}
+.card-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin:14px 0;}
+@media(max-width:760px){.card-grid,.card-grid-3{grid-template-columns:1fr;}}
+
+.ss-block{margin:20px 0;}
+.ss-label{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:7px;letter-spacing:.06em;display:flex;align-items:center;gap:7px;}
+.ss-label::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--amber);}
+.ss-placeholder{width:100%;border:1px dashed var(--border2);border-radius:8px;padding:30px 18px;text-align:center;background:var(--surface2);color:var(--muted);font-size:12px;font-family:'JetBrains Mono',monospace;}
+.ss-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:20px 0;}
+@media(max-width:760px){.ss-grid{grid-template-columns:1fr;}}
+
+.mcp-box{background:#0a1f3a;border:2px solid #4a9eff;border-radius:10px;padding:24px 28px;margin:22px 0;}
+.mcp-box h3{color:#4a9eff;font-family:'Syne',sans-serif;font-size:18px;font-weight:700;margin-bottom:10px;}
+.mcp-box p{color:#b8d4f8;margin-bottom:8px;font-size:13.5px;}
+.mcp-pill{display:inline-block;background:#1a3a6e;border:1px solid #4a9eff;border-radius:4px;padding:3px 10px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#7ab8ff;margin:3px;}
+
+.formula{background:var(--surface2);border:1px solid var(--border2);border-radius:8px;padding:18px 22px;margin:14px 0;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.8;}
+.formula .line{display:flex;gap:10px;margin:3px 0;}
+.formula .op{color:var(--lime);font-weight:500;}
+.formula .val{color:var(--text);}
+.formula .comment{color:var(--faint);font-size:11px;margin-left:8px;}
+
+.anatomy{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:14px 0;}
+@media(max-width:760px){.anatomy{grid-template-columns:1fr;}}
+.anatomy-block{border:1px solid var(--border);border-radius:8px;padding:14px 16px;background:var(--surface);}
+.anatomy-label{font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;}
+.anatomy-desc{font-size:12.5px;color:var(--muted);line-height:1.5;}
+
+.steps{margin:12px 0;}
+.step{display:flex;gap:14px;padding:12px 0;border-bottom:1px solid var(--border);}
+.step:last-child{border-bottom:none;}
+.step-n{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--lime-border);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--lime);flex-shrink:0;margin-top:2px;}
+.step-c h3{margin:0 0 4px;font-size:14px;}
+.step-c p{margin:0;font-size:13.5px;color:var(--muted);}
+
+.plan-tag{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;padding:2px 7px;border-radius:3px;letter-spacing:.04em;white-space:nowrap;}
+.plan-free{background:var(--surface2);color:var(--muted);}
+.plan-basic{background:var(--blue-bg);color:var(--blue);}
+.plan-std{background:var(--purple-bg);color:var(--purple);}
+.plan-pro{background:var(--lime-bg);color:var(--lime);}
+.plan-e{background:#1a1916;color:#e8e6e0;}
+.plan-credits{background:var(--amber-bg);color:var(--amber);}
+.feat-ga{color:var(--green);font-family:'JetBrains Mono',monospace;font-size:11px;}
+.feat-beta{color:var(--amber);font-family:'JetBrains Mono',monospace;font-size:11px;}
+.feat-ea{color:var(--lime);font-family:'JetBrains Mono',monospace;font-size:11px;}
+.feat-deprecated{color:var(--red);font-family:'JetBrains Mono',monospace;font-size:11px;text-decoration:line-through;}
+
+.tbl-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:8px;margin:18px 0;}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:700px;}
+thead th{background:var(--surface2);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;font-weight:400;color:var(--muted);padding:10px 14px;text-align:left;border-bottom:1px solid var(--border2);white-space:nowrap;}
+tbody td{padding:10px 14px;border-bottom:1px solid var(--border);vertical-align:top;color:#3d3b36;}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr:hover td{background:var(--surface2);}
+.fn{font-weight:500;color:var(--text);}
+
+.quote{background:var(--surface);border-left:3px solid var(--lime);padding:14px 18px;margin:14px 0;font-style:italic;color:#3d3b36;font-size:13.5px;}
+.quote .attrib{display:block;margin-top:8px;font-style:normal;font-size:12px;color:var(--muted);}
+
+.toc{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:20px 24px;margin:28px 0 44px;}
+.toc h4{margin-top:0;}
+.toc ol{padding-left:18px;}
+.toc li{margin:4px 0;font-size:13px;}
+.toc a{color:var(--muted);}
+.toc a:hover{color:var(--lime);}
+
+.timeline{margin:18px 0;border-left:2px solid var(--lime-border);padding-left:20px;}
+.timeline-item{position:relative;margin-bottom:18px;}
+.timeline-item::before{content:"";position:absolute;left:-26px;top:6px;width:10px;height:10px;border-radius:50%;background:var(--lime);}
+.timeline-date{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--lime);letter-spacing:.04em;display:block;margin-bottom:2px;}
+.timeline-title{font-weight:500;color:var(--text);font-size:14px;display:block;margin-bottom:3px;}
+.timeline-desc{font-size:13px;color:var(--muted);}
+
+.tool-pill{display:inline-block;background:var(--surface);border:1px solid var(--border2);border-radius:14px;padding:3px 11px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text);margin:3px;}
+.tool-pill.new{border-color:var(--green-border);color:var(--green);background:var(--green-bg);}
+.tool-pill.deprecated{border-color:var(--red-border);color:var(--red);background:var(--red-bg);text-decoration:line-through;}
+
+.metric{display:inline-block;text-align:center;padding:12px 18px;background:var(--surface);border:1px solid var(--border);border-radius:8px;margin:4px;min-width:140px;}
+.metric-value{font-family:'Syne',sans-serif;font-size:22px;font-weight:700;color:var(--lime);display:block;}
+.metric-label{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.04em;text-transform:uppercase;}
+
+.brand-evolution{display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:center;margin:14px 0;}
+.brand-evolution .col{padding:14px;border-radius:8px;}
+.brand-evolution .old{background:var(--surface2);border:1px solid var(--border);}
+.brand-evolution .new{background:var(--lime-bg);border:1px solid var(--lime-border);}
+.brand-evolution .arrow{font-family:'Syne',sans-serif;font-size:24px;color:var(--lime);font-weight:700;}
+@media(max-width:760px){.brand-evolution{grid-template-columns:1fr;}.brand-evolution .arrow{text-align:center;}}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div style="margin-bottom:52px;border-bottom:1px solid var(--border2);padding-bottom:40px;">
+  <div class="header-meta">
+    <span class="badge badge-lime">Research Notes</span>
+    <span class="badge badge-purple">monday.com (MNDY)</span>
+    <span class="badge badge-blue">Sidekick · Vibe · Agents · MCP · Agentalent</span>
+    <span class="badge badge-gray">QPM / SA — May 2026</span>
+  </div>
+  <h1>monday.com AI</h1>
+  <p style="font-size:17px;color:var(--muted);margin-top:14px;font-weight:300;max-width:760px;">
+    Research notes on monday.com's AI Work Platform — the May 6, 2026 repositioning from "work management" to "AI Work Platform" with three native pillars: <strong>monday sidekick</strong> (assistant), <strong>monday vibe</strong> (AI app builder / vibe coding), and <strong>monday agents</strong> (autonomous workforce). Plus monday workflows (agentic automation), monday MCP (Cursor/Claude/ChatGPT/Copilot), AI Platform Gateway (multi-LLM), the Agentalent.ai marketplace, and the AI Credits consumption pricing model.
+  </p>
+  <p style="margin-top:12px;font-size:13px;color:var(--faint);">Primary sources: <a href="https://monday.com/w/ai">monday.com/w/ai</a> · <a href="https://monday.com/w/mcp">monday.com/w/mcp</a> · <a href="https://monday.com/whats-new">monday.com/whats-new</a> · <a href="https://developer.monday.com/apps/changelog">developer.monday.com/apps/changelog</a> · <a href="https://developer.monday.com/api-reference/changelog">developer.monday.com/api-reference/changelog</a> · <a href="https://ir.monday.com/news-and-events/news-releases/news-details/2026/monday-com-Goes-All-In-on-AI-From-Work-Management-Platform-to-AI-Work-Platform/default.aspx">"All In on AI" IR press release (May 6, 2026)</a> · <a href="https://ir.monday.com/news-and-events/news-releases/news-details/2026/monday-com-Launches-Agentalent-ai-a-Hiring-Platform-for-Enterprise-AI-Agents/default.aspx">Agentalent.ai launch (Mar 23, 2026)</a></p>
+</div>
+
+<!-- TOC -->
+<div class="toc">
+  <h4>Contents</h4>
+  <ol>
+    <li><a href="#three-pillars">The three pillars: Sidekick / Vibe / Agents (post-May 6, 2026)</a></li>
+    <li><a href="#brand-evolution">Brand evolution — Magic / Blocks / Digital Workers → Sidekick / Vibe / Agents</a></li>
+    <li><a href="#monday-ai-formula">monday AI formula — AI Platform Gateway + mondayDB + multi-LLM + credits</a></li>
+    <li><a href="#sidekick">monday sidekick — the in-app AI assistant + Sidekick Skills Marketplace</a></li>
+    <li><a href="#vibe">monday vibe — AI app builder ("$1M ARR fastest in monday history")</a></li>
+    <li><a href="#agents">monday agents — autonomous AI workforce + custom agent builder</a></li>
+    <li><a href="#workflows">monday workflows — agentic automation infrastructure</a></li>
+    <li><a href="#ai-blocks">AI Blocks &amp; Magic — the legacy modular foundation</a></li>
+    <li><a href="#mcp">monday MCP — Claude, Cursor, ChatGPT, Copilot Studio</a></li>
+    <li><a href="#api-gateway">AI Platform Gateway — multi-LLM access (Claude, GPT, Gemini)</a></li>
+    <li><a href="#agentalent">Agentalent.ai — the AI agent hiring marketplace</a></li>
+    <li><a href="#service-ai">Service Agent &amp; AI Trust Center</a></li>
+    <li><a href="#credits-pricing">AI Credits pricing model ($0.01/credit, mandatory May 6, 2026)</a></li>
+    <li><a href="#vector">Strategic vector — "AI Work Platform" + Digital Workforce</a></li>
+    <li><a href="#timeline">Release timeline — May 2024 → May 2026</a></li>
+    <li><a href="#adoption">Adoption signals — earnings metrics &amp; community sentiment</a></li>
+    <li><a href="#activation">Activation &amp; setup</a></li>
+  </ol>
+</div>
+
+<!-- ===== 1. THREE PILLARS ===== -->
+<span class="section-label" id="three-pillars">01</span>
+<h2>The Three Pillars (Post-May 6, 2026)</h2>
+
+<p>On <strong>May 6, 2026</strong>, monday.com announced what Eran Zinman called "the biggest change in the history of our company" — a full repositioning from "work management platform" to <strong>"AI Work Platform."</strong> The marketing surface was simplified from ~10 AI brand names down to three native products plus supporting infrastructure.</p>
+
+<div class="card-grid-3">
+  <div class="cb cb-blue" style="margin:0;">
+    <span class="cb-tag">Pillar 1 · assistant</span>
+    <h3>monday sidekick</h3>
+    <p style="font-size:13.5px;">"Built-in personal AI assistant" — context-aware, in-product. Knows your role, your work, your account. Sends emails, schedules meetings, generates images, summarizes ticket history, monitors SLAs, builds roadmaps. <strong>500K+ messages</strong> processed pre-launch (Q4 2025).</p>
+  </div>
+  <div class="cb cb-purple" style="margin:0;">
+    <span class="cb-tag">Pillar 2 · vibe coding</span>
+    <h3>monday vibe</h3>
+    <p style="font-size:13.5px;">"Build any business software in minutes." AI app builder — describe an app in plain English, get a working presentation, inventory app, recruiting app, event portal. Built on mondayDB. <strong>Fastest product to $1M ARR</strong> in monday's history (Q4 2025).</p>
+  </div>
+  <div class="cb cb-lime" style="margin:0;">
+    <span class="cb-tag">Pillar 3 · autonomous · Early Access</span>
+    <h3>monday agents</h3>
+    <p style="font-size:13.5px;">Autonomous AI agents that "act without time, volume, or language constraints." Pre-built across Operations, Project, Marketing, Sales, Engineering. Custom builder with Knowledge + Integrations + Actions + Guardrails. End-to-end workflows.</p>
+  </div>
+</div>
+
+<div class="callout callout-lime">
+  <p><strong>Cross-cutting platform:</strong> <strong>monday workflows</strong> (agentic visual automation, replaces legacy automation builder) · <strong>monday MCP</strong> (Claude/Cursor/ChatGPT/Copilot Studio one-click connectors) · <strong>AI Platform Gateway</strong> (multi-LLM access to Claude/GPT/Gemini) · <strong>Agentalent.ai</strong> (hiring marketplace for external agents) · <strong>AI Trust Center</strong> (governance).</p>
+</div>
+
+<h3>The metrics monday published</h3>
+<div style="margin:14px 0;display:flex;flex-wrap:wrap;gap:8px;">
+  <div class="metric"><span class="metric-value">250K</span><span class="metric-label">Customers worldwide</span></div>
+  <div class="metric"><span class="metric-value">$1.23B</span><span class="metric-label">FY2025 revenue (+27% YoY)</span></div>
+  <div class="metric"><span class="metric-value">77M+</span><span class="metric-label">monday blocks actions powered</span></div>
+  <div class="metric"><span class="metric-value">500K+</span><span class="metric-label">Sidekick user messages</span></div>
+  <div class="metric"><span class="metric-value">&gt;60%</span><span class="metric-label">Fortune 500 customers</span></div>
+  <div class="metric"><span class="metric-value">$1M ARR</span><span class="metric-label">monday vibe — fastest ever in monday history</span></div>
+</div>
+
+<div class="quote">
+  "This is the biggest change in the history of our company, and we're going all-in on the new vision. We have 250,000 customers running their business on monday.com, and we owe them more than another AI feature. We owe them a platform built for what comes next — and that's what we're launching today."
+  <span class="attrib">— Eran Zinman, co-founder &amp; co-CEO · May 6, 2026</span>
+</div>
+
+<div class="quote">
+  "monday.com is now a place where people and agents work side by side. The real measure of a platform isn't what it does — it's what it lets people do."
+  <span class="attrib">— Roy Mann, co-founder &amp; co-CEO · May 6, 2026</span>
+</div>
+
+<!-- ===== 2. BRAND EVOLUTION ===== -->
+<hr>
+<span class="section-label" id="brand-evolution">02</span>
+<h2>Brand Evolution — What Was Renamed, What Stayed</h2>
+
+<p>monday's AI naming has shifted significantly from the 2024 "AI Blocks + magic + Digital Workforce" launch to the 2026 "Sidekick + Vibe + Agents" reorg. Some products were renamed; some were absorbed; some were quietly deprecated.</p>
+
+<div class="brand-evolution">
+  <div class="col old">
+    <h4>2024–early 2025 (legacy branding)</h4>
+    <ul style="font-size:13px;">
+      <li><strong>AI Blocks</strong> — modular AI actions in automation</li>
+      <li><strong>monday magic</strong> — describe a workflow, AI builds the board</li>
+      <li><strong>AI Hub</strong> — discovery surface</li>
+      <li><strong>Digital Workforce / Digital Workers</strong> — autonomous agents</li>
+      <li><strong>SDR Expert agent</strong> · <strong>AI Service Agent</strong></li>
+      <li><strong>Autopilot Hub</strong></li>
+      <li><strong>AI Service copilot</strong></li>
+    </ul>
+  </div>
+  <div class="arrow">→</div>
+  <div class="col new">
+    <h4>Post May 6, 2026 (current branding)</h4>
+    <ul style="font-size:13px;">
+      <li><strong>monday sidekick</strong> (= old assistant + magic-style chat)</li>
+      <li><strong>monday vibe</strong> (= app builder, new product line)</li>
+      <li><strong>monday agents</strong> (= old Digital Workforce, unified)</li>
+      <li><strong>monday workflows</strong> (= legacy automation builder + agents, unified)</li>
+      <li><strong>monday MCP</strong> (= new — external AI clients)</li>
+      <li><strong>AI Platform Gateway</strong> (= multi-LLM access layer)</li>
+      <li><strong>Agentalent.ai</strong> (= external agent marketplace from monday agent labs)</li>
+    </ul>
+  </div>
+</div>
+
+<div class="callout callout-amber">
+  <p><strong>Important infrastructure consolidation (Jan 26, 2026):</strong> monday explicitly deprecated the legacy "Integration for sentence builder" feature. Per the developer changelog: "monday is consolidating all automation feature creation into a single workflows-based infrastructure powering the new automation builder, monday workflows, and monday sidekick." Apps using the legacy API must migrate by <strong>April 30, 2026</strong> to remain available in new automation experiences. Existing automations keep running during the transition; a self-service migration wizard is provided in the Developer Center.</p>
+</div>
+
+<!-- ===== 3. MONDAY AI FORMULA ===== -->
+<hr>
+<span class="section-label" id="monday-ai-formula">03</span>
+<h2>monday AI Formula</h2>
+
+<div class="formula">
+  <div class="line"><span class="op">monday AI</span><span class="val">= AI Platform Gateway</span><span class="comment">// multi-LLM router — Claude, GPT, Gemini</span></div>
+  <div class="line"><span class="op">          </span><span class="val">+ mondayDB foundation</span><span class="comment">// the structured data layer monday vibe builds apps on</span></div>
+  <div class="line"><span class="op">          </span><span class="val">+ Unified workspace context</span><span class="comment">// Work Management + CRM + Dev + Service in one</span></div>
+  <div class="line"><span class="op">          </span><span class="val">+ Infinite knowledge</span><span class="comment">// "AI learns from documents, workflows, historical data"</span></div>
+  <div class="line"><span class="op">          </span><span class="val">+ Open ecosystem</span><span class="comment">// "200+ integrations, and MCP"</span></div>
+  <div class="line"><span class="op">          </span><span class="val">+ AI Credits consumption</span><span class="comment">// $0.01 per credit — usage-based pricing on top of seats</span></div>
+  <div class="line"><span class="op">          </span><span class="val">+ Guardrails + AI Trust Center</span><span class="comment">// GDPR, SOC 2, ISO, HIPAA + AI governance per-user limits</span></div>
+</div>
+
+<div class="callout callout-blue">
+  <p><strong>Architectural difference from competitors:</strong> Where Linear is narrow + deep (dev workflows), ClickUp is wide + deep (work OS), and Jira is "Rovo + Atlassian Intelligence" (two siloed AI layers), monday's bet is <em>multi-product breadth</em> — the same AI fabric (Sidekick + Agents + Vibe + Blocks) is woven through Work Management, CRM, Dev, and Service. The AI Platform Gateway is the shared abstraction that lets the same prompt route to Claude or GPT or Gemini depending on workload.</p>
+</div>
+
+<!-- ===== 4. SIDEKICK ===== -->
+<hr>
+<span class="section-label" id="sidekick">04</span>
+<h2>monday sidekick — The In-App Assistant</h2>
+
+<p>Sidekick is the most-used AI surface — <strong>500,000+ user messages</strong> already processed as of Q4 2025 (per the earnings call). It sits embedded throughout the platform as a sidebar / floating assistant.</p>
+
+<div class="ss-grid">
+  <div class="ss-block" style="margin:0;">
+    <div class="ss-label">📸 Sidekick floating assistant on a board view</div>
+    <div class="ss-placeholder">[screenshot slot — capture from a Work Management board]</div>
+  </div>
+  <div class="ss-block" style="margin:0;">
+    <div class="ss-label">📸 Sidekick Skills Marketplace — Gmail, Slack, Calendar skill installs</div>
+    <div class="ss-placeholder">[screenshot slot — capture from /skills/marketplace]</div>
+  </div>
+</div>
+
+<h3>What Sidekick can do (positioning from /w/ai)</h3>
+<div class="quote">
+  "A context-aware AI assistant who thinks, recommends, and runs work for you at scale."
+  <span class="attrib">— monday.com/w/ai</span>
+</div>
+
+<ul>
+  <li>Creating boards from a description</li>
+  <li>Brainstorming ideas / drafting docs / ad copy</li>
+  <li>Analyzing data on boards (sentiment, trends, summaries)</li>
+  <li>Generating images (marketing assets) — per <strong>March 22, 2026</strong> update</li>
+  <li>Online research with citations</li>
+  <li>Building roadmaps from goals</li>
+  <li>Summarizing ticket history (service context)</li>
+  <li>Monitoring SLAs and flagging breaches</li>
+  <li>Generating brand assets — logos, banners</li>
+</ul>
+
+<h3>Sidekick Skills Marketplace (Mar 30, 2026)</h3>
+<div class="cb cb-blue">
+  <span class="cb-tag">Mar 30, 2026 · Marketplace</span>
+  <h3>"Discover and activate AI-powered skills from the Sidekick Skills Marketplace to act across your entire tech stack."</h3>
+  <p>Skills are app features that let Sidekick take action in third-party tools — e.g. "send Gmail" or "schedule Google Calendar event" or "post in Slack." Developers can build their own (per Jan 16, 2026 developer changelog: "Build skills for monday sidekick — define custom actions triggered by natural-language requests").</p>
+</div>
+
+<h3>Sidekick pricing &amp; tiers</h3>
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>Plan</th><th>Sidekick tier</th><th>Daily message cap</th><th>Notes</th></tr></thead>
+<tbody>
+<tr><td class="fn">Free / Basic</td><td><span class="feat-deprecated">✗ not included</span></td><td>—</td><td>Basic does get AI credits for blocks / columns only.</td></tr>
+<tr><td class="fn">Standard ($12/seat/mo)</td><td>Sidekick <strong>(lite)</strong></td><td>Limited daily, then credits per message over cap</td><td>Core summarisation + brainstorming.</td></tr>
+<tr><td class="fn">Pro ($19/seat/mo)</td><td>Sidekick <strong>(lite)</strong>, higher cap</td><td>Higher daily cap</td><td>Same features, more headroom.</td></tr>
+<tr><td class="fn">Enterprise</td><td>Sidekick <strong>(plus)</strong></td><td>Up to 500 messages/user/day on the Plus add-on</td><td>Full assistant capabilities. Plus add-on tiers available for power users.</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="callout callout-amber">
+  <p><strong>Credit consumption (effective May 20, 2026):</strong> per support docs, "monday sidekick consumes credits per message <em>over the daily limit</em>." Free conversation continues under the cap; over-cap usage drains the workspace's AI Credits pool. <em>This was non-billable before May 2026 — the metering goes live with the AI Work Platform reorg.</em></p>
+</div>
+
+<!-- ===== 5. VIBE ===== -->
+<hr>
+<span class="section-label" id="vibe">05</span>
+<h2>monday vibe — AI App Builder</h2>
+
+<div class="cb cb-purple">
+  <span class="cb-tag">Fastest product to $1M ARR in monday history · Q4 2025</span>
+  <h3>"Build any business software in minutes"</h3>
+  <p>monday vibe is the most differentiated product in the lineup — no Linear/Jira/ClickUp competitor has a direct equivalent. It's "vibe coding" inside monday: describe the app you want in natural language, attach reference files, and vibe generates a working app on top of mondayDB.</p>
+</div>
+
+<h3>Example apps shown on /w/ai</h3>
+<div style="margin:10px 0;">
+  <span class="tool-pill new">Presentation generator</span>
+  <span class="tool-pill new">Inventory app</span>
+  <span class="tool-pill new">Documentation page</span>
+  <span class="tool-pill new">Recruiting app</span>
+  <span class="tool-pill new">Time tracker</span>
+  <span class="tool-pill new">Event portal</span>
+</div>
+
+<h3>Capabilities that landed in 2025</h3>
+<ul>
+  <li><strong>File upload prompts</strong> — attach reference docs/PDFs/images to seed the app generation</li>
+  <li><strong>Board expansion (Mar 30, 2026)</strong> — "Connect additional boards to live vibe apps without rebuilding"</li>
+  <li><strong>Vibe apps update live</strong> as underlying mondayDB boards change — apps are not static exports</li>
+</ul>
+
+<div class="callout callout-blue">
+  <p><strong>Strategic significance:</strong> monday vibe is monday's attempt to <em>own the no-code AI app builder category inside a PM tool</em> — competing not with Linear or Jira directly but with Replit, Lovable, v0, Bolt. The bet: SMB/mid-market customers don't need separate vibe-coding tools if their PM data lives in mondayDB and the apps run on top of it. AI credits per message → monetised differently than seat-based assistants.</p>
+</div>
+
+<!-- ===== 6. AGENTS ===== -->
+<hr>
+<span class="section-label" id="agents">06</span>
+<h2>monday agents — The Autonomous Workforce</h2>
+
+<p>monday agents are positioned as "an unlimited workforce that amplifies your team's impact." Currently in <strong>Early Access</strong> (request via form). They are the post-May-2026 unified successor to the older "Digital Workforce" / "Digital Workers" branding. Native pre-builts span every product line.</p>
+
+<h3>Pre-built agents by domain (from /w/ai)</h3>
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>Category</th><th>Pre-built agents</th></tr></thead>
+<tbody>
+<tr><td class="fn">Operations</td><td>Customer Support Agent · SLA Monitor Agent · Vendor Researcher · Process Automator</td></tr>
+<tr><td class="fn">Project</td><td>Risk Analyzer · Task Coordinator · Meeting Scheduler · Follow-up Agent · PMO Agent</td></tr>
+<tr><td class="fn">Marketing</td><td>RSVP Manager · Market Landscape Analyzer · Competitor Research Agent · Translator Agent · Asset Generator</td></tr>
+<tr><td class="fn">Sales (CRM expert)</td><td>Lead Agent · Contact Duplicates Finder · Sales Agent · Meeting Summarizer</td></tr>
+<tr><td class="fn">Engineering</td><td>Bug Prioritization Agent · Bug Reporter · Release Notes Agent · Coding Agent · PRD Agent · Sentiment Detector · Code Reviewer · Incident Resolver</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>Custom agent building blocks</h3>
+<div class="anatomy">
+  <div class="anatomy-block"><div class="anatomy-label" style="color:var(--lime);">Knowledge</div><div class="anatomy-desc">Boards, docs, files, historical data, connected app data the agent can read.</div></div>
+  <div class="anatomy-block"><div class="anatomy-label" style="color:var(--purple);">Integrations</div><div class="anatomy-desc">Which external tools the agent can act in (200+ available, plus MCP-connected external systems).</div></div>
+  <div class="anatomy-block"><div class="anatomy-label" style="color:var(--blue);">Actions</div><div class="anatomy-desc">What the agent is permitted to do — create items, send emails, update statuses, post to Slack, etc.</div></div>
+  <div class="anatomy-block"><div class="anatomy-label" style="color:var(--teal);">24/7 Autonomy</div><div class="anatomy-desc">"AI agents act without time, volume, or language constraints." Scheduled, triggered, or always-on.</div></div>
+  <div class="anatomy-block"><div class="anatomy-label" style="color:var(--amber);">Guardrails</div><div class="anatomy-desc">"Stay in control with guardrails and full transparency into every action." Confidence thresholds, approval gates.</div></div>
+  <div class="anatomy-block"><div class="anatomy-label" style="color:var(--green);">Permissions</div><div class="anatomy-desc">Agents run within "the same permissions, security, and governance the business already trusts."</div></div>
+</div>
+
+<div class="callout callout-amber">
+  <p><strong>Credit consumption (effective June 8, 2026):</strong> "monday agents consumption varies based on the complexity and depth of the tasks performed." No fixed per-action rate — multi-step agents cost more than single-action agents. <em>Like sidekick, agent credit billing goes live with the AI Work Platform repricing rollout.</em></p>
+</div>
+
+<!-- ===== 7. WORKFLOWS ===== -->
+<hr>
+<span class="section-label" id="workflows">07</span>
+<h2>monday workflows — Agentic Automation</h2>
+
+<p>The successor to the old "automation builder." monday workflows is the <strong>infrastructure</strong> that powers the new automation builder, monday agents, AND monday sidekick — all on one substrate.</p>
+
+<h3>What's new vs the legacy automation builder</h3>
+<ul>
+  <li><strong>Agentic blocks</strong> — agents can be inserted as steps in any workflow</li>
+  <li><strong>Loops (Apr 2, 2026 API)</strong> — new <code>BlockEvent</code> fields: <code>iterator_id</code>, <code>current_iteration</code>, <code>max_iterations</code></li>
+  <li><strong>Cross-product orchestration</strong> — single workflow can span Work Management → CRM → Service → Dev boards</li>
+  <li><strong>Conditional branching</strong> with AI-evaluated conditions</li>
+  <li><strong>Visual builder</strong> — "Visually build, automate, and manage complex cross-functional processes with AI"</li>
+</ul>
+
+<div class="callout callout-lime">
+  <p><strong>Quote (positioning):</strong> "Autonomous workflows that run work end to end." This is monday's framing for what other vendors call "agent flows" (Atlassian Automation), "Skills" (Linear), or "Autopilot" (ClickUp).</p>
+</div>
+
+<!-- ===== 8. AI BLOCKS ===== -->
+<hr>
+<span class="section-label" id="ai-blocks">08</span>
+<h2>AI Blocks &amp; monday magic — The Legacy Modular Foundation</h2>
+
+<p>AI Blocks were monday's original AI play (launched 2024) and remain the foundation under the new pillars. Per the Q4 2025 earnings call: <strong>"Monday blocks have already powered more than 77 million actions."</strong></p>
+
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>AI Block</th><th>What it does</th><th>Cost</th></tr></thead>
+<tbody>
+<tr><td class="fn">Sentiment detection</td><td>Classify text by positive/negative/neutral</td><td>Per-action credits</td></tr>
+<tr><td class="fn">Entity extraction</td><td>Pull names, dates, amounts from PDFs/text</td><td>Per-action credits</td></tr>
+<tr><td class="fn">Categorisation</td><td>Auto-classify items into predefined buckets</td><td>Per-action credits</td></tr>
+<tr><td class="fn">Translation</td><td>Translate text to/from any language</td><td>Per-action credits</td></tr>
+<tr><td class="fn">Summarisation</td><td>Compress long updates / threads / docs</td><td>Per-action credits</td></tr>
+<tr><td class="fn">Custom AI prompt</td><td>Arbitrary LLM call with workspace data injected</td><td>Per-action credits</td></tr>
+<tr><td class="fn">Formula Builder (AI)</td><td>NL → monday formula expression</td><td><strong>Free</strong> (no credits)</td></tr>
+<tr><td class="fn">Docs Assistant</td><td>Inline writing help in monday docs</td><td><strong>Free</strong> (no credits)</td></tr>
+<tr><td class="fn">Deal Insights (CRM)</td><td>Auto-summarise pipeline state</td><td><strong>Free</strong> (no credits)</td></tr>
+<tr><td class="fn">Risk Insights (Portfolio)</td><td>Flag at-risk projects with reasoning</td><td><strong>Free</strong> (no credits)</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>monday magic</h3>
+<p><strong>July 8, 2024 — original launch:</strong> "Describe your workflow in a prompt and get a ready-to-use monday.com solution — no setup, no developers." monday magic generates a complete board with columns, automations, and structure from one prompt. <strong>Magic workspace generation does NOT consume AI credits</strong> — it remained a free top-of-funnel feature even after the May 2026 metering rollout.</p>
+
+<!-- ===== 9. MCP ===== -->
+<hr>
+<span class="section-label" id="mcp">09</span>
+<h2>monday MCP — Connect Any AI Assistant</h2>
+
+<div class="mcp-box">
+  <h3>monday MCP — official OAuth-gated server, all plans, no extra cost</h3>
+  <p><strong>Server URL:</strong> <code style="background:#1a3a6e;color:#7ab8ff;">https://mcp.monday.com/mcp</code></p>
+  <p><strong>Marketplace install:</strong> Admins install the <a href="https://auth.monday.com/marketplace/listing/10000806/monday-mcp" style="color:#7ab8ff;">monday MCP app</a> from the marketplace to enable account-wide access.</p>
+  <p><strong>Auth:</strong> Per-user OAuth — each user authorises individually. "MCP only has access to the data that you, as an individual user, can access."</p>
+  <p><strong>Plan availability:</strong> All plans, currently <strong>no additional cost</strong> for monday MCP itself. (Costs can come from the LLM client side.)</p>
+  <p style="color:#7ab8ff;font-size:13px;margin-top:10px;">Two modes: <strong>platform MCP</strong> (workspace automation) and <strong>apps MCP</strong> (developer mode for app-building, via <code style="background:#1a3a6e;color:#7ab8ff;">@mondaydotcomorg/monday-api-mcp</code> with <code style="background:#1a3a6e;color:#7ab8ff;">--mode apps</code> flag).</p>
+</div>
+
+<h3>Supported AI clients (one-click connectors)</h3>
+<div class="card-grid">
+  <div class="card">
+    <h4>Claude (Anthropic)</h4>
+    <p style="font-size:13.5px;">monday.com is on <strong>Claude's official connector directory</strong> — Pro / Max / Team / Enterprise plans, web + desktop + mobile.</p>
+  </div>
+  <div class="card">
+    <h4>ChatGPT (OpenAI)</h4>
+    <p style="font-size:13.5px;">Requires ChatGPT Plus or Pro. Configured via Settings → Connectors → Advanced (developer mode).</p>
+  </div>
+  <div class="card">
+    <h4>Cursor</h4>
+    <p style="font-size:13.5px;">monday plugin is <strong>verified by Cursor</strong> — installs the MCP server automatically.</p>
+  </div>
+  <div class="card">
+    <h4>Microsoft Copilot Studio</h4>
+    <p style="font-size:13.5px;">Add monday MCP server as a tool to any agent you build in Copilot Studio using the native connector. Also supports Mistral Le Chat and any other MCP-compatible tool.</p>
+  </div>
+</div>
+
+<h3>What monday MCP exposes (tools)</h3>
+<div style="margin:10px 0;">
+  <span class="mcp-pill">Boards (create, read, modify)</span>
+  <span class="mcp-pill">Items (CRUD)</span>
+  <span class="mcp-pill">Columns (create, update, manage)</span>
+  <span class="mcp-pill">Updates / comments</span>
+  <span class="mcp-pill">Users / teams</span>
+  <span class="mcp-pill">Workspaces</span>
+  <span class="mcp-pill">Notetaker meetings query (Apr 2026 API)</span>
+  <span class="mcp-pill">knowledge_base_search (AI search across snippets)</span>
+  <span class="mcp-pill">ask_developer_docs (Apr 2026 API)</span>
+  <span class="mcp-pill">Project / sprint queries (dev product)</span>
+  <span class="mcp-pill">CRM operations (leads, deals, pipelines)</span>
+</div>
+
+<div class="callout callout-blue">
+  <p><strong>Use cases monday publishes:</strong> "generate sprint summaries, team performance reports, deadline tracking" · "convert meeting notes into structured items, assign tasks, update statuses through natural language" · "ask for rollups like 'What's blocking the launch?' across Product, Marketing, and RevOps boards" · "create and triage incidents, support requests" · "create leads and deals, update pipeline stages."</p>
+</div>
+
+<!-- ===== 10. API GATEWAY ===== -->
+<hr>
+<span class="section-label" id="api-gateway">10</span>
+<h2>AI Platform Gateway — Multi-LLM Access</h2>
+
+<p>Announced as part of the May 6, 2026 AI Work Platform launch. The <strong>AI Platform Gateway</strong> is the abstraction layer that lets monday route the same prompt to Claude, GPT, or Gemini transparently — both for internal features (Sidekick uses different models for different intents) and for customer-built agents.</p>
+
+<div class="quote">
+  "Additional capabilities include access to multiple large language models through monday's AI Platform Gateway, new AI-powered development tools in monday vibe, and a redesigned mobile app that brings Sidekick and agents together in one place."
+  <span class="attrib">— IR press release, May 6, 2026</span>
+</div>
+
+<h3>Models confirmed (per /w/ai)</h3>
+<div style="margin:10px 0;">
+  <span class="tool-pill new">Claude (Anthropic)</span>
+  <span class="tool-pill new">GPT (OpenAI)</span>
+  <span class="tool-pill new">Gemini (Google)</span>
+  <span class="tool-pill">"and more"</span>
+</div>
+
+<div class="callout callout-blue">
+  <p><strong>Where this differs from ClickUp's multi-model:</strong> ClickUp lets users <em>toggle the model per prompt</em> on Everything AI ($28). monday's Gateway is largely <em>opaque</em> at the user surface — the platform routes based on intent. Customers who want explicit model choice get it through monday MCP + their own client (Claude.ai, ChatGPT, Cursor), not through Sidekick's UI.</p>
+</div>
+
+<!-- ===== 11. AGENTALENT ===== -->
+<hr>
+<span class="section-label" id="agentalent">11</span>
+<h2>Agentalent.ai — The AI Agent Hiring Marketplace</h2>
+
+<div class="cb cb-lime">
+  <span class="cb-tag">Launched Mar 23, 2026 · monday agent labs</span>
+  <h3>"A managed marketplace where enterprises can discover, evaluate, and hire AI agents for defined business roles."</h3>
+  <p>Agentalent.ai is the first launch from <strong>monday agent labs</strong>, monday.com's incubation engine for agentic work. It's a two-sided marketplace — enterprises post agent "roles," developers/builders publish agents, monday authenticates, authorises, and qualifies them. Pricing starts around <strong>$2,000/month</strong> per agent (per Constellation Research).</p>
+</div>
+
+<h3>How it works (both sides)</h3>
+<div class="card-grid">
+  <div class="card">
+    <h4>For enterprises</h4>
+    <ul>
+      <li>Post a role description (like a job posting)</li>
+      <li>Browse qualified agents matching the role</li>
+      <li>Evaluate based on task fit, business requirements, operational readiness</li>
+      <li>Test performance before adoption</li>
+      <li>Onboard agent alongside human team using existing HR-like process</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h4>For developers / agent builders</h4>
+    <ul>
+      <li>Onboarding into Agentalent — authentication, authorisation, qualification</li>
+      <li>Contract management + billing handled by monday</li>
+      <li>Qualification process gates agents before exposure to enterprises</li>
+      <li>Distribution channel — reach "large companies" via the marketplace</li>
+    </ul>
+  </div>
+</div>
+
+<h3>Launch partners + early customers</h3>
+<ul>
+  <li><strong>Built with:</strong> AWS + Anthropic. "Leveraging the most advanced frontier models, which handle highly complex agent workloads and are built specifically for the enterprise."</li>
+  <li><strong>Early enterprise customers:</strong> Wix, Mesh Payments</li>
+  <li><strong>Channel partners exploring agent roles:</strong> Matrix, Ness Xebia, Devoteam, Impresoft Engage, Demicon — across marketing, campaign execution, operational workflows</li>
+  <li><strong>17 agents available</strong> at launch (per Constellation Research analysis)</li>
+</ul>
+
+<div class="quote">
+  "Every company will soon have a blended workforce of humans and AI agents… Agentalent.ai helps companies define roles, evaluate capability, and onboard AI agents alongside human teams using processes they already understand. As these agents become increasingly capable of operational work, I invite every company to open its ideal AI position and let us help find the right match."
+  <span class="attrib">— Roy Mann, co-founder &amp; co-CEO · Mar 23, 2026</span>
+</div>
+
+<div class="callout callout-lime">
+  <p><strong>Strategic significance:</strong> This is the most <em>commercially aggressive</em> move in the PM-tool AI space — monday positions itself not just as the platform that hosts agents but as the <em>employment agency</em> for AI workers. No competitor has a marketplace at this layer. ClickUp talks about "Certified Agents" without a productised marketplace yet. Atlassian has Forge Marketplace for apps, not agent-as-worker. Constellation: "It's quite possible that enterprise software vendors will start to resemble AI employment agencies."</p>
+</div>
+
+<!-- ===== 12. SERVICE AI ===== -->
+<hr>
+<span class="section-label" id="service-ai">12</span>
+<h2>Service Agent &amp; AI Trust Center</h2>
+
+<p>monday's <strong>service product</strong> got an AI copilot in June 2024 that has matured into a near-autonomous Service Agent. Plus monday operates an <strong>AI Trust Center</strong> as the governance front door — compliance + audit + per-user limits.</p>
+
+<h3>Service Agent capabilities</h3>
+<ul>
+  <li><strong>Auto-resolve tickets with AI (Jun 19, 2024)</strong> — "AI copilot responds to routine requests. You control when AI replies — just choose the confidence level it must reach."</li>
+  <li><strong>Portal Announcements (May 12, 2025)</strong> — AI-assisted banner content generation</li>
+  <li><strong>Active Directory auto-sync (May 7, 2025)</strong> — keeps ticket requester info current without manual lookup</li>
+  <li><strong>SLA Monitor Agent</strong> — pre-built service agent in the new agent platform</li>
+  <li><strong>Incident Resolver</strong> — multi-step incident response agent (Engineering category)</li>
+</ul>
+
+<h3>AI Trust Center + Governance</h3>
+<div class="card-grid">
+  <div class="card">
+    <h4>Compliance certifications</h4>
+    <p style="font-size:13.5px;">GDPR · SOC 2 (AICPA) · ISO · HIPAA. AI Trust Center is the front door for buyer due-diligence. <em>Note: ISO 42001 (AI management) not explicitly listed on the public page — ClickUp/Notion currently lead here.</em></p>
+  </div>
+  <div class="card">
+    <h4>AI governance (Mar 30, 2025)</h4>
+    <p style="font-size:13.5px;">"Set per-user AI credit limits in the admin panel to control budgets, monitor usage with threshold warnings." First-class admin tooling — predates the broader May 2026 credit metering by ~14 months.</p>
+  </div>
+  <div class="card">
+    <h4>Activity audit (Mar 26, 2025)</h4>
+    <p style="font-size:13.5px;">Scheduled cleaning activity log — audit trail for archived/deleted boards. Combined with agent action logging gives compliance-grade trace.</p>
+  </div>
+  <div class="card">
+    <h4>Gartner positioning</h4>
+    <p style="font-size:13.5px;">"Only work management platform to be recognized as a Leader in 3 Gartner® Magic Quadrant™ reports." Used as the enterprise trust anchor in /w/ai marketing.</p>
+  </div>
+</div>
+
+<!-- ===== 13. CREDITS PRICING ===== -->
+<hr>
+<span class="section-label" id="credits-pricing">13</span>
+<h2>AI Credits Pricing Model</h2>
+
+<div class="callout callout-amber">
+  <p><strong>Pricing event:</strong> Starting <strong>May 6, 2026</strong> — the same day as the "All In on AI" announcement — new customers must purchase AI credits alongside seats. Sidekick credit consumption activates <strong>May 20, 2026</strong>; Agents consumption activates <strong>June 8, 2026</strong>. Existing customers can opt in. Enterprise customers receive complementary AI packages.</p>
+</div>
+
+<h3>The credit unit</h3>
+<ul>
+  <li><strong>1 AI Credit = $0.01</strong></li>
+  <li><strong>AI Sidekick conversations (under the cap) and monday magic workspace generation do NOT consume credits</strong></li>
+  <li><strong>Free / no-credit features:</strong> Formula Builder, Docs Assistant, Deal Insights, Risk Insights</li>
+</ul>
+
+<h3>Plan-level credit minimums</h3>
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>Plan</th><th>Min. monthly credits</th><th>Credit options</th><th>Effective $</th></tr></thead>
+<tbody>
+<tr><td class="fn">Basic</td><td>1,000</td><td>1,000 only</td><td>$10/mo</td></tr>
+<tr><td class="fn">Standard</td><td>2,000</td><td>2,000 / 4,000 / 8,000</td><td>$20–$80/mo</td></tr>
+<tr><td class="fn">Pro</td><td>3,000</td><td>3,000 / 4,000 / 8,000 / 20,000</td><td>$30–$200/mo</td></tr>
+<tr><td class="fn">Enterprise</td><td>—</td><td>Contact sales</td><td>Negotiated; complementary packages for existing</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>What consumes credits</h3>
+<ul>
+  <li><strong>AI Blocks</strong> — per-action</li>
+  <li><strong>monday sidekick</strong> — per message <em>over the daily cap</em></li>
+  <li><strong>monday vibe</strong> — per message (no free tier within vibe)</li>
+  <li><strong>monday agents</strong> — varies by complexity/depth of task</li>
+  <li><strong>Image generation</strong> — per image</li>
+</ul>
+
+<div class="callout callout-red">
+  <p><strong>Community pricing criticism (Mondaywiki, Nubia Magazine, TaskRhino):</strong> "AI credits run out faster than expected" · "per-user AI credit limits introduced in 2026 mean heavy users frequently hit a wall" · "the change to non-renewable free AI credits, a new usage model where actions use 8 times as many AI credits and super expensive 'starter' AI Add-on Pricing Plans." Pricing friction is monday's biggest user-side complaint — similar to ClickUp's "AI as add-on" issue but more granular and more painful for power users.</p>
+</div>
+
+<!-- ===== 14. STRATEGIC VECTOR ===== -->
+<hr>
+<span class="section-label" id="vector">14</span>
+<h2>Strategic Vector — "AI Work Platform" + Digital Workforce</h2>
+
+<div class="cb cb-lime">
+  <span class="cb-tag">May 6, 2026 · platform repositioning</span>
+  <h3>monday.com is no longer a "work management platform" — it's an "AI Work Platform"</h3>
+  <p>This is monday's most strategic move of the year. The repositioning is not cosmetic: the product surface was consolidated, the pricing model was rebuilt around AI credits, and the company built an external marketplace (Agentalent) for AI labor. monday is staking out the "AI employment agency for the enterprise" position — a category no competitor has fully claimed.</p>
+</div>
+
+<div class="quote">
+  "We have re-architectured the core of our platform around a single belief that work should be orchestrated between humans and AI agents at scale from a single system of record."
+  <span class="attrib">— Eran Zinman, co-founder &amp; co-CEO</span>
+</div>
+
+<h3>3 / 6 / 12-month outlook</h3>
+<div class="card-grid">
+  <div class="card">
+    <h4>Next 3 months (May → Aug 2026)</h4>
+    <ul>
+      <li>monday agents → GA (out of Early Access)</li>
+      <li>AI Credits go fully live on Sidekick (May 20) and Agents (Jun 8)</li>
+      <li>Agentalent.ai expands beyond launch 17 agents</li>
+      <li>Mobile app + Sidekick + agents unified UX rollout</li>
+      <li>Legacy "Integration for sentence builder" deprecation deadline: <strong>Apr 30, 2026</strong> (already passed for new automations)</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h4>Next 6 months</h4>
+    <ul>
+      <li>Service Agent 2.0 GA</li>
+      <li>Skills Marketplace ecosystem matures — third-party developers monetising Sidekick Skills</li>
+      <li>Project-level AI Blocks (cross-board / portfolio scope)</li>
+      <li>Resource allocation AI with skills + availability matching</li>
+      <li>AI Campaigns expansion in monday CRM</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h4>Next 12 months</h4>
+    <ul>
+      <li>Risk management AI across all PM projects</li>
+      <li>Full resource allocation AI (effort + availability + skills)</li>
+      <li>Agentalent matures — agent marketplace as a real revenue line</li>
+      <li>monday positions as the SMB/mid-market <em>"digital staff augmentation layer"</em></li>
+      <li>Potential ISO 42001 push for enterprise AI governance</li>
+    </ul>
+  </div>
+</div>
+
+<div class="callout callout-lime">
+  <p><strong>The monday vector summary:</strong> <em>SMB Digital Workforce + vibe coding democratization + agent labor market.</em> Three distinct bets, all aligned: (1) Sidekick = assistant for every seat, (2) Vibe = no-code AI app builder for non-devs, (3) Agents + Agentalent = supply the AI workforce itself. monday is the only PM vendor playing all three. The risk: complexity in their own surface area, credit-pricing churn, and reliance on Claude/GPT/Gemini for the actual reasoning under the hood.</p>
+</div>
+
+<!-- ===== 15. TIMELINE ===== -->
+<hr>
+<span class="section-label" id="timeline">15</span>
+<h2>Release Timeline — May 2024 → May 2026</h2>
+
+<div class="timeline">
+  <div class="timeline-item"><span class="timeline-date">May 13, 2024</span><span class="timeline-title">Track AI Credits usage</span><span class="timeline-desc">First in-product credit tracking. Foundation for the May 2026 metering rollout.</span></div>
+  <div class="timeline-item"><span class="timeline-date">May 14, 2024</span><span class="timeline-title">AI Hub — discovery surface</span><span class="timeline-desc">"Your one-stop solution for discovering AI features on monday.com" with personalized recommendations.</span></div>
+  <div class="timeline-item"><span class="timeline-date">May 15–25, 2024</span><span class="timeline-title">AI Block prompts &amp; admin governance</span><span class="timeline-desc">Prompt preview · clarity of AI results · track admin AI usage · restrict by team.</span></div>
+  <div class="timeline-item"><span class="timeline-date">May 20, 2024</span><span class="timeline-title">monday dev AI standups</span><span class="timeline-desc">"AI-driven task summaries and next-step recommendations."</span></div>
+  <div class="timeline-item"><span class="timeline-date">Jun 19, 2024</span><span class="timeline-title">Auto-resolve tickets with AI (Service)</span><span class="timeline-desc">First production-grade service AI — copilot answers routine tickets with confidence threshold gating.</span></div>
+  <div class="timeline-item"><span class="timeline-date">Jun 23, 2024</span><span class="timeline-title">AI board previews</span><span class="timeline-desc">"Use AI-powered board preview to see board content at a glance."</span></div>
+  <div class="timeline-item"><span class="timeline-date">Jul 8, 2024</span><span class="timeline-title">🚀 monday magic</span><span class="timeline-desc">The first major AI brand. NL workflow generator — board + columns + automations from one prompt.</span></div>
+  <div class="timeline-item"><span class="timeline-date">Jul 28, 2024</span><span class="timeline-title">AI portfolio reports</span><span class="timeline-desc">"Create executive-level reports with key insights into portfolio progress and risks at the click of a button."</span></div>
+  <div class="timeline-item"><span class="timeline-date">Oct 22, 2024</span><span class="timeline-title">monday VSCode extension</span><span class="timeline-desc">Dev AI context surface — gives "AI richer context to deliver more accurate, relevant code suggestions."</span></div>
+  <div class="timeline-item"><span class="timeline-date">Nov 6, 2024</span><span class="timeline-title">Autopilot Hub</span><span class="timeline-desc">Workspace-level visibility into all automations. Forerunner of monday workflows.</span></div>
+  <div class="timeline-item"><span class="timeline-date">Mar 15, 2025</span><span class="timeline-title">WorkCanvas native AI canvas</span><span class="timeline-desc">"AI-powered collaborative canvas that syncs live with your boards."</span></div>
+  <div class="timeline-item"><span class="timeline-date">Mar 22, 2025</span><span class="timeline-title">Marketing images via Sidekick</span><span class="timeline-desc">Image generation lands in the assistant.</span></div>
+  <div class="timeline-item"><span class="timeline-date">Mar 30, 2025</span><span class="timeline-title">🚀 Sidekick Skills Marketplace + AI Governance + Vibe expansion</span><span class="timeline-desc">Three big releases on one day. Skills become a marketplace; admins get per-user AI credit limits; vibe boards expand without rebuild.</span></div>
+  <div class="timeline-item"><span class="timeline-date">Q4 2025 (earnings)</span><span class="timeline-desc">$334M Q4 revenue · 27% FY growth · monday vibe = fastest product to $1M ARR · 77M+ Blocks actions · 500K+ Sidekick messages.</span></div>
+  <div class="timeline-item"><span class="timeline-date">Jan 16, 2026</span><span class="timeline-title">Build skills for monday sidekick (developer)</span><span class="timeline-desc">Public Sidekick Skill app feature — developers build custom NL-triggered actions.</span></div>
+  <div class="timeline-item"><span class="timeline-date">Jan 26, 2026</span><span class="timeline-title">⚠ Automation Infrastructure Migration deadline announced</span><span class="timeline-desc">Legacy "Integration for sentence builder" deprecated. Apps must migrate by Apr 30, 2026. New unified workflows infrastructure.</span></div>
+  <div class="timeline-item"><span class="timeline-date">Feb 25, 2026</span><span class="timeline-title">Feature-level lifecycle event subscriptions</span><span class="timeline-desc">Granular event subscription at the feature level (developer).</span></div>
+  <div class="timeline-item"><span class="timeline-date">Mar 23, 2026</span><span class="timeline-title">🚀 Agentalent.ai launches (monday agent labs)</span><span class="timeline-desc">First AI agent hiring marketplace from a PM vendor. AWS + Anthropic. Wix, Mesh Payments early customers. 17 agents at launch.</span></div>
+  <div class="timeline-item"><span class="timeline-date">Apr 2, 2026</span><span class="timeline-title">🧱 API: notetaker meetings + knowledge_base_search + automation loops + ask_developer_docs</span><span class="timeline-desc">Four major new GraphQL queries — all AI-flavored. AI search across knowledge snippets; AI Q&amp;A over developer docs.</span></div>
+  <div class="timeline-item"><span class="timeline-date">May 6, 2026</span><span class="timeline-title">🚀🚀 "All In on AI" — AI Work Platform launch</span><span class="timeline-desc">Platform repositioning. Sidekick + Vibe + Agents canonical. AI Platform Gateway. Anthropic + OpenAI + Microsoft one-click connectors. New AI credits pricing.</span></div>
+  <div class="timeline-item"><span class="timeline-date">May 20, 2026</span><span class="timeline-title">⚠ Sidekick credit consumption begins</span><span class="timeline-desc">Messages over daily cap start drawing AI Credits.</span></div>
+  <div class="timeline-item"><span class="timeline-date">Jun 8, 2026 (upcoming)</span><span class="timeline-title">⚠ Agents credit consumption begins</span><span class="timeline-desc">Agent operations begin drawing AI Credits based on task complexity.</span></div>
+</div>
+
+<!-- ===== 16. ADOPTION ===== -->
+<hr>
+<span class="section-label" id="adoption">16</span>
+<h2>Adoption Signals &amp; Community Sentiment</h2>
+
+<h3>Earnings metrics (Q4 2025 / FY2025)</h3>
+<ul>
+  <li><strong>$1.232B FY2025 revenue · 27% YoY growth</strong></li>
+  <li><strong>Q4 2025 revenue: $334M (+25%)</strong></li>
+  <li><strong>250,000 customers</strong> running businesses on monday.com</li>
+  <li><strong>monday vibe: $1M ARR in record time</strong> — fastest product to that milestone in monday's history</li>
+  <li><strong>77M+ AI Blocks actions</strong> already powered</li>
+  <li><strong>500K+ Sidekick user messages</strong> processed</li>
+  <li>"Early beta users of AI agents are blown away by its capabilities" (per earnings call)</li>
+</ul>
+
+<h3>Independent sentiment</h3>
+<div class="card-grid">
+  <div class="card">
+    <h4>Bullish (Nubia Magazine, May 2026)</h4>
+    <p style="font-size:13.5px;">"AI features are useful but inconsistent. Sidekick is excellent at summarizing long boards and meeting notes. The AI workflow builder genuinely speeds things up. The risk insights feature in the portfolio view added real value."</p>
+  </div>
+  <div class="card">
+    <h4>Pricing pain (Mondaywiki, TaskRhino, 2026)</h4>
+    <p style="font-size:13.5px;">"AI credits run out faster than expected." · "Per-user AI credit limits introduced in 2026 mean heavy users will frequently hit a wall and need to wait or upgrade." · "The change to non-renewable free AI credits, a new usage model where actions use 8 times as many AI credits."</p>
+  </div>
+  <div class="card">
+    <h4>Vibe = the hero feature</h4>
+    <p style="font-size:13.5px;">Most reviewers single out monday vibe as the differentiator. "Building apps in plain English on mondayDB" has no direct PM-tool competitor (Linear/Jira/ClickUp don't ship this). monday's fastest-to-$1M product validates real demand.</p>
+  </div>
+  <div class="card">
+    <h4>AI Blocks praised for SMB users</h4>
+    <p style="font-size:13.5px;">Recurring feedback theme: AI Blocks (sentiment / classification / extraction) "make AI accessible to non-technical users without needing prompt engineering." 77M actions in volume shows real usage, not feature theater.</p>
+  </div>
+</div>
+
+<!-- ===== 17. ACTIVATION ===== -->
+<hr>
+<span class="section-label" id="activation">17</span>
+<h2>Activation &amp; Setup</h2>
+
+<div class="callout callout-blue">
+  <p><strong>vs. Linear:</strong> More moving parts. <strong>vs. Jira:</strong> Vastly simpler than Rovo's "two switches + business domain" trap. <strong>vs. ClickUp:</strong> Similar AI add-on pricing model but more granular credit metering — and credits become mandatory for new customers from May 6, 2026.</p>
+</div>
+
+<div class="steps">
+  <div class="step">
+    <div class="step-n">1</div>
+    <div class="step-c">
+      <h3>Pick a plan + AI credit bundle</h3>
+      <p>Basic / Standard / Pro / Enterprise. AI credits purchased alongside seats (mandatory for new customers post May 6, 2026). Minimums: 1K / 2K / 3K credits per month — $0.01 each.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-n">2</div>
+    <div class="step-c">
+      <h3>Open monday sidekick</h3>
+      <p>Available on Standard+ ("lite") and Enterprise ("plus"). Floating assistant icon throughout the platform. Daily message cap before credit drawdown begins.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-n">3</div>
+    <div class="step-c">
+      <h3>Browse Sidekick Skills Marketplace</h3>
+      <p>Install Gmail / Slack / Calendar / Notion / Salesforce skills as needed. Each Skill extends what Sidekick can <em>do</em> beyond just what it can <em>read</em>.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-n">4</div>
+    <div class="step-c">
+      <h3>Request Early Access to monday agents</h3>
+      <p>EA via request form on /w/ai. Once approved, build via pre-builts or the custom agent builder. Set Knowledge + Integrations + Actions + Guardrails.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-n">5</div>
+    <div class="step-c">
+      <h3>Try monday vibe</h3>
+      <p>Available on paid plans. Describe an app, attach reference files, get a working app on mondayDB. Credit-per-message billing.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-n">6</div>
+    <div class="step-c">
+      <h3>Install monday MCP for external clients</h3>
+      <p>Admin installs from marketplace → users individually OAuth-connect to Claude / Cursor / ChatGPT / Copilot Studio. No additional cost; MCP itself is free across plans.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-n">7</div>
+    <div class="step-c">
+      <h3>Set governance via AI Trust Center</h3>
+      <p>Per-user AI credit limits. Threshold warnings. Audit trail for archived/deleted boards. AI feature restrictions per team. AI Trust Center is the front door for buyer due-diligence.</p>
+    </div>
+  </div>
+</div>
+
+<hr>
+<p style="font-size:12px;color:var(--faint);text-align:center;">
+  monday.com AI Research Notes — QPM / SA / AI research — May 15, 2026<br>
+  Sources: monday.com/w/ai · /w/mcp · /whats-new · developer.monday.com · ir.monday.com · BusinessWire (Agentalent + "All In on AI") · Motley Fool (MNDY Q4 2025 earnings) · Constellation Research · Nubia Magazine · Mondaywiki · TaskRhino.<br>
+  <em>Screenshot slots marked throughout — capture from a live workspace when ready. No monday MCP / playwright access in this research session.</em>
+</p>
+
+</body>
+</html>

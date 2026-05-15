@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plane AI — Research Notes</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap');
+:root {
+  --bg:#fafaf8; --surface:#fff; --surface2:#f4f3ef; --surface3:#eeecea;
+  --border:#e8e6e0; --border2:#d0cdc5;
+  --text:#1a1916; --muted:#7a7870; --faint:#b0ada6;
+  --blue:#0052cc; --blue-bg:#e8f0fe; --blue-border:#aec6f0; --blue-dark:#003d99;
+  --green:#006644; --green-bg:#e3f5ec; --green-border:#a3d9b8;
+  --amber:#974400; --amber-bg:#fff3e0; --amber-border:#fcd08a;
+  --red:#c0392b; --red-bg:#fde8e6; --red-border:#f5aba3;
+  --purple:#5243aa; --purple-bg:#ede8fb; --purple-border:#c3b7f2;
+  --teal:#006475; --teal-bg:#e0f5f8; --teal-border:#95d8e4;
+  --cyan:#0e7490; --cyan-bg:#e0f7fa; --cyan-border:#7dd3e0;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:14.5px;line-height:1.7;max-width:1080px;margin:0 auto;padding:56px 36px 120px;}
+h1{font-family:'Syne',sans-serif;font-size:40px;font-weight:800;line-height:1.1;letter-spacing:-.5px;}
+h2{font-family:'Syne',sans-serif;font-size:22px;font-weight:700;color:var(--text);margin:52px 0 18px;padding-top:8px;}
+h3{font-family:'Inter',sans-serif;font-size:15px;font-weight:500;color:var(--text);margin:20px 0 8px;}
+h4{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin:18px 0 8px;font-weight:400;}
+p{color:#3d3b36;margin-bottom:10px;}
+a{color:var(--blue);text-decoration:none;}a:hover{text-decoration:underline;}
+code{font-family:'JetBrains Mono',monospace;font-size:12px;background:var(--surface2);padding:1px 6px;border-radius:3px;color:var(--cyan);}
+pre{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:16px 18px;font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.6;overflow-x:auto;margin:12px 0;}
+ul,ol{padding-left:20px;margin-bottom:10px;}
+li{color:#3d3b36;margin-bottom:5px;}
+strong{color:var(--text);font-weight:500;}
+hr{border:none;border-top:1px solid var(--border2);margin:52px 0;}
+
+.header-meta{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;align-items:center;}
+.badge{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:3px 11px;border-radius:3px;border:1px solid;display:inline-block;}
+.badge-blue{color:var(--blue);border-color:var(--blue-border);background:var(--blue-bg);}
+.badge-green{color:var(--green);border-color:var(--green-border);background:var(--green-bg);}
+.badge-amber{color:var(--amber);border-color:var(--amber-border);background:var(--amber-bg);}
+.badge-purple{color:var(--purple);border-color:var(--purple-border);background:var(--purple-bg);}
+.badge-cyan{color:var(--cyan);border-color:var(--cyan-border);background:var(--cyan-bg);}
+.badge-gray{color:var(--muted);border-color:var(--border2);background:var(--surface2);}
+
+.section-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--cyan);margin-bottom:6px;display:block;}
+
+.callout{border-radius:8px;padding:14px 18px;margin:18px 0;border:1px solid;}
+.callout p{margin:0;font-size:13.5px;}
+.callout-blue{background:var(--blue-bg);border-color:var(--blue-border);} .callout-blue p{color:#1a3a6e;}
+.callout-amber{background:var(--amber-bg);border-color:var(--amber-border);} .callout-amber p{color:#5a2800;}
+.callout-green{background:var(--green-bg);border-color:var(--green-border);} .callout-green p{color:#003320;}
+.callout-red{background:var(--red-bg);border-color:var(--red-border);} .callout-red p{color:#6b1000;}
+.callout-cyan{background:var(--cyan-bg);border-color:var(--cyan-border);} .callout-cyan p{color:#0d3d4d;}
+.callout-gray{background:var(--surface2);border-color:var(--border2);} .callout-gray p{color:var(--muted);}
+
+.cb{border-left:4px solid;padding:16px 20px;border-radius:0 8px 8px 0;margin-bottom:14px;background:var(--surface);border-top:1px solid var(--border);border-right:1px solid var(--border);border-bottom:1px solid var(--border);}
+.cb h3{margin:0 0 8px;font-size:16px;font-family:'Syne',sans-serif;font-weight:700;}
+.cb-tag{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:3px;display:inline-block;margin-bottom:10px;}
+.cb-blue{border-left-color:var(--blue);} .cb-blue h3{color:var(--blue);} .cb-blue .cb-tag{background:var(--blue-bg);color:var(--blue);}
+.cb-purple{border-left-color:var(--purple);} .cb-purple h3{color:var(--purple);} .cb-purple .cb-tag{background:var(--purple-bg);color:var(--purple);}
+.cb-teal{border-left-color:var(--teal);} .cb-teal h3{color:var(--teal);} .cb-teal .cb-tag{background:var(--teal-bg);color:var(--teal);}
+.cb-green{border-left-color:var(--green);} .cb-green h3{color:var(--green);} .cb-green .cb-tag{background:var(--green-bg);color:var(--green);}
+.cb-amber{border-left-color:var(--amber);} .cb-amber h3{color:var(--amber);} .cb-amber .cb-tag{background:var(--amber-bg);color:var(--amber);}
+.cb-cyan{border-left-color:var(--cyan);} .cb-cyan h3{color:var(--cyan);} .cb-cyan .cb-tag{background:var(--cyan-bg);color:var(--cyan);}
+
+.card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:18px 22px;margin-bottom:14px;}
+.card-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0;}
+.card-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin:14px 0;}
+@media(max-width:760px){.card-grid,.card-grid-3{grid-template-columns:1fr;}}
+
+.ss-block{margin:20px 0;}
+.ss-label{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:7px;letter-spacing:.06em;display:flex;align-items:center;gap:7px;}
+.ss-label::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--amber);}
+.ss-placeholder{width:100%;border:1px dashed var(--border2);border-radius:8px;padding:30px 18px;text-align:center;background:var(--surface2);color:var(--muted);font-size:12px;font-family:'JetBrains Mono',monospace;}
+.ss-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:20px 0;}
+@media(max-width:760px){.ss-grid{grid-template-columns:1fr;}}
+
+.mcp-box{background:#0a1f3a;border:2px solid #4a9eff;border-radius:10px;padding:24px 28px;margin:22px 0;}
+.mcp-box h3{color:#4a9eff;font-family:'Syne',sans-serif;font-size:18px;font-weight:700;margin-bottom:10px;}
+.mcp-box p{color:#b8d4f8;margin-bottom:8px;font-size:13.5px;}
+.mcp-pill{display:inline-block;background:#1a3a6e;border:1px solid #4a9eff;border-radius:4px;padding:3px 10px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#7ab8ff;margin:3px;}
+
+.formula{background:var(--surface2);border:1px solid var(--border2);border-radius:8px;padding:18px 22px;margin:14px 0;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.8;}
+.formula .line{display:flex;gap:10px;margin:3px 0;}
+.formula .op{color:var(--cyan);font-weight:500;}
+.formula .val{color:var(--text);}
+.formula .comment{color:var(--faint);font-size:11px;margin-left:8px;}
+
+.anatomy{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:14px 0;}
+@media(max-width:760px){.anatomy{grid-template-columns:1fr;}}
+.anatomy-block{border:1px solid var(--border);border-radius:8px;padding:14px 16px;background:var(--surface);}
+.anatomy-label{font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;}
+.anatomy-desc{font-size:12.5px;color:var(--muted);line-height:1.5;}
+
+.steps{margin:12px 0;}
+.step{display:flex;gap:14px;padding:12px 0;border-bottom:1px solid var(--border);}
+.step:last-child{border-bottom:none;}
+.step-n{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--cyan-border);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--cyan);flex-shrink:0;margin-top:2px;}
+.step-c h3{margin:0 0 4px;font-size:14px;}
+.step-c p{margin:0;font-size:13.5px;color:var(--muted);}
+
+.plan-tag{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;padding:2px 7px;border-radius:3px;letter-spacing:.04em;white-space:nowrap;}
+.plan-free{background:var(--surface2);color:var(--muted);}
+.plan-pro{background:var(--blue-bg);color:var(--blue);}
+.plan-bus{background:var(--purple-bg);color:var(--purple);}
+.plan-e{background:#1a1916;color:#e8e6e0;}
+.plan-self{background:var(--green-bg);color:var(--green);}
+.feat-ga{color:var(--green);font-family:'JetBrains Mono',monospace;font-size:11px;}
+.feat-beta{color:var(--amber);font-family:'JetBrains Mono',monospace;font-size:11px;}
+.feat-soon{color:var(--blue);font-family:'JetBrains Mono',monospace;font-size:11px;}
+.feat-oss{color:var(--cyan);font-family:'JetBrains Mono',monospace;font-size:11px;}
+
+.tbl-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:8px;margin:18px 0;}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:700px;}
+thead th{background:var(--surface2);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;font-weight:400;color:var(--muted);padding:10px 14px;text-align:left;border-bottom:1px solid var(--border2);white-space:nowrap;}
+tbody td{padding:10px 14px;border-bottom:1px solid var(--border);vertical-align:top;color:#3d3b36;}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr:hover td{background:var(--surface2);}
+.fn{font-weight:500;color:var(--text);}
+
+.quote{background:var(--surface);border-left:3px solid var(--cyan);padding:14px 18px;margin:14px 0;font-style:italic;color:#3d3b36;font-size:13.5px;}
+.quote .attrib{display:block;margin-top:8px;font-style:normal;font-size:12px;color:var(--muted);}
+
+.toc{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:20px 24px;margin:28px 0 44px;}
+.toc h4{margin-top:0;}
+.toc ol{padding-left:18px;}
+.toc li{margin:4px 0;font-size:13px;}
+.toc a{color:var(--muted);}
+.toc a:hover{color:var(--cyan);}
+
+.timeline{margin:18px 0;border-left:2px solid var(--cyan-border);padding-left:20px;}
+.timeline-item{position:relative;margin-bottom:18px;}
+.timeline-item::before{content:"";position:absolute;left:-26px;top:6px;width:10px;height:10px;border-radius:50%;background:var(--cyan);}
+.timeline-date{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--cyan);letter-spacing:.04em;display:block;margin-bottom:2px;}
+.timeline-title{font-weight:500;color:var(--text);font-size:14px;display:block;margin-bottom:3px;}
+.timeline-desc{font-size:13px;color:var(--muted);}
+
+.tool-pill{display:inline-block;background:var(--surface);border:1px solid var(--border2);border-radius:14px;padding:3px 11px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text);margin:3px;}
+.tool-pill.new{border-color:var(--green-border);color:var(--green);background:var(--green-bg);}
+.tool-pill.beta{border-color:var(--amber-border);color:var(--amber);background:var(--amber-bg);}
+
+.metric{display:inline-block;text-align:center;padding:12px 18px;background:var(--surface);border:1px solid var(--border);border-radius:8px;margin:4px;min-width:140px;}
+.metric-value{font-family:'Syne',sans-serif;font-size:22px;font-weight:700;color:var(--cyan);display:block;}
+.metric-label{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.04em;text-transform:uppercase;}
+
+.oss-banner{background:linear-gradient(135deg,var(--cyan-bg) 0%,var(--green-bg) 100%);border:1px solid var(--cyan-border);border-radius:10px;padding:20px 24px;margin:20px 0;}
+.oss-banner h3{color:var(--cyan);font-family:'Syne',sans-serif;font-size:17px;font-weight:700;margin-bottom:8px;}
+.oss-banner p{color:#0d3d4d;font-size:13.5px;margin:0;}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div style="margin-bottom:52px;border-bottom:1px solid var(--border2);padding-bottom:40px;">
+  <div class="header-meta">
+    <span class="badge badge-cyan">Research Notes</span>
+    <span class="badge badge-green">Plane (open source)</span>
+    <span class="badge badge-blue">Plane AI · MCP-native · Self-hosted · Air-gapped</span>
+    <span class="badge badge-gray">QPM / SA — May 2026</span>
+  </div>
+  <h1>Plane AI</h1>
+  <p style="font-size:17px;color:var(--muted);margin-top:14px;font-weight:300;max-width:760px;">
+    Research notes on Plane — the open-source, self-hostable, air-gap-ready project management platform. Plane AI covers Ask / Build / Assign modes, a 55+ tool native MCP server (HTTP + PAT + Stdio transports), bring-your-own-keys model gateway (Anthropic, OpenAI), Slack/Teams AI intake, agent run lifecycle, and "Projects-as-Code" via Plane Compose. The migration-target pitch: <em>"Get out of Jira, Linear, ClickUp, Asana, or Monday without leaving your data behind."</em>
+  </p>
+  <p style="margin-top:12px;font-size:13px;color:var(--faint);">Primary sources: <a href="https://plane.so/">plane.so</a> · <a href="https://plane.so/ai">plane.so/ai</a> · <a href="https://plane.so/changelog">plane.so/changelog</a> · <a href="https://github.com/makeplane/plane">github.com/makeplane/plane</a> · <a href="https://github.com/makeplane/plane/releases">/plane/releases</a> · <a href="https://developers.plane.so/dev-tools/mcp-server">developers.plane.so/dev-tools/mcp-server</a> · <a href="https://developers.plane.so/dev-tools/mcp-server-claude-code">/mcp-server-claude-code</a> · <a href="https://techcrunch.com/2023/11/28/plane-takes-on-jira-with-open-source-project-management-tools-for-software-teams/">TechCrunch — "Plane takes on Jira"</a></p>
+</div>
+
+<!-- OSS BANNER -->
+<div class="oss-banner">
+  <h3>The single sentence that summarises Plane vs everyone else</h3>
+  <p><strong>Plane is the only competitor in this research that is open-source, self-hostable, air-gap-ready, and bring-your-own-keys for the AI model.</strong> Every other competitor (Jira, Linear, ClickUp, monday, Notion, Asana) is closed-source SaaS. That single architectural choice shapes every other strategic difference — pricing, customer base (Fortune 10 + regulated + government), AI model selection, MCP design, and the migration narrative.</p>
+</div>
+
+<!-- TOC -->
+<div class="toc">
+  <h4>Contents</h4>
+  <ol>
+    <li><a href="#oss-thesis">The open-source thesis — why Plane is structurally different</a></li>
+    <li><a href="#three-modes">The three modes: Ask / Build / Assign</a></li>
+    <li><a href="#plane-ai-formula">Plane AI formula — BYO-keys + MCP + Slack intake</a></li>
+    <li><a href="#ask-build-assign">Plane AI in depth — what it does inside the workspace</a></li>
+    <li><a href="#agents">Agents — Agent Development Kit, Agent Run lifecycle, Marketplace</a></li>
+    <li><a href="#slack-teams-ai">Slack + Teams AI intake — @Plane in any channel</a></li>
+    <li><a href="#mcp">Plane MCP — the 55+ tool open-source server</a></li>
+    <li><a href="#self-hosted">Self-hosting — Prime CLI, God Mode, Plane Compose</a></li>
+    <li><a href="#projects-as-code">Plane Compose — Projects-as-Code (YAML)</a></li>
+    <li><a href="#products">Four products in one workspace — Projects / Wiki / Plane AI / Desk</a></li>
+    <li><a href="#migration">Migration path — Jira / Linear / ClickUp / Monday / Asana → Plane</a></li>
+    <li><a href="#pricing-gateway">Pricing &amp; BYO-keys model gateway</a></li>
+    <li><a href="#governance">Governance — air-gapped, "no prompt storage", SOC 2 / ISO / GDPR</a></li>
+    <li><a href="#vector">Strategic vector — "Steerable systems" (Vamsi Kurama)</a></li>
+    <li><a href="#timeline">Release timeline — Nov 2025 → May 2026</a></li>
+    <li><a href="#adoption">Adoption signals — Fortune 10, governments, 92 employees, $4M seed</a></li>
+    <li><a href="#activation">Activation &amp; setup — cloud vs self-hosted</a></li>
+  </ol>
+</div>
+
+<!-- ===== 1. OSS THESIS ===== -->
+<span class="section-label" id="oss-thesis">01</span>
+<h2>The Open-Source Thesis — Why Plane Is Structurally Different</h2>
+
+<p>Every other PM tool we've researched (Jira, Linear, ClickUp, monday, Notion, Asana) is closed-source SaaS where the vendor decides which models the AI runs on, where your data lives, and whether you can self-host. Plane is the inverse on all three axes — and that's what shapes its entire AI strategy.</p>
+
+<div class="card-grid-3">
+  <div class="cb cb-cyan" style="margin:0;">
+    <span class="cb-tag">Axis 1 · code</span>
+    <h3>Open-source PM core</h3>
+    <p style="font-size:13.5px;">Plane is open-source on GitHub at <a href="https://github.com/makeplane/plane">github.com/makeplane/plane</a>. v1.3.1 shipped May 14, 2026. The MCP server is <a href="https://github.com/makeplane/plane-mcp-server">also open source</a>. Closest in spirit to Linear's developer-platform play, but with the actual code public.</p>
+  </div>
+  <div class="cb cb-green" style="margin:0;">
+    <span class="cb-tag">Axis 2 · deployment</span>
+    <h3>Self-hostable + air-gapped</h3>
+    <p style="font-size:13.5px;">"Cloud, self-hosted and air-gapped ready." Docker + Kubernetes with Helm charts. BYO Postgres, Redis, S3-compatible storage. Prime CLI for install / upgrade / backup / monitor. The only PM tool in this research that lists "air-gapped" as a first-class deployment target — appeals to regulated industries and gov.</p>
+  </div>
+  <div class="cb cb-purple" style="margin:0;">
+    <span class="cb-tag">Axis 3 · AI keys</span>
+    <h3>Bring-your-own-keys (BYOK)</h3>
+    <p style="font-size:13.5px;">"Bring-your-own keys (OpenAI or Anthropic)." Self-hosted customers pay their AI provider directly. No vendor markup on tokens. Cloud has its own AI bundled in plans, but the model choice is still configurable. Implicit: no Plane-controlled multi-model gateway like ClickUp/Notion/monday.</p>
+  </div>
+</div>
+
+<div class="callout callout-cyan">
+  <p><strong>Why this matters for the AI conversation:</strong> Plane is the only PM tool whose AI you can run entirely on your own infrastructure, with your own model keys, with zero prompt-storage on Plane's side. For regulated industries (finance, health, gov, defence) this isn't a feature — it's the entry ticket. Customers cited on plane.so include <strong>Aramco, Sony, Dolby, Accenture, Amazon, Zerodha, Stark Bank, Mirador Therapeutics, Government of Lithuania, République Française.</strong> That's not a SMB customer profile — it's an enterprise/regulated/government one, and OSS + air-gapped is why.</p>
+</div>
+
+<h3>Company facts (per Tracxn + Crunchbase + LinkedIn)</h3>
+<div style="margin:14px 0;display:flex;flex-wrap:wrap;gap:8px;">
+  <div class="metric"><span class="metric-value">2022</span><span class="metric-label">Founded</span></div>
+  <div class="metric"><span class="metric-value">$4M</span><span class="metric-label">Total funding (OSS Capital seed, Apr 2024)</span></div>
+  <div class="metric"><span class="metric-value">92</span><span class="metric-label">Employees (Mar 2026)</span></div>
+  <div class="metric"><span class="metric-value">107</span><span class="metric-label">Countries with active users (Jan 2026)</span></div>
+  <div class="metric"><span class="metric-value">293</span><span class="metric-label">Cities with active users (Jan 2026)</span></div>
+  <div class="metric"><span class="metric-value">2× Fortune 10</span><span class="metric-label">Customers migrated from Jira</span></div>
+</div>
+
+<p style="font-size:13px;color:var(--muted);">Founders: <strong>Vamsi Kurama</strong> (Co-founder &amp; CEO) and <strong>Vihar Kurama</strong> (Co-founder &amp; COO). HQ: Hyderabad, India. Sole investor: OSS Capital (the OSS-specialised VC firm). Smallest team of any competitor in this 7-tool research by ~10×.</p>
+
+<!-- ===== 2. THREE MODES ===== -->
+<hr>
+<span class="section-label" id="three-modes">02</span>
+<h2>The Three Modes: Ask / Build / Assign</h2>
+
+<p>Plane AI's product surface clusters into <strong>three named modes</strong> rather than a sprawling brand family like ClickUp (Brain² + Super Agents + Ambient + MAX) or monday (Sidekick + Vibe + Agents + Workflows + MCP + Gateway + Agentalent). Plane's framing is intentionally minimalist.</p>
+
+<div class="card-grid-3">
+  <div class="cb cb-blue" style="margin:0;">
+    <span class="cb-tag">Mode 1 · query</span>
+    <h3>Ask to know</h3>
+    <p style="font-size:13.5px;">"Natural-language queries against live workspace data." Ask about status, blockers, doc changes, who's working on what. Web search added Feb 17, 2026 for "real-time external context."</p>
+  </div>
+  <div class="cb cb-purple" style="margin:0;">
+    <span class="cb-tag">Mode 2 · generate</span>
+    <h3>Talk to build</h3>
+    <p style="font-size:13.5px;">"Generates project structure, work items, and cycles from a prompt." Plane AI converts a goal description into full project scaffolding — initiatives, projects, epics, cycles, work items with draft briefs.</p>
+  </div>
+  <div class="cb cb-cyan" style="margin:0;">
+    <span class="cb-tag">Mode 3 · delegate</span>
+    <h3>Assign to ship</h3>
+    <p style="font-size:13.5px;">"@mention an agent on a work item to triage and progress it." Agents act as first-class workspace participants — they appear as assignees, run via Agent Run lifecycle, and are tracked like humans.</p>
+  </div>
+</div>
+
+<div class="quote">
+  "The age of AI does not need more agents. It needs a place for agents to work."
+  <span class="attrib">— plane.so/ai positioning statement</span>
+</div>
+
+<div class="callout callout-blue">
+  <p><strong>The cross-cutting layer:</strong> Plane AI is exposed externally through the <strong>native open-source MCP server</strong> (55+ tools, HTTP / PAT / Stdio transports). Internally, the same AI surfaces through <strong>Slack and Microsoft Teams</strong> via @Plane intake. There is no separate "agent marketplace" like monday's Agentalent — agents are built with Plane's <strong>Agent Development Kit</strong> and shipped to a Marketplace or kept internal.</p>
+</div>
+
+<!-- ===== 3. PLANE AI FORMULA ===== -->
+<hr>
+<span class="section-label" id="plane-ai-formula">03</span>
+<h2>Plane AI Formula</h2>
+
+<div class="formula">
+  <div class="line"><span class="op">Plane AI</span><span class="val">= BYO model keys</span><span class="comment">// OpenAI OR Anthropic (Claude Sonnet 4.0 default, Nov 2025)</span></div>
+  <div class="line"><span class="op">        </span><span class="val">+ Workspace context</span><span class="comment">// projects, cycles, modules, work items, pages, customers</span></div>
+  <div class="line"><span class="op">        </span><span class="val">+ Three modes</span><span class="comment">// Ask · Build · Assign (Dec 2025)</span></div>
+  <div class="line"><span class="op">        </span><span class="val">+ Web search</span><span class="comment">// real-time external context (Feb 2026)</span></div>
+  <div class="line"><span class="op">        </span><span class="val">+ Native open-source MCP</span><span class="comment">// 55+ tools, HTTP+PAT+Stdio transports</span></div>
+  <div class="line"><span class="op">        </span><span class="val">+ Slack &amp; Teams @Plane intake</span><span class="comment">// AGI-like conversational issue creation</span></div>
+  <div class="line"><span class="op">        </span><span class="val">+ Agent Development Kit</span><span class="comment">// build custom agents, ship to Marketplace OR keep internal</span></div>
+  <div class="line"><span class="op">        </span><span class="val">+ "No prompt storage"</span><span class="comment">// air-gap-ready · 99.99% API uptime · 100% on AI &amp; Agents</span></div>
+</div>
+
+<div class="callout callout-amber">
+  <p><strong>Architectural difference from every other competitor:</strong> Plane doesn't operate a multi-LLM gateway in the ClickUp/Notion/monday sense — they don't aggregate Claude + GPT + Gemini behind a routing layer. Instead, they let the customer plug in <em>their own</em> Anthropic or OpenAI key, and the workspace runs against that single model. On cloud they default to Claude (Sonnet 4.0 since Nov 2025). On self-hosted, you choose. This is more like the Linear / Plane approach to MCP than the ClickUp BrainGPT approach.</p>
+</div>
+
+<!-- ===== 4. ASK BUILD ASSIGN ===== -->
+<hr>
+<span class="section-label" id="ask-build-assign">04</span>
+<h2>Plane AI In Depth — What It Does Inside the Workspace</h2>
+
+<div class="ss-grid">
+  <div class="ss-block" style="margin:0;">
+    <div class="ss-label">📸 Plane AI panel — Ask mode answering a workspace question</div>
+    <div class="ss-placeholder">[screenshot slot — capture from a Plane workspace]</div>
+  </div>
+  <div class="ss-block" style="margin:0;">
+    <div class="ss-label">📸 Plane AI generating project structure from a prompt (Build mode)</div>
+    <div class="ss-placeholder">[screenshot slot — capture from project creation flow]</div>
+  </div>
+</div>
+
+<h3>What Plane AI ships today (per plane.so/ai)</h3>
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>Capability</th><th>Status</th><th>Detail</th></tr></thead>
+<tbody>
+<tr><td class="fn">Project structure generation (Talk to build)</td><td><span class="feat-ga">● GA</span></td><td>Generate project structure, work items, cycles from a prompt</td></tr>
+<tr><td class="fn">Workspace Q&amp;A (Ask to know)</td><td><span class="feat-ga">● GA</span></td><td>Natural-language queries against live workspace data; "Ask mode" + "Build mode" since Dec 23, 2025</td></tr>
+<tr><td class="fn">Web search</td><td><span class="feat-ga">● GA</span> <span style="font-size:11px;color:var(--muted);">Feb 17, 2026</span></td><td>Plane AI gets "real-time external context" — research alongside workspace queries</td></tr>
+<tr><td class="fn">Agent assignees on work items (Assign to ship)</td><td><span class="feat-ga">● GA</span></td><td>@mention an agent on any work item → it triages and progresses it</td></tr>
+<tr><td class="fn">Duplicate detection</td><td><span class="feat-ga">● GA</span></td><td>Detects duplicates against backlog before work-item creation</td></tr>
+<tr><td class="fn">One-click summaries</td><td><span class="feat-ga">● GA</span></td><td>For cycles, projects, initiatives</td></tr>
+<tr><td class="fn">AI-drafted briefs</td><td><span class="feat-ga">● GA</span></td><td>Auto-attached as Pages on initiatives/projects</td></tr>
+<tr><td class="fn">Auto-triage</td><td><span class="feat-ga">● GA</span></td><td>Classify, label, assign, route incoming work</td></tr>
+<tr><td class="fn">In-editor block actions</td><td><span class="feat-ga">● GA</span></td><td>Summarize · rewrite · expand · translate (in Pages editor)</td></tr>
+<tr><td class="fn">AI charts on dashboards</td><td><span class="feat-ga">● GA</span> <span style="font-size:11px;color:var(--muted);">Mar 16, 2026</span></td><td>"Explore data with interactive AI charts"</td></tr>
+<tr><td class="fn">Convert editor text → work items</td><td><span class="feat-ga">● GA</span> <span style="font-size:11px;color:var(--muted);">Dec 23, 2025</span></td><td>Select text in a Page → AI creates work items linked to the doc</td></tr>
+<tr><td class="fn">AI understands cycles, modules, work items</td><td><span class="feat-ga">● GA</span> <span style="font-size:11px;color:var(--muted);">Dec 23, 2025</span></td><td>Plane AI gained native awareness of cycles/modules/work items</td></tr>
+<tr><td class="fn">Answers convert to editable Pages</td><td><span class="feat-ga">● GA</span> <span style="font-size:11px;color:var(--muted);">Nov 15, 2025</span></td><td>Save an AI answer as a Page — durable knowledge from chat output</td></tr>
+</tbody>
+</table>
+</div>
+
+<!-- ===== 5. AGENTS ===== -->
+<hr>
+<span class="section-label" id="agents">05</span>
+<h2>Agents — Development Kit, Run Lifecycle, Marketplace</h2>
+
+<p>Plane's agent platform is the smallest in scope of any competitor we've researched but has all four elements that matter — <strong>identity, lifecycle, surfaces, distribution</strong>. The Agent Development Kit + open-source MCP server is the developer story.</p>
+
+<div class="anatomy">
+  <div class="anatomy-block">
+    <div class="anatomy-label" style="color:var(--cyan);">Identity</div>
+    <div class="anatomy-desc">Agents are first-class workspace participants — appear as work-item assignees alongside humans.</div>
+  </div>
+  <div class="anatomy-block">
+    <div class="anatomy-label" style="color:var(--purple);">Triggers (surfaces)</div>
+    <div class="anatomy-desc">@mentions in comments, docs, threads (Slack, MS Teams). Direct work-item assignment.</div>
+  </div>
+  <div class="anatomy-block">
+    <div class="anatomy-label" style="color:var(--blue);">Agent Run</div>
+    <div class="anatomy-desc">Lifecycle tracking primitive — every agent invocation is an Agent Run, tracked and audited.</div>
+  </div>
+  <div class="anatomy-block">
+    <div class="anatomy-label" style="color:var(--green);">Agent Development Kit</div>
+    <div class="anatomy-desc">Framework to build custom agents. Bundled with the open-source MCP server.</div>
+  </div>
+  <div class="anatomy-block">
+    <div class="anatomy-label" style="color:var(--amber);">Distribution</div>
+    <div class="anatomy-desc">Ship to Plane's Marketplace OR keep internal. No public marketplace count yet (vs monday's 17-at-launch Agentalent).</div>
+  </div>
+  <div class="anatomy-block">
+    <div class="anatomy-label" style="color:var(--teal);">Connectors</div>
+    <div class="anatomy-desc">First-party: Slack, GitHub, GitLab, Sentry, others. Agent can reach across these via the SDK.</div>
+  </div>
+</div>
+
+<div class="callout callout-cyan">
+  <p><strong>Comparison to Linear's Agent Interaction SDK:</strong> Conceptually similar — both make agents first-class users with their own identity, both ship an SDK + open-source reference. Linear's is more polished (8 months of iteration, 18+ external coding agents integrated). Plane's is smaller but has the OSS advantage — you can self-host the entire agent stack.</p>
+</div>
+
+<!-- ===== 6. SLACK + TEAMS AI ===== -->
+<hr>
+<span class="section-label" id="slack-teams-ai">06</span>
+<h2>Slack + Microsoft Teams AI Intake — @Plane in Any Channel</h2>
+
+<p>The Slack integration shipped first in <strong>November 15, 2025</strong> (powered by Claude Sonnet 4.0 from launch). Microsoft Teams marked "Coming soon" on /ai. The framing on plane.so describes the Slack experience as <strong>"AGI-like"</strong>.</p>
+
+<h3>What @Plane in Slack does</h3>
+<ul>
+  <li><strong>Conversational issue creation</strong> — describe what you need in plain English, Plane creates the work item with title, description, project assignment</li>
+  <li><strong>Auto-assignment + routing</strong> — Plane decides who to assign based on workspace context</li>
+  <li><strong>Thread sync</strong> — comment in Slack thread → syncs to Plane work item, and vice versa. Bidirectional</li>
+  <li><strong>Zero context-switching</strong> — never leave Slack to file or update tasks</li>
+  <li><strong>Re-routing project updates</strong> (Jan 15, 2026) — tighter control over how updates flow Slack ↔ Plane</li>
+</ul>
+
+<div class="quote">
+  Plane AI for Slack uses Claude Sonnet 4.0 as the default model (per Nov 15, 2025 changelog) and "can turn answers into editable Pages" — meaning anything the agent generates in a Slack conversation can be promoted to durable workspace knowledge in one click.
+  <span class="attrib">— plane.so/changelog 2025-11-15</span>
+</div>
+
+<!-- ===== 7. MCP ===== -->
+<hr>
+<span class="section-label" id="mcp">07</span>
+<h2>Plane MCP — 55+ Tools, HTTP + PAT + Stdio Transports</h2>
+
+<div class="mcp-box">
+  <h3>Plane MCP is the only fully open-source MCP server in the PM-tool space</h3>
+  <p><strong>Open source:</strong> <code style="background:#1a3a6e;color:#7ab8ff;">github.com/makeplane/plane-mcp-server</code></p>
+  <p><strong>Remote endpoint:</strong> <code style="background:#1a3a6e;color:#7ab8ff;">https://mcp.plane.so/http/mcp</code> (OAuth)</p>
+  <p><strong>API-key endpoint:</strong> <code style="background:#1a3a6e;color:#7ab8ff;">https://mcp.plane.so/http/api-key/mcp</code> (PAT in headers — for CI/CD)</p>
+  <p><strong>Legacy SSE:</strong> <code style="background:#1a3a6e;color:#7ab8ff;">https://mcp.plane.so/sse</code></p>
+  <p><strong>Self-hosted Stdio:</strong> <code style="background:#1a3a6e;color:#7ab8ff;">uvx plane-mcp-server stdio</code> + env vars <code style="background:#1a3a6e;color:#7ab8ff;">PLANE_API_KEY</code>, <code style="background:#1a3a6e;color:#7ab8ff;">PLANE_WORKSPACE_SLUG</code>, <code style="background:#1a3a6e;color:#7ab8ff;">PLANE_BASE_URL</code></p>
+  <p style="color:#7ab8ff;font-size:13px;margin-top:10px;">Tools: <strong>55+</strong> across projects, work items, cycles, modules, members, pages, intake, etc.</p>
+</div>
+
+<h3>Supported AI clients</h3>
+<div class="card-grid">
+  <div class="card">
+    <h4>Claude (Desktop, Web, Code, Cloud)</h4>
+    <p style="font-size:13px;">Claude.ai Settings → Integrations → Add more · Claude Desktop config · Claude Code: <code>claude mcp add-json plane '{ ... }'</code></p>
+  </div>
+  <div class="card">
+    <h4>Cursor</h4>
+    <p style="font-size:13px;">.cursor/mcp.json or Settings → Tools &amp; Integrations → New MCP Server</p>
+  </div>
+  <div class="card">
+    <h4>VSCode</h4>
+    <p style="font-size:13px;">.vscode/mcp.json — project-scoped server</p>
+  </div>
+  <div class="card">
+    <h4>Windsurf / Zed</h4>
+    <p style="font-size:13px;">Cascade → MCP servers (Windsurf) · context_servers key (Zed)</p>
+  </div>
+</div>
+
+<h3>Setup snippet — Cursor / Claude Desktop (most common path)</h3>
+<pre>{
+  "mcpServers": {
+    "plane": {
+      "command": "npx",
+      "args": ["mcp-remote@latest", "https://mcp.plane.so/http/mcp"]
+    }
+  }
+}
+</pre>
+
+<h3>Tool surface (55+ tools, illustrative)</h3>
+<div style="margin:10px 0;">
+  <span class="mcp-pill">list_projects</span>
+  <span class="mcp-pill">create_work_item</span>
+  <span class="mcp-pill">update_work_item</span>
+  <span class="mcp-pill">search_work_items</span>
+  <span class="mcp-pill">get_me</span>
+  <span class="mcp-pill">list_cycles · create_cycle</span>
+  <span class="mcp-pill">list_modules</span>
+  <span class="mcp-pill">list_members</span>
+  <span class="mcp-pill">create_page · update_page</span>
+  <span class="mcp-pill">list_intake_items</span>
+  <span class="mcp-pill">manage_state</span>
+  <span class="mcp-pill">manage_label</span>
+  <span class="mcp-pill">work_item_comments</span>
+  <span class="mcp-pill">work_item_links</span>
+  <span class="mcp-pill">project_views</span>
+  <span class="mcp-pill">workspace_views</span>
+  <span class="mcp-pill">webhooks</span>
+  <span class="mcp-pill">…and 35+ more</span>
+</div>
+
+<div class="callout callout-amber">
+  <p><strong>Tool ceiling watch-out (per 2026 ecosystem guidance):</strong> "Cursor has a soft ceiling of roughly 40 active tools across all your MCP servers combined… Plane exposes 55+ tools alone, so you may want to scope which tools are active per project." Recommendation: use Cursor's per-tool toggle for read-only vs write modes when combining Plane MCP with other servers (GitHub MCP, Atlassian MCP, etc.).</p>
+</div>
+
+<!-- ===== 8. SELF-HOSTED ===== -->
+<hr>
+<span class="section-label" id="self-hosted">08</span>
+<h2>Self-Hosting — Prime CLI, God Mode, Docker / K8s / Air-gapped</h2>
+
+<div class="cb cb-green">
+  <span class="cb-tag">The differentiator no other competitor in this research offers</span>
+  <h3>"Self-host without compromise, on-prem and air-gapped"</h3>
+  <p>Plane explicitly markets the self-hosted experience as full-parity with cloud — including Plane AI. The targeting is clear: regulated industries (finance, health, defence, gov) and privacy-first orgs (R&amp;D, security, agencies) where data residency &gt; everything.</p>
+</div>
+
+<h3>Self-hosted tooling</h3>
+<div class="card-grid">
+  <div class="card">
+    <h4>Prime CLI</h4>
+    <ul>
+      <li>Install, configure, upgrade, backup, monitor</li>
+      <li>Single-command lifecycle for the full Plane stack</li>
+      <li>Docker + Kubernetes targets supported out of the box</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h4>God Mode (admin panel)</h4>
+    <ul>
+      <li>SMTP · auth · SSO · security · telemetry settings</li>
+      <li>SSO/SAML/LDAP</li>
+      <li>RBAC + audit logs</li>
+      <li>BYO Postgres, Redis, S3-compatible storage</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h4>Plane AI on self-hosted</h4>
+    <ul>
+      <li>Full feature parity with cloud</li>
+      <li>BYO Anthropic OR OpenAI API key</li>
+      <li>Air-gapped option: no outbound prompt traffic except your model provider</li>
+      <li>"No prompt storage. No training on customer data"</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h4>Plane MCP on self-hosted</h4>
+    <ul>
+      <li>Stdio transport (local), invoked via <code>uvx plane-mcp-server stdio</code></li>
+      <li>Set <code>PLANE_BASE_URL</code> to your private Plane instance</li>
+      <li>Same 55+ tools surface as cloud</li>
+      <li>Same OSS code — you can fork and audit</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ===== 9. PLANE COMPOSE ===== -->
+<hr>
+<span class="section-label" id="projects-as-code">09</span>
+<h2>Plane Compose — Projects-as-Code (YAML)</h2>
+
+<div class="cb cb-purple">
+  <span class="cb-tag">The Plane feature with no equivalent anywhere else</span>
+  <h3>"Every setting versioned, reviewed, and deployed from your terminal."</h3>
+  <p style="font-size:13.5px;">Plane Compose lets teams define project structure — initiatives, projects, cycles, work-item templates, labels, states, workflows, dashboards — as <strong>YAML manifests checked into Git</strong>. Run <code>plane apply</code> to deploy. PR-review your project changes. Roll back via Git. <strong>This is GitOps for PM tooling.</strong></p>
+</div>
+
+<h3>What this enables</h3>
+<ul>
+  <li><strong>Bootstrap a new team workspace from a template repo</strong> — instead of clicking through UI for hours</li>
+  <li><strong>Audit changes to project structure</strong> via git blame / git log</li>
+  <li><strong>Multi-environment workflows</strong> — dev / staging / prod workspaces, all defined in code, deployed identically</li>
+  <li><strong>Coding-agent compatibility</strong> — Plane Compose is the format a coding agent would write to programmatically</li>
+  <li><strong>Compliance-friendly</strong> — every change to PM config has an immutable git history</li>
+</ul>
+
+<div class="callout callout-cyan">
+  <p><strong>Strategic implication:</strong> Plane Compose is the cleanest mechanism we've seen for letting AI agents safely modify project structure at scale. Where ClickUp/monday agents can update settings directly through the API (and bypass review), a Plane agent can write a YAML diff that lands as a git commit — full review, full rollback, full audit. <em>This is the most engineering-team-friendly AI-agent integration in any of the 7 PM tools.</em></p>
+</div>
+
+<!-- ===== 10. PRODUCTS ===== -->
+<hr>
+<span class="section-label" id="products">10</span>
+<h2>Four Products in One Workspace</h2>
+
+<p>Plane bundles four products that compete with what would otherwise be 3-4 separate tools at the Atlassian shop (Jira + Confluence + JSM) or a Linear+Notion shop.</p>
+
+<div class="card-grid">
+  <div class="cb cb-blue" style="margin:0;">
+    <span class="cb-tag">Product 1 · PM</span>
+    <h3>Projects</h3>
+    <p style="font-size:13.5px;">"Project management that matches how your team works." Initiatives, projects, epics, cycles, modules. Views: Board, Spreadsheet, List, Gantt. Sprints with burndown. Workflows + approvals (no plugins). Real-time dashboards.</p>
+  </div>
+  <div class="cb cb-green" style="margin:0;">
+    <span class="cb-tag">Product 2 · wiki</span>
+    <h3>Wiki (Pages)</h3>
+    <p style="font-size:13.5px;">"Documentation built in for tribal knowledge." Block-based editor with multi-column layouts (Mar 2026). Plane AI integrated for summarise / rewrite / expand / translate in-editor. Convert text → work items inline.</p>
+  </div>
+  <div class="cb cb-cyan" style="margin:0;">
+    <span class="cb-tag">Product 3 · AI</span>
+    <h3>Plane AI</h3>
+    <p style="font-size:13.5px;">"AI that knows your work, not just your prompts." Ask / Build / Assign modes. MCP server. Slack + Teams intake. Agent Development Kit. BYO model keys on self-hosted.</p>
+  </div>
+  <div class="cb cb-amber" style="margin:0;">
+    <span class="cb-tag">Product 4 · service · soon</span>
+    <h3>Desk <span style="font-size:9px;color:var(--blue);">(Coming soon)</span></h3>
+    <p style="font-size:13.5px;">"Customer support that lives where your work does." Plane's answer to JSM/Zendesk/Intercom. Will close the loop on the 4-products-1-tool pitch.</p>
+  </div>
+</div>
+
+<!-- ===== 11. MIGRATION ===== -->
+<hr>
+<span class="section-label" id="migration">11</span>
+<h2>Migration Path — The Plane Sales Story</h2>
+
+<div class="cb cb-cyan">
+  <span class="cb-tag">"Two Fortune 10 companies chose Plane for their Jira migration."</span>
+  <h3>"Get out of Jira, Linear, ClickUp, Asana, or Monday without leaving your data behind."</h3>
+  <p>Plane's most aggressive marketing claim. The 3-week migration program is structured as: <strong>discovery → parallel run → cutover</strong>. Dedicated comparison pages exist for Jira, Asana, Monday.com, and Linear (no comparison page for Notion or ClickUp on the public site).</p>
+</div>
+
+<h3>Public customer migration stories</h3>
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>Customer</th><th>Migrated from</th><th>Industry</th></tr></thead>
+<tbody>
+<tr><td class="fn">FortyAU</td><td>Monday + Trello</td><td>Custom software dev agency</td></tr>
+<tr><td class="fn">MinimalArt</td><td>ClickUp</td><td>Design/agency</td></tr>
+<tr><td class="fn">VATES</td><td>"a Trello alternative"</td><td>—</td></tr>
+<tr><td class="fn">2× unnamed Fortune 10</td><td>Jira</td><td>Enterprise</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>The migration value-prop (why a team would switch)</h3>
+<div class="card-grid">
+  <div class="card">
+    <h4>From Jira</h4>
+    <p style="font-size:13px;">Complexity fatigue · cost (esp. Premium for AI) · Rovo activation pain · self-hostable replacement for Data Center customers being forced to Cloud.</p>
+  </div>
+  <div class="card">
+    <h4>From Linear</h4>
+    <p style="font-size:13px;">Need for wiki + Desk in same tool · need for self-hosting / air-gap · enterprise governance + SSO/SAML/LDAP.</p>
+  </div>
+  <div class="card">
+    <h4>From ClickUp</h4>
+    <p style="font-size:13px;">UX complexity · AI add-on pricing friction · vendor lock-in · "ClickUp Brain is great, the rest is too much."</p>
+  </div>
+  <div class="card">
+    <h4>From Monday</h4>
+    <p style="font-size:13px;">AI Credits sticker shock · "$0.01/credit, hit limits, upgrade" pattern · need for OSS / privacy-first stance.</p>
+  </div>
+</div>
+
+<!-- ===== 12. PRICING ===== -->
+<hr>
+<span class="section-label" id="pricing-gateway">12</span>
+<h2>Pricing &amp; BYO-Keys Model Gateway</h2>
+
+<p>Plane's pricing model is genuinely different from every other competitor in this research. There is <em>no</em> AI seat upcharge — Plane AI "ships on every plan." The cost discipline lives on the AI-provider side: customers pay Anthropic / OpenAI directly via BYO keys (self-hosted) or via a credit-based consumption model (cloud).</p>
+
+<h3>Plan tiers (cloud)</h3>
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>Plan</th><th>Pricing</th><th>AI access</th><th>Notes</th></tr></thead>
+<tbody>
+<tr><td class="fn">Free</td><td>$0</td><td>Plane AI included (with fair-use caps)</td><td>Small teams &amp; OSS users</td></tr>
+<tr><td class="fn">Pro</td><td>Per-user</td><td>Full Plane AI</td><td>Most-bundled SMB tier</td></tr>
+<tr><td class="fn">Business</td><td>Per-user (homepage CTA: "Try Plane Business for 14 days")</td><td>Full Plane AI · advanced controls</td><td>Mid-market / growing teams</td></tr>
+<tr><td class="fn">Enterprise</td><td>Custom (sales)</td><td>Full Plane AI + custom roles + air-gapped self-host option</td><td>Fortune 10 / regulated / government</td></tr>
+<tr><td class="fn">Self-hosted (OSS)</td><td>Free</td><td>BYO Anthropic/OpenAI key — you pay AI provider directly</td><td>Privacy-first / air-gap / OSS-aligned orgs</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>The credit model (cloud only)</h3>
+<ul>
+  <li>"Credit-based consumption model, no per-seat AI fee"</li>
+  <li>Self-hosted customers pay their AI provider directly (no Plane credits)</li>
+  <li>Specific credit rates not publicly disclosed in the sources I fetched — would need to check /pricing in detail</li>
+  <li>Comparison to other vendors: monday charges $0.01/credit · Notion $10/1000 credits · ClickUp $10/10K credits. Plane's exact unit not surfaced publicly</li>
+</ul>
+
+<div class="callout callout-green">
+  <p><strong>What this commercially means:</strong> Plane is the only PM tool in this research where <em>a privacy-conscious customer can run all AI for free</em> (self-host + BYO keys). Anthropic / OpenAI bills go directly to your account, your prompts never touch Plane's servers. For the enterprise buyer, this is also a procurement story — finance teams understand "Anthropic API spend" as a separate line item, separate from PM tool spend.</p>
+</div>
+
+<!-- ===== 13. GOVERNANCE ===== -->
+<hr>
+<span class="section-label" id="governance">13</span>
+<h2>Governance — Air-Gapped, "No Prompt Storage", Compliance</h2>
+
+<h3>Compliance posture</h3>
+<ul>
+  <li><strong>SOC 2 · ISO 27001 · GDPR · CCPA</strong> "out of the box"</li>
+  <li><strong>SSO · SAML · LDAP · RBAC · audit logs</strong></li>
+  <li>Committed uptime SLA</li>
+  <li>Public security portal: <a href="https://security.plane.so">security.plane.so</a></li>
+  <li>"99.99% API uptime. 100% on AI and Agents"</li>
+</ul>
+
+<h3>AI-specific governance promises</h3>
+<div class="card-grid">
+  <div class="card">
+    <h4>"No prompt storage"</h4>
+    <p style="font-size:13.5px;">Plane explicitly states prompts are not stored on their servers. The model provider may still log per their policy (Anthropic/OpenAI have their own retention rules).</p>
+  </div>
+  <div class="card">
+    <h4>"No training on customer data"</h4>
+    <p style="font-size:13.5px;">Standard SaaS promise — but reinforced by air-gapped option where Plane has no visibility into prompts at all.</p>
+  </div>
+  <div class="card">
+    <h4>Air-gapped option</h4>
+    <p style="font-size:13.5px;">Self-host the full Plane stack with no outbound network access except your chosen AI provider endpoint. The only PM tool offering this.</p>
+  </div>
+  <div class="card">
+    <h4>Custom OAuth scopes (Feb 28, 2026)</h4>
+    <p style="font-size:13.5px;">Per-integration scope control for third-party app access — relevant for MCP clients you authorise.</p>
+  </div>
+</div>
+
+<!-- ===== 14. STRATEGIC VECTOR ===== -->
+<hr>
+<span class="section-label" id="vector">14</span>
+<h2>Strategic Vector — "Steerable Systems"</h2>
+
+<div class="cb cb-cyan">
+  <span class="cb-tag">Vamsi Kurama · Co-founder &amp; CEO · 2026 vision</span>
+  <h3>"Steerable systems — humans and agents operate inside the same loop."</h3>
+  <p>Where ClickUp pitches "Converged AI Workspace," monday pitches "AI Work Platform," Notion pitches "Context, collaboration, and action — all in one place," and Linear pitches "Issue tracking is dead," Plane's CEO frames the company's bet around <strong>steerability</strong> — the idea that org-level decision making (not strategic, but operational mid-level decisions made hourly) is the actual ground where AI changes work.</p>
+</div>
+
+<div class="quote">
+  "Everyone in productivity and project management is talking about consolidation right now — bringing features together and calling it 'All-in-one.' Consolidation without connection doesn't work. Organizations don't just need consolidated tools. They need steerable systems — a steerable system is one where humans and agents operate inside the same loop, where a change in intent propagates through workflows, decisions, and outcomes without friction."
+  <span class="attrib">— Vamsi Kurama, 2026 vision posts</span>
+</div>
+
+<div class="quote">
+  "This happens a thousand times a week inside every enterprise. Not in the boardroom but below it. The strategic calls are made once a quarter. The decisions that actually move the business get made every hour, by managers doing their best with whatever data they can grab in time. Most of the time, they're flying on instinct and hoping the dashboard catches up."
+  <span class="attrib">— Vamsi Kurama on operational mid-level decisions as the AI target</span>
+</div>
+
+<h3>3 / 6 / 12-month outlook</h3>
+<div class="card-grid">
+  <div class="card">
+    <h4>Next 3 months (May → Aug 2026)</h4>
+    <ul>
+      <li>Plane Desk launches (the 4th product — fills the JSM/Zendesk gap)</li>
+      <li>Microsoft Teams AI intake GA (was "Coming soon" on /ai)</li>
+      <li>Agent Marketplace populated with first wave of community + first-party agents</li>
+      <li>More AI charts / dashboard features (extending Mar 16, 2026 launch)</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h4>Next 6 months</h4>
+    <ul>
+      <li>Plane Compose ecosystem matures — community templates for common project shapes</li>
+      <li>Deeper agent skills via Agent Development Kit</li>
+      <li>Vertical-specific deployments (regulated industries: pharma, finance, defence)</li>
+      <li>Possible Series A — $4M seed was 2 years ago, growth signals (Fortune 10 wins) justify next round</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h4>Next 12 months</h4>
+    <ul>
+      <li>Plane as the OSS-stack-of-choice for AI-native PM at regulated &amp; government orgs</li>
+      <li>"Air-gapped AI PM" becomes a real procurement category (Plane owns it today)</li>
+      <li>Migration pattern from Jira Data Center continues — Atlassian's forced Cloud migration is structural tailwind</li>
+      <li>OSS contribution growth — measurable on github.com/makeplane/plane (current state: 92 employees, but OSS contributors are larger)</li>
+    </ul>
+  </div>
+</div>
+
+<div class="callout callout-cyan">
+  <p><strong>The Plane vector summary:</strong> <em>The OSS, self-hostable, air-gap-ready PM platform with first-class AI for regulated, privacy-first, and government customers.</em> Where every other competitor is fighting for "AI work platform" mindshare on top of closed SaaS, Plane is targeting the segment those competitors structurally <em>can't</em> serve — orgs that won't or can't put their data in a vendor cloud. Combined with the "Get out of Jira" migration pitch and aggressive MCP/agent SDK posture, this is the most asymmetric strategic bet of any competitor in this research.</p>
+</div>
+
+<!-- ===== 15. TIMELINE ===== -->
+<hr>
+<span class="section-label" id="timeline">15</span>
+<h2>Release Timeline — Nov 2025 → May 2026</h2>
+
+<div class="timeline">
+  <div class="timeline-item"><span class="timeline-date">Nov 15, 2025</span><span class="timeline-title">🚀 Plane AI with Slack support + Claude Sonnet 4.0</span><span class="timeline-desc">First major Plane AI release. Slack @Plane intake. Runs on Claude Sonnet 4.0. "Can turn answers into editable Pages." Web app migrates to React Router + Vite.</span></div>
+  <div class="timeline-item"><span class="timeline-date">Dec 11, 2025</span><span class="timeline-title">v1.2.0 OSS release — Next.js → React Router migration</span><span class="timeline-desc">"Power K, supercharged" — keyboard-driven command palette. Triage state for Intake. New top nav with global Search and Inbox.</span></div>
+  <div class="timeline-item"><span class="timeline-date">Dec 23, 2025</span><span class="timeline-title">🚀 Plane AI gets context awareness + Ask/Build modes</span><span class="timeline-desc">Plane AI "understands cycles, modules, and work items with Ask and Build modes." Intake ownership. Editor-to-work-item conversion.</span></div>
+  <div class="timeline-item"><span class="timeline-date">Jan 15, 2026</span><span class="timeline-title">Re-routing project updates to Slack + bulk imports</span><span class="timeline-desc">"Tighter control over how work flows between Plane and Slack." Bulk import tooling. "Smarter, context-aware AI interactions." Security hardening across auth/uploads/integrations.</span></div>
+  <div class="timeline-item"><span class="timeline-date">Feb 2, 2026</span><span class="timeline-title">Product tour + Try section + Plane AI updates</span><span class="timeline-desc">Guided onboarding. "Improvements to pages, forms, AI, and app performance."</span></div>
+  <div class="timeline-item"><span class="timeline-date">Feb 17, 2026</span><span class="timeline-title">🚀 Web search in Plane AI · Project Subscribers</span><span class="timeline-desc">Plane AI gets "real-time external context" via web search. Workspace view layouts.</span></div>
+  <div class="timeline-item"><span class="timeline-date">Feb 23, 2026</span><span class="timeline-title">v1.2.2 OSS — security patches</span><span class="timeline-desc">API token rate limit validation. SSRF mitigation in work item links. IDOR fixes. Django + cryptography updates.</span></div>
+  <div class="timeline-item"><span class="timeline-date">Feb 28, 2026</span><span class="timeline-title">Archive epics + rich filters + custom OAuth scopes</span><span class="timeline-desc">"Custom OAuth scopes for finer control over third-party app access" — relevant for MCP / agent integrations.</span></div>
+  <div class="timeline-item"><span class="timeline-date">Mar 5, 2026</span><span class="timeline-title">v1.2.3 OSS — webhook security</span><span class="timeline-desc">Webhook validation against reserved IP addresses.</span></div>
+  <div class="timeline-item"><span class="timeline-date">Mar 16, 2026</span><span class="timeline-title">🚀 AI charts + column layouts + project labels</span><span class="timeline-desc">"Explore data with interactive AI charts." Multi-column Pages. Reusable Project labels.</span></div>
+  <div class="timeline-item"><span class="timeline-date">Apr 6, 2026</span><span class="timeline-title">v1.3.0 OSS — design refresh + Gitea auth + i18n</span><span class="timeline-desc">"A cleaner, calmer Plane." Gitea Authentication support. Project Summary external API. Ukrainian language. Expanded Russian.</span></div>
+  <div class="timeline-item"><span class="timeline-date">Apr 25, 2026</span><span class="timeline-title">Custom roles + granular access control</span><span class="timeline-desc">Redesigned permissions system. Custom roles for Enterprise. Foundation for tighter AI-agent permission scoping.</span></div>
+  <div class="timeline-item"><span class="timeline-date">May 14, 2026</span><span class="timeline-title">v1.3.1 OSS — security hardening</span><span class="timeline-desc">ORM field injection prevention · workspace membership enforcement on V2 asset endpoints · filename sanitization · webhook SSRF protection via <code>WEBHOOK_ALLOWED_IPS</code> allowlist. Intercom integration removed entirely.</span></div>
+</div>
+
+<!-- ===== 16. ADOPTION ===== -->
+<hr>
+<span class="section-label" id="adoption">16</span>
+<h2>Adoption Signals — Fortune 10, Governments, OSS Capital</h2>
+
+<h3>Customer logos (per plane.so homepage)</h3>
+<div style="margin:10px 0;">
+  <span class="tool-pill">Sony</span>
+  <span class="tool-pill">Aramco</span>
+  <span class="tool-pill">Dolby</span>
+  <span class="tool-pill">Accenture</span>
+  <span class="tool-pill">Amazon</span>
+  <span class="tool-pill">Zerodha</span>
+  <span class="tool-pill">Stark Bank</span>
+  <span class="tool-pill">Mirador Therapeutics</span>
+  <span class="tool-pill new">Government of Lithuania</span>
+  <span class="tool-pill new">République Française</span>
+</div>
+
+<div class="callout callout-cyan">
+  <p><strong>What this customer mix tells us:</strong> Plane is NOT a SMB tool. The mix skews <em>enterprise + regulated + government</em> — the segment where Notion is too unstructured, monday is too cloudy, ClickUp is too kitchen-sink, and Jira+Confluence is too expensive and not self-hostable enough. <strong>Two unnamed Fortune 10 customers migrated from Jira</strong>, per public marketing.</p>
+</div>
+
+<h3>Independent sentiment</h3>
+<div class="card-grid">
+  <div class="card">
+    <h4>Bullish — privacy/self-host buyers</h4>
+    <p style="font-size:13.5px;">"That our software can be hosted by our customers on their own infrastructure, with all the protections from the public internet, is a key driver for Plane's adoption." — Vamsi Kurama. Customers cite air-gap option as the reason for adoption over Jira/Linear.</p>
+  </div>
+  <div class="card">
+    <h4>Bullish — OSS-first orgs</h4>
+    <p style="font-size:13.5px;">OSS Capital backed this with their thesis fund. Plane's GitHub repo has consistent activity. v1.3.x security hardening cadence shows the team takes the OSS commitment seriously.</p>
+  </div>
+  <div class="card">
+    <h4>Mixed — feature depth vs incumbents</h4>
+    <p style="font-size:13.5px;">"Plane is smaller in scope than ClickUp or monday and has fewer pre-built agents than Linear's coding-agent roster." That's the honest gap — Plane is making the OSS + air-gap bet, not the breadth bet.</p>
+  </div>
+  <div class="card">
+    <h4>Operational metrics</h4>
+    <p style="font-size:13.5px;">January 2026: users from <strong>293 cities across 107 countries</strong>. Annual revenue ₹17.4Cr (~$2M) as of March 31, 2025 — small revenue base but high-quality customer mix. 92 employees. Ranked 28th of 1,960 active competitors on Tracxn.</p>
+  </div>
+</div>
+
+<!-- ===== 17. ACTIVATION ===== -->
+<hr>
+<span class="section-label" id="activation">17</span>
+<h2>Activation &amp; Setup — Cloud vs Self-Hosted</h2>
+
+<div class="callout callout-blue">
+  <p><strong>Setup verdict:</strong> Cloud is the simplest of all 7 competitors — Plane AI ships on every plan with no Rovo-style toggles, no AI add-on negotiation. Self-hosted is the most powerful but also the most operationally involved — Plane is the only competitor where activation includes "deploy a Kubernetes cluster."</p>
+</div>
+
+<h3>Cloud path</h3>
+<div class="steps">
+  <div class="step">
+    <div class="step-n">1</div>
+    <div class="step-c">
+      <h3>Sign up for Plane cloud</h3>
+      <p>Pick Pro / Business / Enterprise. Plane AI is included. No separate AI add-on. 14-day Business trial available.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-n">2</div>
+    <div class="step-c">
+      <h3>Use Plane AI immediately</h3>
+      <p>Cmd/Ctrl K → Plane AI panel. Try Ask mode ("what's the status of project X?") or Build mode ("create a Q3 launch project"). Web search included as of Feb 17, 2026.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-n">3</div>
+    <div class="step-c">
+      <h3>Connect Slack / Teams</h3>
+      <p>Settings → Integrations → Slack (or MS Teams when GA). @Plane in any channel to create work items conversationally. Bidirectional thread sync.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-n">4</div>
+    <div class="step-c">
+      <h3>Connect Plane MCP</h3>
+      <p>Settings → Integrations → Add more → enter <code>https://mcp.plane.so/http/mcp</code> → click Connect → OAuth flow → done. Then add the same URL in Cursor / Claude / VSCode.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-n">5</div>
+    <div class="step-c">
+      <h3>(Optional) Plane Compose</h3>
+      <p>Define project structure as YAML in a git repo. <code>plane apply</code> deploys. Use for multi-environment, audit-trail, GitOps-style project management.</p>
+    </div>
+  </div>
+</div>
+
+<h3>Self-hosted path</h3>
+<div class="steps">
+  <div class="step">
+    <div class="step-n">1</div>
+    <div class="step-c">
+      <h3>Prerequisites</h3>
+      <p>Docker host OR Kubernetes cluster. BYO Postgres + Redis + S3-compatible storage. Anthropic or OpenAI API key.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-n">2</div>
+    <div class="step-c">
+      <h3>Install via Prime CLI</h3>
+      <p>Single-command install. Configures app, db, queues, storage. Helm charts available for K8s.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-n">3</div>
+    <div class="step-c">
+      <h3>God Mode setup</h3>
+      <p>Admin panel → configure SMTP, auth (SSO/SAML/LDAP), security, telemetry, AI provider key.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-n">4</div>
+    <div class="step-c">
+      <h3>Wire Plane AI to your model</h3>
+      <p>BYO Anthropic OR OpenAI key (configured in God Mode). All Plane AI surfaces (Ask/Build/Assign) route through your model.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-n">5</div>
+    <div class="step-c">
+      <h3>Air-gap (optional)</h3>
+      <p>Restrict outbound network access to <em>only</em> your AI provider endpoint. Plane never sees prompts after this point.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-n">6</div>
+    <div class="step-c">
+      <h3>Connect MCP via Stdio (for self-hosted)</h3>
+      <p>Configure <code>uvx plane-mcp-server stdio</code> with <code>PLANE_API_KEY</code>, <code>PLANE_WORKSPACE_SLUG</code>, <code>PLANE_BASE_URL</code> pointing to your private instance. Add to Claude Code / Cursor / Claude Desktop.</p>
+    </div>
+  </div>
+</div>
+
+<hr>
+<p style="font-size:12px;color:var(--faint);text-align:center;">
+  Plane AI Research Notes — QPM / SA / AI research — May 15, 2026<br>
+  Sources: plane.so · plane.so/ai · plane.so/changelog · github.com/makeplane/plane · github.com/makeplane/plane-mcp-server · developers.plane.so · TechCrunch · Tracxn · Crunchbase · OSS Capital · LinkedIn (Vamsi Kurama posts).<br>
+  <em>Screenshot slots marked throughout — capture from a live Plane workspace when ready. No Plane MCP / playwright access in this research session.</em>
+</p>
+
+</body>
+</html>

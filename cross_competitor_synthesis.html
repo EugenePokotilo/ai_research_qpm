@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AI Research — Cross-Competitor Synthesis</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+:root{
+  --bg:#fafaf8; --surface:#fff; --surface2:#f4f3ef;
+  --text:#1a1916; --muted:#7a7870; --line:#e8e6df;
+  --accent:#5b3df5;
+  --c-jira:#0052cc; --c-linear:#d946ef; --c-clickup:#7b68ee; --c-monday:#84cc16;
+  --c-notion:#475569; --c-plane:#06b6d4; --c-asana:#f97316; --c-qpm:#dc2626;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:15px}
+.container{max-width:1280px;margin:0 auto;padding:48px 32px}
+h1{font-family:'Syne',sans-serif;font-weight:800;font-size:54px;line-height:1.05;letter-spacing:-0.02em;margin-bottom:16px}
+h2{font-family:'Syne',sans-serif;font-weight:700;font-size:32px;letter-spacing:-0.01em;margin:48px 0 20px}
+h3{font-family:'Syne',sans-serif;font-weight:600;font-size:20px;margin:24px 0 12px}
+h4{font-family:'Inter',sans-serif;font-weight:600;font-size:14px;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin:16px 0 8px}
+p{margin-bottom:12px}
+a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent;transition:border-color .15s}
+a:hover{border-color:var(--accent)}
+code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:var(--surface2);padding:2px 6px;border-radius:4px}
+.header{border-bottom:1px solid var(--line);padding-bottom:32px;margin-bottom:32px}
+.section-label{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:8px}
+.subtitle{font-size:19px;color:var(--muted);max-width:780px;margin-top:8px}
+.meta-row{display:flex;gap:16px;margin-top:20px;flex-wrap:wrap}
+.badge{font-family:'JetBrains Mono',monospace;font-size:11px;padding:5px 10px;background:var(--surface2);border:1px solid var(--line);border-radius:4px;color:var(--muted)}
+.toc{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:24px 28px;margin:32px 0}
+.toc h4{margin-top:0}
+.toc ol{list-style:none;counter-reset:item;column-count:2;column-gap:32px}
+.toc li{counter-increment:item;padding:6px 0;break-inside:avoid}
+.toc li::before{content:counter(item,decimal-leading-zero) ".";font-family:'JetBrains Mono',monospace;color:var(--accent);margin-right:10px;font-size:12px}
+.callout{background:var(--surface);border-left:3px solid var(--accent);padding:18px 22px;margin:20px 0;border-radius:0 6px 6px 0}
+.callout.warn{border-left-color:#ea580c;background:#fff7ed}
+.callout.note{border-left-color:#0891b2;background:#ecfeff}
+.callout strong{color:var(--text)}
+table{width:100%;border-collapse:collapse;margin:20px 0;font-size:13px;background:var(--surface);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+th{background:var(--surface2);font-family:'Syne',sans-serif;font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:0.06em;padding:12px 10px;text-align:left;border-bottom:1px solid var(--line);color:var(--text)}
+td{padding:12px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#fbfaf7}
+.feat-table{font-size:12px}
+.feat-table th{font-size:11px;padding:10px 8px}
+.feat-table td{padding:10px 8px;font-size:12px;line-height:1.45}
+.feat-table .row-label{font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:var(--text);background:#fafaf8;border-right:1px solid var(--line)}
+.feat-table .qpm-cell{background:#fef2f2;border-left:2px solid var(--c-qpm);color:var(--c-qpm);font-style:italic;font-weight:500}
+.feat-table .comment-cell{background:#fbfaf7;font-style:italic;color:var(--muted);font-size:11px}
+.col-jira{border-top:3px solid var(--c-jira)}
+.col-linear{border-top:3px solid var(--c-linear)}
+.col-clickup{border-top:3px solid var(--c-clickup)}
+.col-monday{border-top:3px solid var(--c-monday)}
+.col-notion{border-top:3px solid var(--c-notion)}
+.col-plane{border-top:3px solid var(--c-plane)}
+.col-asana{border-top:3px solid var(--c-asana)}
+.col-qpm{border-top:3px solid var(--c-qpm);background:#fef2f2}
+.tag{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;padding:2px 6px;border-radius:3px;background:var(--surface2);color:var(--muted);margin-right:4px;white-space:nowrap}
+.tag.yes{background:#dcfce7;color:#166534}
+.tag.no{background:#fee2e2;color:#991b1b}
+.tag.partial{background:#fef3c7;color:#92400e}
+.vector-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin:24px 0}
+.vector-card{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:20px 22px;border-top:4px solid var(--accent)}
+.vector-card.jira{border-top-color:var(--c-jira)}
+.vector-card.linear{border-top-color:var(--c-linear)}
+.vector-card.clickup{border-top-color:var(--c-clickup)}
+.vector-card.monday{border-top-color:var(--c-monday)}
+.vector-card.notion{border-top-color:var(--c-notion)}
+.vector-card.plane{border-top-color:var(--c-plane)}
+.vector-card.asana{border-top-color:var(--c-asana)}
+.vector-card h3{font-size:18px;margin:0 0 8px}
+.vector-card .focus{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;display:block}
+.vector-card .why{margin-top:10px;padding-top:10px;border-top:1px dashed var(--line);font-size:13px}
+.vector-card .why strong{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);display:block;margin-bottom:4px}
+.dim-table{font-size:13px}
+.dim-table .competitor{font-family:'Syne',sans-serif;font-weight:600;font-size:13px}
+.rec-card{background:linear-gradient(135deg,#faf9ff,#fff);border:1px solid var(--line);border-left:4px solid var(--accent);padding:20px 24px;margin:20px 0;border-radius:0 8px 8px 0}
+.rec-card h3{margin-top:0;color:var(--accent)}
+.footer{margin-top:64px;padding-top:32px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+.footer h4{color:var(--muted)}
+.footer ul{list-style:none;padding-left:0}
+.footer li{padding:4px 0}
+.scroll{overflow-x:auto;margin:20px -8px;padding:0 8px}
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="header">
+<div class="section-label">Cross-competitor synthesis · v1.0</div>
+<h1>AI in PM Tools, 2026<br>Side-by-side, 7 competitors.</h1>
+<p class="subtitle">The decision-grade synthesis across Jira, Linear, ClickUp, monday.com, Notion, Plane, and Asana — capability map, 12-month strategic vectors, and dimension-by-dimension recommendations for QPM positioning.</p>
+<div class="meta-row">
+<span class="badge">Date · 2026-05-15</span>
+<span class="badge">Competitors · 7</span>
+<span class="badge">Capability rows · 14</span>
+<span class="badge">Dimensions · 6</span>
+<span class="badge">QPM cells · TODO</span>
+</div>
+</div>
+
+<div class="toc">
+<h4>Contents</h4>
+<ol>
+<li><a href="#01">Executive synopsis</a></li>
+<li><a href="#02">How to read this doc</a></li>
+<li><a href="#03">Capability matrix — 14 features × 7 competitors + QPM</a></li>
+<li><a href="#04">12-month AI strategic vectors</a></li>
+<li><a href="#05">Dimension: Pricing models</a></li>
+<li><a href="#06">Dimension: MCP support</a></li>
+<li><a href="#07">Dimension: Agent architectures</a></li>
+<li><a href="#08">Dimension: Governance posture</a></li>
+<li><a href="#09">Dimension: Model gateways</a></li>
+<li><a href="#10">Dimension: Strategic vectors compared</a></li>
+<li><a href="#11">Recommendations for QPM</a></li>
+<li><a href="#12">Open questions</a></li>
+</ol>
+</div>
+
+<!-- ============ SECTION 01 ============ -->
+<section id="01">
+<div class="section-label">01 · Executive synopsis</div>
+<h2>The single-page read</h2>
+
+<p>Seven competitors. Three structural archetypes.</p>
+
+<div class="callout">
+<strong>Archetype A — Defenders of the installed base.</strong> Jira (Atlassian Intelligence + Rovo) and Asana (AI Teammates + Work Graph). Public companies under disruption pressure; AI is the rerating catalyst. Both leaning on the enterprise governance brand to slow churn. Asana is the more concentrated bet — GA Q1 FY27 with a 15% net new ARR target locked into guidance.
+</div>
+
+<div class="callout">
+<strong>Archetype B — AI-native repositioners.</strong> ClickUp (Brain² + Codegen + Qatalog acquisitions), monday (All-In on AI + Agentalent marketplace + Sidekick/Vibe/Agents triad), Notion (3.0 GPT-5 rebuild + pages-as-memory + Verify-any-page). All three made aggressive product rebrands in 2025-2026 to claim the AI work-OS narrative. ClickUp goes wide (acquisitions), monday goes marketplace, Notion goes context substrate.
+</div>
+
+<div class="callout">
+<strong>Archetype C — Architectural outliers.</strong> Linear (orchestration layer for external dev agents — "issue tracking is dead") and Plane (open-source + self-hosted + air-gap-ready). Both built their AI bet around a single, opinionated architectural choice rather than feature breadth. Linear owns the dev-agent interface; Plane owns the regulated/gov segment that no SaaS competitor can serve.
+</div>
+
+<p style="margin-top:20px"><strong>The big gap to flag:</strong> Asana is the <em>only</em> competitor in this set without a public MCP server. Every other competitor — including Plane — ships one. Asana's omission is conspicuous given how loudly they frame the "context-starved LLM" problem.</p>
+
+</section>
+
+<!-- ============ SECTION 02 ============ -->
+<section id="02">
+<div class="section-label">02 · How to read this doc</div>
+<h2>Reading guide</h2>
+
+<p>This document is built to be skimmed in 3 minutes and re-read in 30. Three layers:</p>
+
+<ol style="padding-left:24px;margin:12px 0">
+<li style="margin:6px 0"><strong>Capability matrix (§03)</strong> — what each competitor has, named, dated, and rated against QPM (cells marked TODO).</li>
+<li style="margin:6px 0"><strong>12-month vectors (§04)</strong> — where each competitor is going, with the <em>why</em>.</li>
+<li style="margin:6px 0"><strong>Dimension deep-dives (§05–10)</strong> — six axes to make build-vs-buy and positioning calls.</li>
+</ol>
+
+<p>Sources are the 7 per-competitor docs already in <code>ai_research/</code> (jira/linear/clickup/monday/notion/plane/asana). For verbatim quotes and citations, see each competitor's <code>*_raw_notes.md</code>.</p>
+
+<div class="callout note">
+<strong>QPM cells are TODO.</strong> The "Does QPM have this?" and "Do we plan to have this & why?" columns are intentionally blank pending QPM roadmap input. The structure is ready to fill once you confirm QPM's current AI surface and 12-month plan.
+</div>
+
+</section>
+
+<!-- ============ SECTION 03 ============ -->
+<section id="03">
+<div class="section-label">03 · Capability matrix</div>
+<h2>14 features × 7 competitors + QPM</h2>
+
+<p>Rows grouped by capability area. Each cell names the competitor's feature and when first delivered. <span class="tag yes">YES</span> / <span class="tag no">NO</span> / <span class="tag partial">PARTIAL</span> tags indicate maturity.</p>
+
+<div class="scroll">
+<table class="feat-table">
+<thead>
+<tr>
+<th style="width:140px">Capability</th>
+<th class="col-jira">Jira</th>
+<th class="col-linear">Linear</th>
+<th class="col-clickup">ClickUp</th>
+<th class="col-monday">monday</th>
+<th class="col-notion">Notion</th>
+<th class="col-plane">Plane</th>
+<th class="col-asana">Asana</th>
+<th>Technical enabler</th>
+<th class="col-qpm">QPM has?</th>
+<th class="col-qpm">QPM plan?</th>
+<th style="width:140px">Comment</th>
+</tr>
+</thead>
+<tbody>
+
+<tr>
+<td class="row-label">1. Conversational assistant</td>
+<td>Atlassian Intelligence <span class="tag yes">2024</span></td>
+<td>Linear Ask <span class="tag yes">2024</span></td>
+<td>ClickUp Brain² <span class="tag yes">2023→25</span></td>
+<td>Sidekick (formerly AI Blocks) <span class="tag yes">2023→26</span></td>
+<td>Notion AI <span class="tag yes">2023</span></td>
+<td>Plane AI – Ask mode <span class="tag yes">Nov 2025</span></td>
+<td>Asana AI (Smart Fields, summaries) <span class="tag yes">2023</span></td>
+<td>LLM + RAG over workspace data</td>
+<td class="qpm-cell">TODO</td>
+<td class="qpm-cell">TODO</td>
+<td class="comment-cell">Table stakes. Every competitor has it. Differentiation is in depth of context (rows 7-8 below).</td>
+</tr>
+
+<tr>
+<td class="row-label">2. Autonomous multi-step agents</td>
+<td>Rovo Agents <span class="tag yes">2024</span></td>
+<td>Linear Agent <span class="tag yes">Mar 24, 2026</span></td>
+<td>Super Agents <span class="tag yes">Dec 22, 2025</span></td>
+<td>AI Agents triad (Sidekick/Vibe/Agents) <span class="tag yes">2026</span></td>
+<td>Notion Agent (20-min autonomous) <span class="tag yes">Sep 18, 2025</span></td>
+<td>Plane AI – Assign mode <span class="tag yes">Nov 2025</span></td>
+<td>AI Teammates <span class="tag partial">GA Q1 FY27</span></td>
+<td>Agent SDK + lifecycle webhooks + LLM tool-use</td>
+<td class="qpm-cell">TODO</td>
+<td class="qpm-cell">TODO</td>
+<td class="comment-cell">Notion leads on runtime length (20 min). Linear leads on SDK quality. Asana is last to GA.</td>
+</tr>
+
+<tr>
+<td class="row-label">3. No-code agent / workflow builder</td>
+<td>Rovo Studio <span class="tag yes">2024</span></td>
+<td>— <span class="tag no">NO</span></td>
+<td>Brain MAX / Custom Agents <span class="tag yes">2025</span></td>
+<td>AI Agent builder <span class="tag yes">2026</span></td>
+<td>Custom Agents <span class="tag yes">Feb 24, 2026 beta</span></td>
+<td>Plane AI – Build mode + ADK <span class="tag yes">Nov 2025</span></td>
+<td>AI Studio <span class="tag yes">2024</span></td>
+<td>Visual workflow canvas + LLM tool catalog</td>
+<td class="qpm-cell">TODO</td>
+<td class="qpm-cell">TODO</td>
+<td class="comment-cell">Linear deliberately skips this — bets on external agent ecosystem instead. Bold choice.</td>
+</tr>
+
+<tr>
+<td class="row-label">4. Agent marketplace / prebuilts</td>
+<td>Atlassian Marketplace <span class="tag yes">legacy</span></td>
+<td>External agents via SDK (Cursor/Codex/Devin) <span class="tag yes">2026</span></td>
+<td>Super Agents library <span class="tag yes">2025</span></td>
+<td>Agentalent.ai <span class="tag yes">Mar 23, 2026</span></td>
+<td>Custom Agents catalog <span class="tag yes">2026</span></td>
+<td>Agent Marketplace <span class="tag yes">2025</span></td>
+<td>21 prebuilt AI Teammates <span class="tag yes">2026</span></td>
+<td>Marketplace infra + per-agent pricing</td>
+<td class="qpm-cell">TODO</td>
+<td class="qpm-cell">TODO</td>
+<td class="comment-cell">monday's Agentalent ($2K/mo/agent, AWS+Anthropic) is the most aggressive monetization play. Asana 21 prebuilts is the most curated.</td>
+</tr>
+
+<tr>
+<td class="row-label">5. MCP server (external integration)</td>
+<td>Atlassian Remote MCP <span class="tag yes">2025</span></td>
+<td>Linear MCP <span class="tag yes">2025</span></td>
+<td>mcp.clickup.com/mcp <span class="tag yes">2025</span></td>
+<td>mcp.monday.com/mcp <span class="tag yes">2025</span></td>
+<td>mcp.notion.com/mcp <span class="tag yes">2025</span></td>
+<td>Open-source MCP, 55+ tools <span class="tag yes">2025</span></td>
+<td>— <span class="tag no">NO public MCP</span></td>
+<td>MCP protocol (OAuth/PAT/Stdio transports)</td>
+<td class="qpm-cell">TODO</td>
+<td class="qpm-cell">TODO</td>
+<td class="comment-cell">Asana is the only one without. Plane is the only open-source one. ClickUp omits delete tools by design.</td>
+</tr>
+
+<tr>
+<td class="row-label">6. Multi-model gateway / BYO keys</td>
+<td>Bedrock + OpenAI (bundled) <span class="tag partial">Bundled</span></td>
+<td>Claude baseline (Anthropic) <span class="tag partial">Single</span></td>
+<td>Multi-model (Claude/GPT/Gemini/o3/MiniMax) <span class="tag yes">2025</span></td>
+<td>AI Platform Gateway <span class="tag yes">2026</span></td>
+<td>GPT-5 + Claude <span class="tag yes">Sep 2025</span></td>
+<td>BYO Anthropic OR OpenAI direct <span class="tag yes">Nov 2025</span></td>
+<td>OpenAI + Anthropic multi-LLM <span class="tag yes">2024</span></td>
+<td>Model abstraction layer</td>
+<td class="qpm-cell">TODO</td>
+<td class="qpm-cell">TODO</td>
+<td class="comment-cell">Plane is unique with BYO direct-to-provider keys. ClickUp Brain MAX has widest model menu.</td>
+</tr>
+
+<tr>
+<td class="row-label">7. Memory / context substrate</td>
+<td>Issue graph + Confluence pages <span class="tag yes">legacy</span></td>
+<td>Issue graph (structured tickets) <span class="tag yes">legacy</span></td>
+<td>Brain Workspace + ActionQuery <span class="tag yes">2025</span></td>
+<td>mondayDB <span class="tag yes">2024</span></td>
+<td>Pages-as-memory <span class="tag yes">legacy moat</span></td>
+<td>Workspace context (projects+docs) <span class="tag yes">2025</span></td>
+<td>Work Graph® + Memory Associations <span class="tag yes">2024</span></td>
+<td>Vector DB / graph DB / text-fact store</td>
+<td class="qpm-cell">TODO</td>
+<td class="qpm-cell">TODO</td>
+<td class="comment-cell">Notion's pages-as-memory is the strongest natural moat. Asana's Work Graph is the most explicit "relational graph" framing.</td>
+</tr>
+
+<tr>
+<td class="row-label">8. Enterprise search (cross-tool)</td>
+<td>Rovo Search <span class="tag yes">2024</span></td>
+<td>— <span class="tag no">limited</span></td>
+<td>Brain MAX (Qatalog acq) <span class="tag yes">Nov 12, 2025</span></td>
+<td>— <span class="tag partial">limited</span></td>
+<td>Enterprise Search + AI Connectors <span class="tag yes">2025</span></td>
+<td>Workspace-scoped <span class="tag partial">limited</span></td>
+<td>AI Connectors (OpenAI/Slack/Notion) <span class="tag yes">2025</span></td>
+<td>RAG over connected sources + permission inheritance</td>
+<td class="qpm-cell">TODO</td>
+<td class="qpm-cell">TODO</td>
+<td class="comment-cell">Notion's permission-inheriting AI Connectors are the cleanest enterprise model. ClickUp paid $25.4M for Qatalog to get here.</td>
+</tr>
+
+<tr>
+<td class="row-label">9. Slack / Teams AI intake</td>
+<td>AI in Slack via Rovo <span class="tag yes">2024</span></td>
+<td>Linear Asks (Slack) <span class="tag yes">2024</span></td>
+<td>ClickUp Brain in Slack <span class="tag yes">2024</span></td>
+<td>Slack integration <span class="tag partial">basic</span></td>
+<td>Slack integration <span class="tag partial">basic</span></td>
+<td>@Plane in any channel (Claude Sonnet 4.0) <span class="tag yes">Nov 15, 2025</span></td>
+<td>Slack integration <span class="tag partial">basic</span></td>
+<td>Chat-platform agent runtime + workspace OAuth</td>
+<td class="qpm-cell">TODO</td>
+<td class="qpm-cell">TODO</td>
+<td class="comment-cell">Plane's "AGI-like" Slack agent is the most aggressive on this surface. Linear Asks is the most mature for intake.</td>
+</tr>
+
+<tr>
+<td class="row-label">10. Code / dev-tool intelligence</td>
+<td>DX + Forge <span class="tag partial">legacy</span></td>
+<td>Code Intelligence + external dev agents <span class="tag yes">May 14, 2026 beta</span></td>
+<td>Codegen acq <span class="tag yes">Dec 23, 2025</span></td>
+<td>— <span class="tag no">limited</span></td>
+<td>— <span class="tag no">limited</span></td>
+<td>GitHub integration + dev-focused <span class="tag partial">core feature</span></td>
+<td>3 Product/Eng teammates <span class="tag partial">narrow</span></td>
+<td>Code-aware LLM + IDE/agent integration</td>
+<td class="qpm-cell">TODO</td>
+<td class="qpm-cell">TODO</td>
+<td class="comment-cell">Linear is dominant here. ClickUp bought Codegen for $10/10K credits. monday/Notion/Asana are weak on dev tooling.</td>
+</tr>
+
+<tr>
+<td class="row-label">11. Governance / human-in-the-loop</td>
+<td>Atlassian admin controls <span class="tag yes">legacy</span></td>
+<td>Standard <span class="tag partial">basic</span></td>
+<td>Workspace permissions <span class="tag partial">basic</span></td>
+<td>Standard <span class="tag partial">basic</span></td>
+<td>Verify-any-page citations + AI Connectors <span class="tag yes">2025</span></td>
+<td>Air-gapped + no prompt storage <span class="tag yes">2025</span></td>
+<td>"Context, checkpoints, controls" + explicit user approval <span class="tag yes">2024</span></td>
+<td>HITL gates + audit + permission inheritance</td>
+<td class="qpm-cell">TODO</td>
+<td class="qpm-cell">TODO</td>
+<td class="comment-cell">Asana owns the brand. Plane owns the technical model. Notion citations are a unique trust differentiator.</td>
+</tr>
+
+<tr>
+<td class="row-label">12. Self-hosted / air-gapped</td>
+<td>Data Center <span class="tag partial">legacy on-prem, AI limited</span></td>
+<td>— <span class="tag no">NO</span></td>
+<td>— <span class="tag no">NO</span></td>
+<td>— <span class="tag no">NO</span></td>
+<td>— <span class="tag no">NO</span></td>
+<td>Docker/K8s/air-gapped, full AI parity <span class="tag yes">core</span></td>
+<td>— <span class="tag no">NO</span></td>
+<td>Containerized deploy + BYO model keys</td>
+<td class="qpm-cell">TODO</td>
+<td class="qpm-cell">TODO</td>
+<td class="comment-cell">Plane is the only SaaS competitor with full AI parity self-hosted. This is the regulated/gov moat.</td>
+</tr>
+
+<tr>
+<td class="row-label">13. Pricing model (AI bundling)</td>
+<td>AI in Premium/Enterprise tier <span class="tag partial">bundled</span></td>
+<td>AI bundled in seat <span class="tag yes">simple</span></td>
+<td>ClickUp Brain $7/user + Codegen credits <span class="tag partial">hybrid</span></td>
+<td>$0.01/credit metering <span class="tag partial">credits</span></td>
+<td>$10/1000 credits (Custom Agents) <span class="tag partial">credits</span></td>
+<td>AI on every plan, BYO keys <span class="tag yes">no upcharge</span></td>
+<td>AI Studio: 50K/100K/5M credits per quarter by tier <span class="tag partial">credits</span></td>
+<td>—</td>
+<td class="qpm-cell">TODO</td>
+<td class="qpm-cell">TODO</td>
+<td class="comment-cell">Plane and Linear are simplest. Asana's tiered credit quotas are the most enterprise-friendly. monday's per-credit is the most usage-flexible.</td>
+</tr>
+
+<tr>
+<td class="row-label">14. Open source</td>
+<td>— <span class="tag no">NO</span></td>
+<td>— <span class="tag no">NO</span></td>
+<td>— <span class="tag no">NO</span></td>
+<td>— <span class="tag no">NO</span></td>
+<td>— <span class="tag no">NO</span></td>
+<td>github.com/makeplane/plane <span class="tag yes">YES</span></td>
+<td>— <span class="tag no">NO</span></td>
+<td>Source-available license + community contribution</td>
+<td class="qpm-cell">TODO</td>
+<td class="qpm-cell">TODO</td>
+<td class="comment-cell">Plane is the structural outlier. This single choice cascades into every other dimension.</td>
+</tr>
+
+</tbody>
+</table>
+</div>
+
+<div class="callout warn" style="margin-top:24px">
+<strong>Pattern to flag.</strong> Rows 11-12-14 are tightly correlated for Plane: governance, self-hosting, and open source are <em>one decision</em>, not three. For Asana, rows 7-11 (Work Graph + Memory + Governance brand) are one decision. For Linear, rows 2-4-10 (Agent SDK + skipping no-code builder + Code Intelligence) are one decision — Linear positions itself as the dev-agent <em>interface</em>, not the agent runtime.
+</div>
+
+</section>
+
+<!-- ============ SECTION 04 ============ -->
+<section id="04">
+<div class="section-label">04 · 12-month strategic vectors</div>
+<h2>Where each competitor is going (May 2026 → May 2027)</h2>
+
+<p>Each card states the primary AI bet for the next 12 months, the strongest public commitment behind it, and why they're committing.</p>
+
+<div class="vector-grid">
+
+<div class="vector-card jira">
+<span class="focus">Jira / Atlassian</span>
+<h3>Rovo expansion + AI moat across the Atlassian suite</h3>
+<p>Deepen Atlassian Intelligence across Jira, Confluence, Loom, and Compass. Rovo Studio agent platform scaling. Forge as the AI extensibility runtime. AI search → Rovo Search becomes the cross-product context layer.</p>
+<div class="why">
+<strong>Why</strong>
+Defend the 300K+ customer installed base from Linear-class disruption. AI is the retention story, not the acquisition story. Stock pressure is real but less acute than ASAN.
+</div>
+</div>
+
+<div class="vector-card linear">
+<span class="focus">Linear</span>
+<h3>"Issue tracking is dead" — become the orchestration layer for dev agents</h3>
+<p>Code Intelligence GA + IDE integrations. Scale the external agent ecosystem (Cursor/Codex/Devin/Replit). Agent Interaction SDK as the substrate. Karri Saarinen + Akshay Kothari thesis: Linear is the interface, not the runtime.</p>
+<div class="why">
+<strong>Why</strong>
+Own the dev-agent interaction surface before someone else does. Avoid the trap of becoming a generic AI workspace — bet hard on developers + AI coding agents.
+</div>
+</div>
+
+<div class="vector-card clickup">
+<span class="focus">ClickUp</span>
+<h3>Brain² + Codegen + Qatalog → the AI work-OS by acquisition</h3>
+<p>Integrate Codegen (Dec 23, 2025 acq) for dev AI. Integrate Qatalog (Nov 12, 2025, $25.4M-funded) for ActionQuery enterprise search. Super Agents at scale. Brain MAX as the multi-model gateway. Ambient Agents.</p>
+<div class="why">
+<strong>Why</strong>
+Convergence to a single work-OS. Zeb Evans is buying capabilities ClickUp can't build fast enough organically. Bet: customers want one tool, not seven.
+</div>
+</div>
+
+<div class="vector-card monday">
+<span class="focus">monday.com</span>
+<h3>"All In on AI" + Agentalent marketplace at scale</h3>
+<p>Sidekick/Vibe/Agents triad as the AI Work Platform brand. Agentalent.ai marketplace (AWS+Anthropic, $2K/mo per agent) becomes the agent commerce layer. AI Platform Gateway for multi-model. Roy Mann + Eran Zinman betting on mid-market AI workflows.</p>
+<div class="why">
+<strong>Why</strong>
+Capture mid-market AI workflow spend. Marketplace economics are the moat — if customers + agent builders both sit on monday, it's defensible. monday is public but more stable than ASAN; can afford the bet.
+</div>
+</div>
+
+<div class="vector-card notion">
+<span class="focus">Notion</span>
+<h3>Workspace-as-memory + verify-any-page + Developer Platform 3.5</h3>
+<p>Notion 3.0 GPT-5 rebuild (Sep 2025) → Notion Agent 20-min autonomous runs. Custom Agents GA + credit pricing ($10/1000, May 4, 2026). Developer Platform 3.5 (May 13, 2026): External Agents API, Notion Workers, Agent SDK, CLI. Enterprise Search dominance.</p>
+<div class="why">
+<strong>Why</strong>
+Own the workspace context substrate before others do. Pages-as-memory is the natural moat — competitors have to build context graphs; Notion's customers already wrote them.
+</div>
+</div>
+
+<div class="vector-card plane">
+<span class="focus">Plane</span>
+<h3>OSS + self-hostable + air-gap-ready + BYO keys = the regulated segment</h3>
+<p>Plane AI (Ask/Build/Assign) + Slack agent (Claude Sonnet 4.0) + 55-tool MCP open source. Plane Compose for GitOps. Prime CLI + God Mode for self-hosted enterprise. Fortune 10 + Government of Lithuania + République Française as proof points.</p>
+<div class="why">
+<strong>Why</strong>
+Vamsi Kurama's "steerable systems" thesis. Target the segment the other 6 competitors structurally cannot serve — regulated industries, governments, defense-adjacent. $4M seed from OSS Capital sets the constraint: build cheap, ship open, win the moat segment.
+</div>
+</div>
+
+<div class="vector-card asana">
+<span class="focus">Asana</span>
+<h3>AI Teammates GA Q1 FY27 — the public-market rerating catalyst</h3>
+<p>21 prebuilt AI Teammates (7 Marketing + 6 Ops/PMO + 5 IT + 3 Product/Eng). Sales-led GA end of Q1 FY27 (≈ May 2026); self-serve H2 FY27. AI Studio credit tiers (50K/100K/5M per quarter). Work Graph + Memory Associations. Asana Gov (Winter 2026). FY27 guidance: $850M-$858M revenue with <strong>15% net new ARR from AI products</strong>.</p>
+<div class="why">
+<strong>Why</strong>
+ASAN stock down ~50% YTD, ~92% from ATH. Dan Rogers needs the Teammates GA narrative to land at Q1 FY27 earnings (≈ Aug 2026) to rerate. This is a single concentrated bet — no MCP, no OSS, no marketplace breadth — just AI Teammates + Work Graph + governance brand.
+</div>
+</div>
+
+</div>
+
+<div class="callout" style="margin-top:32px">
+<strong>The pattern.</strong> Five competitors are betting on <em>breadth</em> (Jira, ClickUp, monday, Notion, Asana). Two are betting on <em>opinion</em> (Linear: dev-agent interface; Plane: open + self-host). The opinionated bets are the ones to watch — they don't have to win the whole market, only their slice.
+</div>
+
+</section>
+
+<!-- ============ SECTION 05 ============ -->
+<section id="05">
+<div class="section-label">05 · Dimension · Pricing</div>
+<h2>Pricing models side-by-side</h2>
+
+<table class="dim-table">
+<thead>
+<tr><th>Competitor</th><th>Seat pricing</th><th>AI bundling</th><th>AI metering</th><th>Notable</th></tr>
+</thead>
+<tbody>
+<tr><td class="competitor" style="color:var(--c-jira)">Jira</td><td>Free / Standard $7.53 / Premium $13.53 / Enterprise sales</td><td>AI in Premium+</td><td>Rovo agents metered separately</td><td>Bundling-led, enterprise gate on Rovo</td></tr>
+<tr><td class="competitor" style="color:var(--c-linear)">Linear</td><td>Free / Basic $8 / Business $14 / Enterprise sales</td><td>AI bundled in seat</td><td>None — flat</td><td>Simplest model. AI is not a SKU.</td></tr>
+<tr><td class="competitor" style="color:var(--c-clickup)">ClickUp</td><td>Free / Unlimited $7 / Business $12 / Enterprise sales</td><td>ClickUp Brain $7/user/mo add-on</td><td>Codegen $10/10K credits</td><td>Hybrid — add-on + credits. Most complex pricing.</td></tr>
+<tr><td class="competitor" style="color:var(--c-monday)">monday.com</td><td>Free / Basic $9 / Standard $12 / Pro $19 / Enterprise sales</td><td>Sidekick/Vibe in tier</td><td>$0.01/credit for Agents</td><td>Per-credit metering is most usage-flexible.</td></tr>
+<tr><td class="competitor" style="color:var(--c-notion)">Notion</td><td>Free / Plus $10 / Business $18 / Enterprise sales</td><td>Notion AI bundled at higher tiers</td><td>Custom Agents $10/1000 credits</td><td>Per-1000 credit pricing for Custom Agents (May 4, 2026).</td></tr>
+<tr><td class="competitor" style="color:var(--c-plane)">Plane</td><td>Free / Pro $8 / Business $15 / Enterprise self-host</td><td><strong>AI on every plan, no upcharge</strong></td><td>BYO keys — pay model provider direct</td><td>Unique. Self-host customers bypass Plane on AI spend entirely.</td></tr>
+<tr><td class="competitor" style="color:var(--c-asana)">Asana</td><td>Personal Free / Starter $10.99 / Advanced $24.99 / Enterprise sales</td><td>Basic AI in tier</td><td>AI Studio: 50K Starter / 100K Plus / 5M Pro credits per quarter</td><td>Quarterly credit quotas — most enterprise-friendly forecasting.</td></tr>
+</tbody>
+</table>
+
+<div class="rec-card">
+<h3>Recommendation</h3>
+<p><strong>Where the market is going:</strong> Two-axis pricing — flat seat for table-stakes AI (conversational, summaries), metered credits for autonomous agents. 5 of 7 competitors are converging here. The exceptions are Linear (refuses to meter) and Plane (BYO keys lets them sidestep).</p>
+<p><strong>For QPM:</strong> Avoid ClickUp's hybrid mess — too many SKUs confuses the buyer. Pick one of: <em>(a)</em> Linear's "all-in" simplicity, <em>(b)</em> Asana's quarterly quota by tier, or <em>(c)</em> monday's per-credit. The choice depends on whether your buyer is a developer (simplicity wins) or procurement (quarterly quota wins).</p>
+</div>
+
+</section>
+
+<!-- ============ SECTION 06 ============ -->
+<section id="06">
+<div class="section-label">06 · Dimension · MCP</div>
+<h2>MCP support side-by-side</h2>
+
+<table class="dim-table">
+<thead>
+<tr><th>Competitor</th><th>Public MCP?</th><th>Endpoint</th><th>Transport</th><th>Auth</th><th>Open source?</th><th>Notable</th></tr>
+</thead>
+<tbody>
+<tr><td class="competitor" style="color:var(--c-jira)">Jira</td><td><span class="tag yes">YES</span></td><td>Atlassian Remote MCP</td><td>HTTP</td><td>OAuth</td><td>No</td><td>Cross-product (Jira+Confluence+Bitbucket)</td></tr>
+<tr><td class="competitor" style="color:var(--c-linear)">Linear</td><td><span class="tag yes">YES</span></td><td>Linear MCP via developers</td><td>HTTP</td><td>OAuth + PAT</td><td>No</td><td>Designed for Claude / Cursor / Codex flows</td></tr>
+<tr><td class="competitor" style="color:var(--c-clickup)">ClickUp</td><td><span class="tag yes">YES</span></td><td><code>mcp.clickup.com/mcp</code></td><td>HTTP</td><td>OAuth</td><td>No</td><td>Deliberately omits delete tools (governance)</td></tr>
+<tr><td class="competitor" style="color:var(--c-monday)">monday.com</td><td><span class="tag yes">YES</span></td><td><code>mcp.monday.com/mcp</code></td><td>HTTP</td><td>OAuth</td><td>No</td><td>Tied to Agentalent marketplace</td></tr>
+<tr><td class="competitor" style="color:var(--c-notion)">Notion</td><td><span class="tag yes">YES</span></td><td><code>mcp.notion.com/mcp</code></td><td>HTTP</td><td>OAuth</td><td>No</td><td>Permission inheritance preserved through MCP calls</td></tr>
+<tr><td class="competitor" style="color:var(--c-plane)">Plane</td><td><span class="tag yes">YES</span></td><td><code>mcp.plane.so/http/mcp</code> + Stdio</td><td>HTTP + PAT + Stdio</td><td>OAuth + PAT</td><td><strong>Yes</strong> — github.com/makeplane/plane-mcp-server</td><td>55+ tools. Only OSS MCP in the set. Self-host transport included.</td></tr>
+<tr><td class="competitor" style="color:var(--c-asana)">Asana</td><td><span class="tag no">NO</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td><strong>Conspicuous gap.</strong> Every competitor — even Plane — ships one.</td></tr>
+</tbody>
+</table>
+
+<div class="rec-card">
+<h3>Recommendation</h3>
+<p><strong>Where the market is going:</strong> Public HTTP MCP with OAuth is the consensus baseline. Differentiation is in <em>governance overlays</em> (ClickUp's no-delete, Notion's permission inheritance) and <em>transport breadth</em> (Plane's Stdio for self-hosted).</p>
+<p><strong>For QPM:</strong> Ship an MCP server, full stop — Asana's absence is the lesson. Differentiate on governance (no-delete by default, permission inheritance) rather than tool count. If self-host is on QPM's roadmap, ship Stdio transport from day one.</p>
+</div>
+
+</section>
+
+<!-- ============ SECTION 07 ============ -->
+<section id="07">
+<div class="section-label">07 · Dimension · Agent architectures</div>
+<h2>Agent architectures side-by-side</h2>
+
+<table class="dim-table">
+<thead>
+<tr><th>Competitor</th><th>Agent philosophy</th><th>Runtime</th><th>Builder UX</th><th>Autonomy</th></tr>
+</thead>
+<tbody>
+<tr><td class="competitor" style="color:var(--c-jira)">Jira</td><td>In-product copilots + Rovo agents</td><td>Atlassian Intelligence (Bedrock+OpenAI)</td><td>Rovo Studio (no-code)</td><td>Bounded; admin-gated</td></tr>
+<tr><td class="competitor" style="color:var(--c-linear)">Linear</td><td><strong>External-agent interface</strong>, not runtime</td><td>Agent Interaction SDK + Agent Sessions + webhooks; agents run elsewhere</td><td>SDK for partners (Cursor, Codex, Devin)</td><td>Defined by external agent; Linear hosts the conversation</td></tr>
+<tr><td class="competitor" style="color:var(--c-clickup)">ClickUp</td><td>Wide breadth (Brain² + Super + Brain MAX + Ambient + ActionQuery)</td><td>Multi-model gateway</td><td>Brain MAX + Custom Agents</td><td>High (Ambient Agents act without invocation)</td></tr>
+<tr><td class="competitor" style="color:var(--c-monday)">monday.com</td><td>Triad — Sidekick (ambient) + Vibe (creative) + Agents (autonomous)</td><td>AI Platform Gateway</td><td>Visual builder + Agentalent</td><td>Tier-dependent; Agents are most autonomous</td></tr>
+<tr><td class="competitor" style="color:var(--c-notion)">Notion</td><td>Long-running autonomous (20-min runs) + External Agents API</td><td>GPT-5 + Claude orchestration</td><td>Custom Agents builder + Notion Workers + Agent SDK</td><td>High — multi-step autonomy with verify-any-page</td></tr>
+<tr><td class="competitor" style="color:var(--c-plane)">Plane</td><td>Three modes — Ask / Build / Assign</td><td>Agent Development Kit + Agent Run lifecycle</td><td>Build mode + ADK</td><td>Tunable (BYO keys, self-host = full control)</td></tr>
+<tr><td class="competitor" style="color:var(--c-asana)">Asana</td><td>Collaborative AI Teammates</td><td>Multi-LLM (OpenAI + Anthropic) + Work Graph + Memory Associations</td><td>AI Studio (no-code, credit-metered)</td><td><strong>Low by design</strong> — every consequential action requires user approval</td></tr>
+</tbody>
+</table>
+
+<div class="rec-card">
+<h3>Recommendation</h3>
+<p><strong>Where the market is going:</strong> Two philosophical camps. <em>Runtime camp</em> (ClickUp, monday, Notion, Asana, Plane) builds the agent execution layer in-product. <em>Interface camp</em> (Linear) hosts the conversation and lets external agents do the work. Jira sits in the middle (both Rovo agents in-product + Forge for external).</p>
+<p><strong>For QPM:</strong> Choose explicitly. Building an internal agent runtime is expensive (model spend, eval infrastructure, prompt engineering at scale). Becoming an interface for external agents is cheaper but requires Agent SDK quality on par with Linear's. The wrong choice is "both, half-built" — that's ClickUp's risk.</p>
+</div>
+
+</section>
+
+<!-- ============ SECTION 08 ============ -->
+<section id="08">
+<div class="section-label">08 · Dimension · Governance</div>
+<h2>Governance posture side-by-side</h2>
+
+<table class="dim-table">
+<thead>
+<tr><th>Competitor</th><th>Brand position</th><th>HITL gates</th><th>Audit</th><th>Compliance</th><th>Data residency</th></tr>
+</thead>
+<tbody>
+<tr><td class="competitor" style="color:var(--c-jira)">Jira</td><td>Atlassian Trust Center</td><td>Standard admin controls</td><td>Yes</td><td>SOC 2, ISO 27001, FedRAMP Moderate</td><td>EU + US regions</td></tr>
+<tr><td class="competitor" style="color:var(--c-linear)">Linear</td><td>Engineering-grade defaults</td><td>Standard</td><td>Yes</td><td>SOC 2, ISO 27001</td><td>US + EU</td></tr>
+<tr><td class="competitor" style="color:var(--c-clickup)">ClickUp</td><td>Workspace permissions + no-delete MCP</td><td>Permission-scoped</td><td>Yes</td><td>SOC 2, GDPR</td><td>US, EU</td></tr>
+<tr><td class="competitor" style="color:var(--c-monday)">monday.com</td><td>Standard enterprise</td><td>Tier-gated</td><td>Yes</td><td>SOC 2, ISO 27001, HIPAA on Enterprise</td><td>US, EU, AU</td></tr>
+<tr><td class="competitor" style="color:var(--c-notion)">Notion</td><td><strong>"Verify any page"</strong> — AI citations</td><td>AI Connectors permission inheritance</td><td>Yes</td><td>SOC 2, ISO 27001, GDPR, HIPAA</td><td>US, EU</td></tr>
+<tr><td class="competitor" style="color:var(--c-plane)">Plane</td><td><strong>"No prompt storage"</strong> + air-gapped</td><td>BYO keys = customer controls all</td><td>Yes</td><td>SOC 2, ISO 27001, GDPR, CCPA</td><td>Customer-controlled (self-host)</td></tr>
+<tr><td class="competitor" style="color:var(--c-asana)">Asana</td><td><strong>"Context, checkpoints, controls"</strong> + Asana Gov</td><td><strong>Every consequential action requires user approval</strong></td><td>Yes</td><td>SOC 2, ISO 27001, FedRAMP (Asana Gov pending)</td><td>US, EU, US-Gov</td></tr>
+</tbody>
+</table>
+
+<div class="rec-card">
+<h3>Recommendation</h3>
+<p><strong>Where the market is going:</strong> Governance is moving from compliance checkboxes to <em>brand positioning</em>. Three competitors own a phrase — Asana ("context, checkpoints, controls"), Notion ("verify any page"), Plane ("no prompt storage"). The phrase shapes the buying conversation.</p>
+<p><strong>For QPM:</strong> Pick a phrase before competitors crowd you out. "Context, checkpoints, controls" is taken. "Verify any page" is taken. "No prompt storage" is taken. The remaining strong territories: <em>output auditability</em> ("every AI action is reviewable"), <em>cost transparency</em> ("see what each AI call cost"), or <em>scope limiting</em> ("AI cannot leave your workspace"). Choose one and brand it.</p>
+</div>
+
+</section>
+
+<!-- ============ SECTION 09 ============ -->
+<section id="09">
+<div class="section-label">09 · Dimension · Model gateways</div>
+<h2>Model gateways side-by-side</h2>
+
+<table class="dim-table">
+<thead>
+<tr><th>Competitor</th><th>Models supported</th><th>Customer choice?</th><th>BYO keys?</th><th>Default</th></tr>
+</thead>
+<tbody>
+<tr><td class="competitor" style="color:var(--c-jira)">Jira</td><td>Bedrock + OpenAI</td><td>No (vendor-managed)</td><td>No</td><td>Atlassian Intelligence (Bedrock primary)</td></tr>
+<tr><td class="competitor" style="color:var(--c-linear)">Linear</td><td>Claude (Anthropic)</td><td>No</td><td>No</td><td>Claude Sonnet</td></tr>
+<tr><td class="competitor" style="color:var(--c-clickup)">ClickUp</td><td>Claude, GPT, Gemini, o3, MiniMax</td><td><strong>Yes (model picker in Brain MAX)</strong></td><td>No</td><td>Multi-model auto-routing</td></tr>
+<tr><td class="competitor" style="color:var(--c-monday)">monday.com</td><td>Multi-model (Claude/OpenAI/others via Platform Gateway)</td><td>Partial</td><td>No</td><td>Anthropic-leaning via AWS</td></tr>
+<tr><td class="competitor" style="color:var(--c-notion)">Notion</td><td>GPT-5 + Claude</td><td>Limited (task-dependent)</td><td>No</td><td>GPT-5 for Notion 3.0 / Agent</td></tr>
+<tr><td class="competitor" style="color:var(--c-plane)">Plane</td><td>Anthropic OR OpenAI</td><td>Yes (BYO direct)</td><td><strong>Yes — direct provider</strong></td><td>Customer-set (Claude Sonnet 4.0 in Slack)</td></tr>
+<tr><td class="competitor" style="color:var(--c-asana)">Asana</td><td>OpenAI + Anthropic</td><td>No (orchestrated)</td><td>No</td><td>Multi-LLM auto-routing</td></tr>
+</tbody>
+</table>
+
+<div class="rec-card">
+<h3>Recommendation</h3>
+<p><strong>Where the market is going:</strong> Single-model loyalty (Linear → Claude) is the minority. Multi-model orchestration is the majority — but only ClickUp exposes the picker to the customer. Only Plane allows BYO keys to direct providers. The model decision is becoming the vendor's, not the customer's.</p>
+<p><strong>For QPM:</strong> The competitive question isn't "which model" — it's "do you let the customer choose, or do you orchestrate?" Orchestration is the path of least friction for SMB; explicit picker is the path for enterprise wanting cost control; BYO keys is the path for regulated buyers. The decision determines your buyer segment.</p>
+</div>
+
+</section>
+
+<!-- ============ SECTION 10 ============ -->
+<section id="10">
+<div class="section-label">10 · Dimension · Strategic vectors compared</div>
+<h2>Strategic vectors compared</h2>
+
+<table class="dim-table">
+<thead>
+<tr><th>Competitor</th><th>Primary bet</th><th>Target buyer</th><th>Moat</th><th>Biggest risk</th></tr>
+</thead>
+<tbody>
+<tr><td class="competitor" style="color:var(--c-jira)">Jira</td><td>AI defends installed base</td><td>Enterprise platform owner</td><td>300K+ customers, Confluence+Jira data graph</td><td>Linear-class disruption from below</td></tr>
+<tr><td class="competitor" style="color:var(--c-linear)">Linear</td><td>Be the dev-agent interface</td><td>High-velocity eng team</td><td>Brand + product quality + Agent SDK ecosystem</td><td>Cursor/Codex bypass Linear entirely</td></tr>
+<tr><td class="competitor" style="color:var(--c-clickup)">ClickUp</td><td>AI work-OS by acquisition</td><td>SMB seeking consolidation</td><td>Codegen + Qatalog + breadth</td><td>Integration debt, pricing complexity</td></tr>
+<tr><td class="competitor" style="color:var(--c-monday)">monday.com</td><td>AI Work Platform + Agentalent</td><td>Mid-market ops/PMO</td><td>Marketplace + AWS partnership</td><td>Agent supply doesn't materialize</td></tr>
+<tr><td class="competitor" style="color:var(--c-notion)">Notion</td><td>Workspace-as-memory + verify-any-page</td><td>Knowledge-work teams</td><td>Pages-as-context (only one with it)</td><td>Page hygiene erodes the memory moat</td></tr>
+<tr><td class="competitor" style="color:var(--c-plane)">Plane</td><td>OSS + self-host + air-gap</td><td>Regulated, gov, F10</td><td>The only credible on-prem AI PM</td><td>92 employees stretching to enterprise sales</td></tr>
+<tr><td class="competitor" style="color:var(--c-asana)">Asana</td><td>AI Teammates GA as rerating catalyst</td><td>Enterprise + US Gov</td><td>Work Graph + 21 prebuilt teammates</td><td>GA slips → ASAN thesis breaks</td></tr>
+</tbody>
+</table>
+
+<div class="callout">
+<strong>The map.</strong> Plane and Linear are the only competitors whose moats <em>scale with AI maturity</em> rather than fight it. Plane's moat (regulated/on-prem) grows as AI raises the bar on data sovereignty. Linear's moat (interface for external agents) grows as the agent ecosystem fragments. The other five are in a race that AI may compress.
+</div>
+
+</section>
+
+<!-- ============ SECTION 11 ============ -->
+<section id="11">
+<div class="section-label">11 · Recommendations for QPM</div>
+<h2>Recommendations</h2>
+
+<p>Six recommendations, ordered by leverage. Each tied to a competitor learning.</p>
+
+<div class="rec-card">
+<h3>1. Ship an MCP server. Yesterday.</h3>
+<p>Asana's absence here is a mistake QPM should not repeat. Public HTTP MCP with OAuth is the 2026 consensus. Differentiate on <em>governance overlays</em> (no-delete by default, permission inheritance through MCP calls) rather than tool count. If self-host is on QPM's roadmap, ship Stdio transport from day one (Plane is the reference implementation).</p>
+</div>
+
+<div class="rec-card">
+<h3>2. Pick a governance phrase and own it.</h3>
+<p>Three strong phrases are taken: "context, checkpoints, controls" (Asana), "verify any page" (Notion), "no prompt storage" (Plane). Remaining territory: output auditability, cost transparency, or workspace-scope limiting. Pick one before competitors crowd you out. Governance is becoming a brand, not a checkbox.</p>
+</div>
+
+<div class="rec-card">
+<h3>3. Choose your agent philosophy explicitly: runtime or interface.</h3>
+<p>The wrong answer is "both, half-built." That's ClickUp's risk. Linear's choice (interface for external agents) is cheaper but demands Agent SDK quality. Runtime (Notion, ClickUp, monday, Asana, Plane) is more expensive but more defensible long-term. Pick one and resource it fully.</p>
+</div>
+
+<div class="rec-card">
+<h3>4. Don't replicate ClickUp's pricing complexity.</h3>
+<p>The market is converging on two-axis pricing: flat seat for table-stakes AI, metered credits for autonomous agents. ClickUp's add-on + credit hybrid creates buyer confusion. Linear's "all-in" is the dev-friendly default. Asana's quarterly quota is the procurement-friendly default. monday's per-credit is the most usage-flexible. Pick one.</p>
+</div>
+
+<div class="rec-card">
+<h3>5. If you're not Plane, don't try to be Plane.</h3>
+<p>Open-source + self-hosted + air-gapped + BYO keys is one decision, not four. It cascades into every dimension — pricing, customer mix, MCP design, team economics. Either commit fully (and accept the regulated/gov segment as your TAM) or commit to the SaaS path and don't half-step.</p>
+</div>
+
+<div class="rec-card">
+<h3>6. Make the memory substrate decision early.</h3>
+<p>Asana built Work Graph as relational graph + text-fact memory (explicitly not vector DB). Notion's natural moat is pages-as-memory. ClickUp paid $25.4M for Qatalog ActionQuery. The memory substrate decision determines what AI can do <em>in 18 months</em>, not what it can do today. If QPM doesn't have an explicit memory architecture decision, that's a gap to close before shipping more AI features.</p>
+</div>
+
+</section>
+
+<!-- ============ SECTION 12 ============ -->
+<section id="12">
+<div class="section-label">12 · Open questions</div>
+<h2>Open questions</h2>
+
+<p>To finalize this synthesis with full QPM context, I need:</p>
+
+<ol style="padding-left:24px;margin:12px 0">
+<li style="margin:8px 0"><strong>QPM's current AI surface</strong> — feature list mapped to the 14 capability rows. (Today the QPM cells are TODO.)</li>
+<li style="margin:8px 0"><strong>QPM's 12-month AI plan</strong> — committed milestones with dates, drawn from the roadmap. Source for the "Do we plan to have this?" column.</li>
+<li style="margin:8px 0"><strong>QPM's target buyer segment</strong> — determines which competitor archetype you're competing against (defender / repositioner / outlier).</li>
+<li style="margin:8px 0"><strong>QPM's pricing model intent</strong> — bundled vs. metered vs. hybrid. Determines pricing recommendation (§05).</li>
+<li style="margin:8px 0"><strong>QPM's data residency / self-host requirements</strong> — if regulated/gov is on the roadmap, Plane is the reference; if SaaS-only, the comparison set is the other six.</li>
+</ol>
+
+<p style="margin-top:16px">Once you provide these, I can fill the QPM columns, sharpen the recommendations to QPM-specific moves, and turn this into a decision document instead of a market synthesis.</p>
+
+</section>
+
+<div class="footer">
+<h4>Sources</h4>
+<ul>
+<li>jira_ai_research.html — Atlassian Intelligence, Rovo, DX</li>
+<li>linear_ai_research.html — Triage Intelligence, Linear Agent, Code Intelligence</li>
+<li>clickup_ai_research.html — Brain², Super Agents, Brain MAX (Qatalog + Codegen acquisitions)</li>
+<li>monday_ai_research.html — Sidekick + Vibe + Agents + Agentalent</li>
+<li>notion_ai_research.html — Notion Agent + Custom Agents + Enterprise Search</li>
+<li>plane_ai_research.html — Plane AI + MCP-native + self-hostable + air-gap</li>
+<li>asana_ai_research.html — AI Studio + AI Teammates + Work Graph + Asana Gov</li>
+</ul>
+<p style="margin-top:24px">For verbatim source quotes and citations, see each competitor's <code>*_raw_notes.md</code> in this folder.</p>
+</div>
+
+</div>
+</body>
+</html>

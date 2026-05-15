@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ClickUp AI — Research Notes</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap');
+:root {
+  --bg:#fafaf8; --surface:#fff; --surface2:#f4f3ef; --surface3:#eeecea;
+  --border:#e8e6e0; --border2:#d0cdc5;
+  --text:#1a1916; --muted:#7a7870; --faint:#b0ada6;
+  --blue:#0052cc; --blue-bg:#e8f0fe; --blue-border:#aec6f0; --blue-dark:#003d99;
+  --green:#006644; --green-bg:#e3f5ec; --green-border:#a3d9b8;
+  --amber:#974400; --amber-bg:#fff3e0; --amber-border:#fcd08a;
+  --red:#c0392b; --red-bg:#fde8e6; --red-border:#f5aba3;
+  --purple:#5243aa; --purple-bg:#ede8fb; --purple-border:#c3b7f2;
+  --teal:#006475; --teal-bg:#e0f5f8; --teal-border:#95d8e4;
+  --magenta:#7c1fa2; --magenta-bg:#f3e6f9; --magenta-border:#d9a8ea;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:14.5px;line-height:1.7;max-width:1080px;margin:0 auto;padding:56px 36px 120px;}
+h1{font-family:'Syne',sans-serif;font-size:40px;font-weight:800;line-height:1.1;letter-spacing:-.5px;}
+h2{font-family:'Syne',sans-serif;font-size:22px;font-weight:700;color:var(--text);margin:52px 0 18px;padding-top:8px;}
+h3{font-family:'Inter',sans-serif;font-size:15px;font-weight:500;color:var(--text);margin:20px 0 8px;}
+h4{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin:18px 0 8px;font-weight:400;}
+p{color:#3d3b36;margin-bottom:10px;}
+a{color:var(--blue);text-decoration:none;}a:hover{text-decoration:underline;}
+code{font-family:'JetBrains Mono',monospace;font-size:12px;background:var(--surface2);padding:1px 6px;border-radius:3px;color:var(--magenta);}
+pre{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:16px 18px;font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.6;overflow-x:auto;margin:12px 0;}
+ul,ol{padding-left:20px;margin-bottom:10px;}
+li{color:#3d3b36;margin-bottom:5px;}
+strong{color:var(--text);font-weight:500;}
+hr{border:none;border-top:1px solid var(--border2);margin:52px 0;}
+
+.header-meta{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;align-items:center;}
+.badge{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:3px 11px;border-radius:3px;border:1px solid;display:inline-block;}
+.badge-blue{color:var(--blue);border-color:var(--blue-border);background:var(--blue-bg);}
+.badge-green{color:var(--green);border-color:var(--green-border);background:var(--green-bg);}
+.badge-amber{color:var(--amber);border-color:var(--amber-border);background:var(--amber-bg);}
+.badge-purple{color:var(--purple);border-color:var(--purple-border);background:var(--purple-bg);}
+.badge-magenta{color:var(--magenta);border-color:var(--magenta-border);background:var(--magenta-bg);}
+.badge-gray{color:var(--muted);border-color:var(--border2);background:var(--surface2);}
+
+.section-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--magenta);margin-bottom:6px;display:block;}
+
+.callout{border-radius:8px;padding:14px 18px;margin:18px 0;border:1px solid;}
+.callout p{margin:0;font-size:13.5px;}
+.callout-blue{background:var(--blue-bg);border-color:var(--blue-border);} .callout-blue p{color:#1a3a6e;}
+.callout-amber{background:var(--amber-bg);border-color:var(--amber-border);} .callout-amber p{color:#5a2800;}
+.callout-green{background:var(--green-bg);border-color:var(--green-border);} .callout-green p{color:#003320;}
+.callout-red{background:var(--red-bg);border-color:var(--red-border);} .callout-red p{color:#6b1000;}
+.callout-magenta{background:var(--magenta-bg);border-color:var(--magenta-border);} .callout-magenta p{color:#4a0a5e;}
+.callout-gray{background:var(--surface2);border-color:var(--border2);} .callout-gray p{color:var(--muted);}
+
+.cb{border-left:4px solid;padding:16px 20px;border-radius:0 8px 8px 0;margin-bottom:14px;background:var(--surface);border-top:1px solid var(--border);border-right:1px solid var(--border);border-bottom:1px solid var(--border);}
+.cb h3{margin:0 0 8px;font-size:16px;font-family:'Syne',sans-serif;font-weight:700;}
+.cb-tag{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:3px;display:inline-block;margin-bottom:10px;}
+.cb-blue{border-left-color:var(--blue);} .cb-blue h3{color:var(--blue);} .cb-blue .cb-tag{background:var(--blue-bg);color:var(--blue);}
+.cb-purple{border-left-color:var(--purple);} .cb-purple h3{color:var(--purple);} .cb-purple .cb-tag{background:var(--purple-bg);color:var(--purple);}
+.cb-teal{border-left-color:var(--teal);} .cb-teal h3{color:var(--teal);} .cb-teal .cb-tag{background:var(--teal-bg);color:var(--teal);}
+.cb-green{border-left-color:var(--green);} .cb-green h3{color:var(--green);} .cb-green .cb-tag{background:var(--green-bg);color:var(--green);}
+.cb-amber{border-left-color:var(--amber);} .cb-amber h3{color:var(--amber);} .cb-amber .cb-tag{background:var(--amber-bg);color:var(--amber);}
+.cb-magenta{border-left-color:var(--magenta);} .cb-magenta h3{color:var(--magenta);} .cb-magenta .cb-tag{background:var(--magenta-bg);color:var(--magenta);}
+
+.card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:18px 22px;margin-bottom:14px;}
+.card-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0;}
+.card-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin:14px 0;}
+@media(max-width:760px){.card-grid,.card-grid-3{grid-template-columns:1fr;}}
+
+.ss-block{margin:20px 0;}
+.ss-label{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:7px;letter-spacing:.06em;display:flex;align-items:center;gap:7px;}
+.ss-label::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--amber);}
+.ss-placeholder{width:100%;border:1px dashed var(--border2);border-radius:8px;padding:30px 18px;text-align:center;background:var(--surface2);color:var(--muted);font-size:12px;font-family:'JetBrains Mono',monospace;}
+.ss-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:20px 0;}
+@media(max-width:760px){.ss-grid{grid-template-columns:1fr;}}
+
+.mcp-box{background:#0a1f3a;border:2px solid #4a9eff;border-radius:10px;padding:24px 28px;margin:22px 0;}
+.mcp-box h3{color:#4a9eff;font-family:'Syne',sans-serif;font-size:18px;font-weight:700;margin-bottom:10px;}
+.mcp-box p{color:#b8d4f8;margin-bottom:8px;font-size:13.5px;}
+.mcp-pill{display:inline-block;background:#1a3a6e;border:1px solid #4a9eff;border-radius:4px;padding:3px 10px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#7ab8ff;margin:3px;}
+
+.formula{background:var(--surface2);border:1px solid var(--border2);border-radius:8px;padding:18px 22px;margin:14px 0;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.8;}
+.formula .line{display:flex;gap:10px;margin:3px 0;}
+.formula .op{color:var(--magenta);font-weight:500;}
+.formula .val{color:var(--text);}
+.formula .comment{color:var(--faint);font-size:11px;margin-left:8px;}
+
+.anatomy{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:14px 0;}
+@media(max-width:760px){.anatomy{grid-template-columns:1fr;}}
+.anatomy-block{border:1px solid var(--border);border-radius:8px;padding:14px 16px;background:var(--surface);}
+.anatomy-label{font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;}
+.anatomy-desc{font-size:12.5px;color:var(--muted);line-height:1.5;}
+
+.steps{margin:12px 0;}
+.step{display:flex;gap:14px;padding:12px 0;border-bottom:1px solid var(--border);}
+.step:last-child{border-bottom:none;}
+.step-n{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--magenta-border);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--magenta);flex-shrink:0;margin-top:2px;}
+.step-c h3{margin:0 0 4px;font-size:14px;}
+.step-c p{margin:0;font-size:13.5px;color:var(--muted);}
+
+.plan-tag{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;padding:2px 7px;border-radius:3px;letter-spacing:.04em;white-space:nowrap;}
+.plan-free{background:var(--surface2);color:var(--muted);}
+.plan-brain{background:var(--purple-bg);color:var(--purple);}
+.plan-everything{background:var(--magenta-bg);color:var(--magenta);}
+.plan-addon{background:var(--amber-bg);color:var(--amber);}
+.feat-ga{color:var(--green);font-family:'JetBrains Mono',monospace;font-size:11px;}
+.feat-beta{color:var(--amber);font-family:'JetBrains Mono',monospace;font-size:11px;}
+.feat-new{color:var(--magenta);font-family:'JetBrains Mono',monospace;font-size:11px;}
+.feat-soon{color:var(--blue);font-family:'JetBrains Mono',monospace;font-size:11px;}
+
+.tbl-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:8px;margin:18px 0;}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:700px;}
+thead th{background:var(--surface2);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;font-weight:400;color:var(--muted);padding:10px 14px;text-align:left;border-bottom:1px solid var(--border2);white-space:nowrap;}
+tbody td{padding:10px 14px;border-bottom:1px solid var(--border);vertical-align:top;color:#3d3b36;}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr:hover td{background:var(--surface2);}
+.fn{font-weight:500;color:var(--text);}
+
+.frustration{background:#fffdf5;border:1px solid #fcd08a;border-left:4px solid #f59e0b;border-radius:0 8px 8px 0;padding:16px 20px;margin:18px 0;}
+.frustration h3{color:#92400e;font-size:14px;font-family:'Syne',sans-serif;font-weight:700;margin:0 0 8px;}
+.frustration p{color:#78350f;font-size:13.5px;margin:0 0 6px;}
+.frustration p:last-child{margin:0;}
+.frustration code{background:#fef3c7;color:#92400e;}
+
+.quote{background:var(--surface);border-left:3px solid var(--magenta);padding:14px 18px;margin:14px 0;font-style:italic;color:#3d3b36;font-size:13.5px;}
+.quote .attrib{display:block;margin-top:8px;font-style:normal;font-size:12px;color:var(--muted);}
+
+.toc{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:20px 24px;margin:28px 0 44px;}
+.toc h4{margin-top:0;}
+.toc ol{padding-left:18px;}
+.toc li{margin:4px 0;font-size:13px;}
+.toc a{color:var(--muted);}
+.toc a:hover{color:var(--magenta);}
+
+.timeline{margin:18px 0;border-left:2px solid var(--magenta-border);padding-left:20px;}
+.timeline-item{position:relative;margin-bottom:18px;}
+.timeline-item::before{content:"";position:absolute;left:-26px;top:6px;width:10px;height:10px;border-radius:50%;background:var(--magenta);}
+.timeline-date{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--magenta);letter-spacing:.04em;display:block;margin-bottom:2px;}
+.timeline-title{font-weight:500;color:var(--text);font-size:14px;display:block;margin-bottom:3px;}
+.timeline-desc{font-size:13px;color:var(--muted);}
+
+.tool-pill{display:inline-block;background:var(--surface);border:1px solid var(--border2);border-radius:14px;padding:3px 11px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text);margin:3px;}
+.tool-pill.new{border-color:var(--green-border);color:var(--green);background:var(--green-bg);}
+.tool-pill.beta{border-color:var(--amber-border);color:var(--amber);background:var(--amber-bg);}
+
+.metric{display:inline-block;text-align:center;padding:12px 18px;background:var(--surface);border:1px solid var(--border);border-radius:8px;margin:4px;min-width:140px;}
+.metric-value{font-family:'Syne',sans-serif;font-size:22px;font-weight:700;color:var(--magenta);display:block;}
+.metric-label{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.04em;text-transform:uppercase;}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div style="margin-bottom:52px;border-bottom:1px solid var(--border2);padding-bottom:40px;">
+  <div class="header-meta">
+    <span class="badge badge-magenta">Research Notes</span>
+    <span class="badge badge-purple">ClickUp</span>
+    <span class="badge badge-blue">Brain² · Super Agents · MCP · BrainGPT</span>
+    <span class="badge badge-gray">QPM / SA — May 2026</span>
+  </div>
+  <h1>ClickUp AI</h1>
+  <p style="font-size:17px;color:var(--muted);margin-top:14px;font-weight:300;max-width:760px;">
+    Research notes on ClickUp Brain² (Brain 2.0) — the multi-model AI surface — and the Super Agents platform built on the acquired <strong>Codegen</strong> stack (BrainGPT, sub-agents, episodic memory). Covers Ambient Agents, AI Notetaker, Brain MAX desktop, the <strong>Qatalog ActionQuery</strong> enterprise search engine, native ClickUp MCP server, and the Codegen coding agent. ClickUp's bet: "One AI to Replace them All."
+  </p>
+  <p style="margin-top:12px;font-size:13px;color:var(--faint);">Primary sources: <a href="https://clickup.com/brain">clickup.com/brain</a> · <a href="https://clickup.com/brain/agents">/brain/agents</a> · <a href="https://clickup.com/brain/max">/brain/max</a> · <a href="https://clickup.com/brain/ai-notetaker">/brain/ai-notetaker</a> · <a href="https://feedback.clickup.com/changelog">feedback.clickup.com/changelog</a> · <a href="https://developer.clickup.com/docs/connect-an-ai-assistant-to-clickups-mcp-server">developer.clickup.com — MCP</a> · <a href="https://help.clickup.com/hc/en-us/articles/33335772678423-What-is-ClickUp-MCP">help.clickup.com — What is ClickUp MCP</a> · <a href="https://clickup.com/blog/clickup-codegen-acquisition/">Codegen acquisition</a> · <a href="https://clickup.com/qatalog-acquisition">Qatalog acquisition</a></p>
+</div>
+
+<!-- TOC -->
+<div class="toc">
+  <h4>Contents</h4>
+  <ol>
+    <li><a href="#three-pillars">The four pillars: Brain² / Super Agents / Ambient Agents / Brain MAX</a></li>
+    <li><a href="#braingpt-formula">ClickUp AI formula — BrainGPT + ActionQuery + multi-model + workspace context</a></li>
+    <li><a href="#brain-inline">Brain² — inline AI everywhere (Assistant, @Brain, Writing, Summaries)</a></li>
+    <li><a href="#super-agents">Super Agents — agents-as-first-class-users, 500+ skills, Studio</a></li>
+    <li><a href="#ambient-agents">Ambient Agents — Live Answers, Live Intelligence</a></li>
+    <li><a href="#brain-max">Brain MAX — desktop super-app, Talk to Text, Chrome extension</a></li>
+    <li><a href="#ai-notetaker">AI Notetaker + SyncUps — meetings become workspace knowledge</a></li>
+    <li><a href="#enterprise-search">Enterprise Search (Qatalog ActionQuery) — 100+ connected apps</a></li>
+    <li><a href="#mcp">ClickUp MCP — official OAuth server + community SDK</a></li>
+    <li><a href="#codegen">Codegen — the acquired coding agent in ClickUp</a></li>
+    <li><a href="#multimodel">Multi-model strategy — GPT-5.2, Claude Opus, Gemini, BrainGPT routing</a></li>
+    <li><a href="#pricing">Pricing — Free / Brain AI ($9) / Everything AI ($28) + add-ons + credits</a></li>
+    <li><a href="#governance">Governance — audit logs, AI Usage Dashboard, "no training, no retention"</a></li>
+    <li><a href="#vector">Strategic vector — "One AI to Replace them All" / Converged AI Workspace</a></li>
+    <li><a href="#timeline">Release timeline — Dec 2025 → May 2026 (Brain² / Super Agents era)</a></li>
+    <li><a href="#sentiment">Adoption signals &amp; community sentiment</a></li>
+  </ol>
+</div>
+
+<!-- ===== 1. FOUR PILLARS ===== -->
+<span class="section-label" id="three-pillars">01</span>
+<h2>The Four Pillars of ClickUp AI</h2>
+
+<p>ClickUp's AI surface is the broadest of any PM-tool competitor — and the only one that's a full work-OS bet, not just a workflow augmentation. The product splits into four named layers. Underneath all four is <strong>BrainGPT</strong>, ClickUp's proprietary orchestration + memory + sub-agent architecture acquired with <strong>Codegen</strong> in Dec 2025.</p>
+
+<div class="card-grid">
+  <div class="cb cb-magenta" style="margin:0;">
+    <span class="cb-tag">Pillar 1 · inline AI</span>
+    <h3>Brain² (Brain 2.0)</h3>
+    <p style="font-size:13.5px;">Central AI assistant. <code>@Brain</code> anywhere, Brain Assistant chat, project summaries, AI writing, AI fields, AI assign / prioritize / time-block, image generation, enterprise search. Free trial; full access on Brain AI plan.</p>
+  </div>
+  <div class="cb cb-purple" style="margin:0;">
+    <span class="cb-tag">Pillar 2 · autonomous</span>
+    <h3>Super Agents™</h3>
+    <p style="font-size:13.5px;">"Personalized AI teammates" modeled as first-class users. @mention, assign, DM, schedule, trigger. Super Agent Studio for natural-language building. 500+ skills. <strong>3.3M tasks already automated</strong> (per /brain/agents). Powered by BrainGPT.</p>
+  </div>
+  <div class="cb cb-teal" style="margin:0;">
+    <span class="cb-tag">Pillar 3 · ambient</span>
+    <h3>Ambient Agents</h3>
+    <p style="font-size:13.5px;">"Always in context, always on." Live Answers Agent, Live Intelligence Agent. Pre-built by ClickUp experts ("100s more"). Run continuously in background. Plug into Drive / GitHub / Salesforce / 20+ apps.</p>
+  </div>
+  <div class="cb cb-blue" style="margin:0;">
+    <span class="cb-tag">Pillar 4 · desktop OS</span>
+    <h3>Brain MAX</h3>
+    <p style="font-size:13.5px;">Standalone super-app (Mac/Windows/iOS/Android + Chrome extension). Voice-first ("Talk to Text"), multi-model premium chat (GPT-5.2, Claude Opus, Gemini), universal search across web + work apps. "One AI to Replace them All." Product Hunt #1 in Productivity &amp; AI.</p>
+  </div>
+</div>
+
+<div class="callout callout-magenta">
+  <p><strong>Cross-cutting:</strong> <strong>Codegen</strong> (the acquired AI coding agent) ships as <code>@Codegen</code> — tag in any task → it gathers context, writes production-ready code, opens a PR. <strong>AI Notetaker</strong> joins any meeting via link. <strong>ClickUp MCP server</strong> (public beta) exposes Workspace to Cursor / Claude / VS Code / ChatGPT. <strong>Qatalog ActionQuery</strong> powers permission-aware enterprise search across 100+ apps.</p>
+</div>
+
+<h3>The Brain² growth metrics ClickUp publishes</h3>
+<div style="margin:14px 0;display:flex;flex-wrap:wrap;gap:8px;">
+  <div class="metric"><span class="metric-value">3.3M+</span><span class="metric-label">Tasks automated by Super Agents</span></div>
+  <div class="metric"><span class="metric-value">400%</span><span class="metric-label">YoY AI sales growth (2025)</span></div>
+  <div class="metric"><span class="metric-value">800%</span><span class="metric-label">YoY AI usage growth (2025)</span></div>
+  <div class="metric"><span class="metric-value">$300M</span><span class="metric-label">ARR (Sep 2025)</span></div>
+  <div class="metric"><span class="metric-value">20M+</span><span class="metric-label">Total users</span></div>
+  <div class="metric"><span class="metric-value">86%</span><span class="metric-label">Claimed cost savings vs standalone AI tools</span></div>
+</div>
+
+<!-- ===== 2. BRAINGPT FORMULA ===== -->
+<hr>
+<span class="section-label" id="braingpt-formula">02</span>
+<h2>ClickUp AI Formula</h2>
+
+<div class="formula">
+  <div class="line"><span class="op">ClickUp AI</span><span class="val">= BrainGPT orchestration</span><span class="comment">// "Route to the best models from intent" (acquired from Codegen)</span></div>
+  <div class="line"><span class="op">           </span><span class="val">+ Multi-model premium</span><span class="comment">// GPT-5.2 + Claude Opus + Gemini + more — single subscription</span></div>
+  <div class="line"><span class="op">           </span><span class="val">+ ActionQuery search</span><span class="comment">// Qatalog AI engine — permission-aware, no-index, 100+ apps</span></div>
+  <div class="line"><span class="op">           </span><span class="val">+ Human-level memory</span><span class="comment">// Short / Long-term / Episodic — agents remember decisions</span></div>
+  <div class="line"><span class="op">           </span><span class="val">+ Sub-Agent Architecture</span><span class="comment">// Multi-agent collab + delegation under BrainGPT</span></div>
+  <div class="line"><span class="op">           </span><span class="val">+ Workspace context</span><span class="comment">// tasks, docs, chats, meetings, calendar, email</span></div>
+  <div class="line"><span class="op">           </span><span class="val">+ "Zero training, zero retention"</span><span class="comment">// SOC 2, ISO 27001, ISO 42001, GDPR, HIPAA</span></div>
+</div>
+
+<div class="callout callout-blue">
+  <p><strong>The acquisition-built stack:</strong> Two acquisitions in two months built today's ClickUp AI. <strong>Qatalog</strong> (Nov 2025, $25.4M-funded London startup with Nvidia/Twitter/Airbnb pedigree) brought permission-aware search across 100+ apps. <strong>Codegen</strong> (Dec 23, 2025) brought autonomous agent technology and Jay Hack as Head of AI. Existing Codegen standalone product sunset January 16, 2026 — fully absorbed into ClickUp Super Agents within 4 weeks of the deal.</p>
+</div>
+
+<div class="quote">
+  "The bottleneck to agents transforming how work is done is no longer AI capabilities, it's context. ClickUp is the only platform that houses all of a company's plans, docs, and goals in one place."
+  <span class="attrib">— Jay Hack, Codegen CEO &amp; now ClickUp Head of AI · Dec 23, 2025</span>
+</div>
+
+<div class="quote">
+  "True AI is only possible when it has 100% context. By providing every piece of work, communication, and knowledge, ClickUp's Converged AI Workspace delivers insights and automation that standalone tools simply can't match."
+  <span class="attrib">— Zeb Evans, ClickUp Founder &amp; CEO · Qatalog acquisition, Nov 12, 2025</span>
+</div>
+
+<!-- ===== 3. BRAIN INLINE ===== -->
+<hr>
+<span class="section-label" id="brain-inline">03</span>
+<h2>Brain² — Inline AI Everywhere</h2>
+
+<p>Brain² is what most users see first — the chat interface, the @Brain mention, the AI Writing slash commands, the auto-summaries that appear on tasks and projects. It's the foundation that everything else (Super Agents, Ambient Agents, Brain MAX) extends.</p>
+
+<div class="ss-grid">
+  <div class="ss-block" style="margin:0;">
+    <div class="ss-label">📸 Brain Assistant chat — context-aware Q&amp;A panel</div>
+    <div class="ss-placeholder">[screenshot slot — capture from desktop app]</div>
+  </div>
+  <div class="ss-block" style="margin:0;">
+    <div class="ss-label">📸 @Brain mention in task description — Writing actions menu</div>
+    <div class="ss-placeholder">[screenshot slot — capture from task editor]</div>
+  </div>
+</div>
+
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>Feature</th><th>Status</th><th>Plan</th><th>Pain solved</th></tr></thead>
+<tbody>
+<tr><td class="fn">Brain Assistant (chat)</td><td><span class="feat-ga">● GA</span></td><td><span class="plan-tag plan-brain">Brain AI</span></td><td>Org Q&amp;A. Workspace-aware ChatGPT-style chat with multi-model toggle.</td></tr>
+<tr><td class="fn">@Brain mention</td><td><span class="feat-ga">● GA</span></td><td><span class="plan-tag plan-brain">Brain AI</span></td><td>Inline AI in any text field — task description, comment, doc, chat.</td></tr>
+<tr><td class="fn">AI Writing actions</td><td><span class="feat-ga">● GA</span></td><td><span class="plan-tag plan-brain">Brain AI</span></td><td>Summarize, improve, fix grammar, brainstorm, change tone, translate.</td></tr>
+<tr><td class="fn">Project Summaries &amp; Updates</td><td><span class="feat-ga">● GA</span></td><td><span class="plan-tag plan-brain">Brain AI</span></td><td>Auto-generated status updates from task activity.</td></tr>
+<tr><td class="fn">Web Search &amp; Deep Search</td><td><span class="feat-ga">● GA</span></td><td><span class="plan-tag plan-brain">Brain AI</span></td><td>Cited web research inside the workspace. Deep Search synthesizes sources into reports with visualizations.</td></tr>
+<tr><td class="fn">AI Fields (custom)</td><td><span class="feat-ga">● GA</span></td><td><span class="plan-tag plan-everything">Everything AI</span> · credits</td><td>AI-computed task properties — sentiment, priority, category — from descriptions.</td></tr>
+<tr><td class="fn">AI Cards</td><td><span class="feat-ga">● GA</span></td><td><span class="plan-tag plan-everything">Everything AI</span></td><td>Visual cards with AI-generated insights surfaced on dashboards.</td></tr>
+<tr><td class="fn">AI Assign</td><td><span class="feat-ga">● GA</span></td><td><span class="plan-tag plan-everything">Everything AI</span></td><td>Auto-assigns based on workload, skills, history.</td></tr>
+<tr><td class="fn">AI Prioritize</td><td><span class="feat-ga">● GA</span></td><td><span class="plan-tag plan-everything">Everything AI</span></td><td>Auto-sets task priority from content + context.</td></tr>
+<tr><td class="fn">AI Time Blocking</td><td><span class="feat-ga">● GA</span></td><td><span class="plan-tag plan-everything">Everything AI</span></td><td>AI-Powered Planner blocks focus time across calendar.</td></tr>
+<tr><td class="fn">AI auto-classify Task Types</td><td><span class="feat-ga">● GA</span> <span style="font-size:11px;color:var(--muted);">Feb 2026</span></td><td><span class="plan-tag plan-brain">Brain AI</span></td><td>Keeps Task Types "clean and consistent" in List/Table views.</td></tr>
+<tr><td class="fn">Image generation</td><td><span class="feat-ga">● GA</span></td><td><span class="plan-tag plan-everything">Everything AI</span> · credits</td><td>Inline image creation. Consumes Super Credits.</td></tr>
+<tr><td class="fn">Memory &amp; Preferences (persistent)</td><td><span class="feat-ga">● GA</span></td><td><span class="plan-tag plan-brain">Brain AI</span></td><td>Brain learns communication style, role, workflows. Import memory from ChatGPT &amp; Claude. User-editable &amp; deletable.</td></tr>
+<tr><td class="fn">Gmail ↔ Brain</td><td><span class="feat-ga">● GA</span> <span style="font-size:11px;color:var(--muted);">Dec 2025</span></td><td><span class="plan-tag plan-brain">Brain AI</span></td><td>Email intelligence — prioritize, summarize.</td></tr>
+<tr><td class="fn">ClickUp inside ChatGPT (App Store)</td><td><span class="feat-ga">● GA</span> <span style="font-size:11px;color:var(--muted);">May 2026</span></td><td><span class="plan-tag plan-free">All plans</span></td><td>ChatGPT users can read &amp; act on ClickUp data without leaving ChatGPT.</td></tr>
+<tr><td class="fn">ClickUp in Cursor (OAuth)</td><td><span class="feat-ga">● GA</span> <span style="font-size:11px;color:var(--muted);">May 2026</span></td><td><span class="plan-tag plan-free">All plans</span></td><td>Search tasks/docs/comments, create &amp; update via NL prompts from Cursor.</td></tr>
+</tbody>
+</table>
+</div>
+
+<!-- ===== 4. SUPER AGENTS ===== -->
+<hr>
+<span class="section-label" id="super-agents">04</span>
+<h2>Super Agents™ — Agents as First-Class Users</h2>
+
+<p>Super Agents launched <strong>December 22, 2025</strong> (initial preview) → fully shipped <strong>January 29, 2026</strong> ("Release Notes Takeover"). Built on the Codegen technology acquired December 23, 2025 — a deliberate fast-cycle: acquire on the 23rd, sunset standalone product Jan 16, fully relaunch by Jan 29.</p>
+
+<div class="quote">
+  "Super Agents are <strong>THE WORLD'S ONLY HUMAN-LEVEL AI AGENTS</strong> that work as teammates… They show up just like teammates, because under the hood, they're modeled as real users."
+  <span class="attrib">— clickup.com/brain/agents</span>
+</div>
+
+<h3>The 7 capabilities of a Super Agent (verbatim from the page)</h3>
+<div class="anatomy">
+  <div class="anatomy-block"><div class="anatomy-label" style="color:var(--magenta);">Memory</div><div class="anatomy-desc">"Episodic memory, agent preferences memory, short-term memory and long-term memory." Decisions stored in editable Docs.</div></div>
+  <div class="anatomy-block"><div class="anatomy-label" style="color:var(--purple);">Knowledge</div><div class="anatomy-desc">Vast databases + learning from every interaction. Real-time syncing via ActionQuery + fine-tuned embeddings.</div></div>
+  <div class="anatomy-block"><div class="anatomy-label" style="color:var(--teal);">Collaboration</div><div class="anatomy-desc">Works with humans AND other agents — multi-agent delegation under BrainGPT's sub-agent architecture.</div></div>
+  <div class="anatomy-block"><div class="anatomy-label" style="color:var(--blue);">Skills</div><div class="anatomy-desc">"500+ human skills" — email, scheduling, reporting, image generation, code, sync, audit, etc.</div></div>
+  <div class="anatomy-block"><div class="anatomy-label" style="color:var(--green);">Autonomous</div><div class="anatomy-desc">Independent decisions and actions. Reflection loop: "execution loops that ensure Agents constantly reflect on work they're doing."</div></div>
+  <div class="anatomy-block"><div class="anatomy-label" style="color:var(--amber);">Ambient</div><div class="anatomy-desc">Runs quietly in the background — works on schedules or triggers without explicit human prompts.</div></div>
+</div>
+
+<h3>How a Super Agent gets triggered (4 surfaces)</h3>
+<div class="card-grid">
+  <div class="card">
+    <h4>@mention anywhere</h4>
+    <p>Tag the agent in a task, doc, comment, or chat. Agent reads context, executes, posts result.</p>
+  </div>
+  <div class="card">
+    <h4>Assign as task owner</h4>
+    <p>Delegate a task to an agent like a human teammate. Agent executes end-to-end and proactively escalates.</p>
+  </div>
+  <div class="card">
+    <h4>Direct message (DM)</h4>
+    <p>Open a 1:1 chat with the agent. Iterate naturally. Edit tone, instructions, tools through the conversation — no Builder revisit needed (improved May 2026).</p>
+  </div>
+  <div class="card">
+    <h4>Schedule / Automation trigger</h4>
+    <p>Daily morning summaries, hourly reminders, event-triggered playbooks. May 2026 added hourly schedules with guardrails against overlapping runs.</p>
+  </div>
+</div>
+
+<h3>Super Agent Builder ("Super Agent Studio")</h3>
+<div class="cb cb-purple">
+  <span class="cb-tag">No-code · natural language</span>
+  <h3>"The world's only infinite agent catalog"</h3>
+  <p style="font-size:13.5px;">Describe the job in plain English → Builder defines scope, knowledge sources, tool restrictions, behavior. "One prompt spins up an entire team" — Builder can auto-delegate goals to multiple agents at once.</p>
+  <p style="font-size:13px;color:var(--muted);margin-top:6px;">Agent categories shown on /brain/agents: <strong>PM Agents · Sales Agents · Coding Agents · Designer Agents · Certified Agents</strong> (marketplace). The launch blog names <strong>Project Manager Agent</strong> as a flagship pre-built.</p>
+</div>
+
+<h3>Permissions &amp; security model</h3>
+<ul>
+  <li><strong>Modeled as real users</strong> in ClickUp's existing data model — agents have user accounts with explicit role-based access.</li>
+  <li><strong>Default scope:</strong> public Workspace data only. Private context shared selectively.</li>
+  <li><strong>Audit everything:</strong> every action (post, summarize, create, assign, status change, update DB, generate report) logged with timestamp + location.</li>
+  <li><strong>Real-time audit logs</strong> + admin granular permissions.</li>
+  <li><strong>"Zero data retention. Zero training."</strong> — page claim: "More secure than using OpenAI, Gemini directly."</li>
+  <li><strong>Reflection</strong> loop on every action for self-checking.</li>
+</ul>
+
+<h3>BrainGPT — the proprietary engine</h3>
+<div class="card-grid">
+  <div class="card">
+    <h4>Optimized orchestration</h4>
+    <p style="font-size:13.5px;">"Route to the best models from intent" — picks GPT vs Claude vs Gemini per sub-task. The technical reason ClickUp can ship multi-model without UX chaos.</p>
+  </div>
+  <div class="card">
+    <h4>Sub-Agent architecture</h4>
+    <p style="font-size:13.5px;">A Super Agent can spawn sub-agents that handle slices of work in parallel and report back. Inherited from Codegen's "autonomous PR" stack.</p>
+  </div>
+  <div class="card">
+    <h4>Deep Research &amp; Compression</h4>
+    <p style="font-size:13.5px;">"Research optimally from compressed context" — long-running research with context windowing to handle large workspaces without token bloat.</p>
+  </div>
+  <div class="card">
+    <h4>Self-Learning</h4>
+    <p style="font-size:13.5px;">"Every interaction, job, and piece of human feedback improves Super Agents." Continuous improvement without retraining the underlying foundation model.</p>
+  </div>
+</div>
+
+<!-- ===== 5. AMBIENT AGENTS ===== -->
+<hr>
+<span class="section-label" id="ambient-agents">05</span>
+<h2>Ambient Agents — Always-On, Always-In-Context</h2>
+
+<p>Different from Super Agents in framing: Ambient Agents are <strong>pre-built by ClickUp experts</strong> and run continuously, reacting passively to events rather than being explicitly triggered. They are the answer to "what should AI do when no one asks it anything?"</p>
+
+<div class="card-grid">
+  <div class="cb cb-teal" style="margin:0;">
+    <span class="cb-tag">Always listening</span>
+    <h3>Live Answers Agent</h3>
+    <p style="font-size:13.5px;">"Listens for questions and automatically gives rich answers with complete context." Surfaces in chats and threads. The "Q&amp;A agent that's always on" — comparable to Atlassian's Rovo Chat ambient mode but pre-installed and silent until needed.</p>
+  </div>
+  <div class="cb cb-blue" style="margin:0;">
+    <span class="cb-tag">Always thinking</span>
+    <h3>Live Intelligence Agent</h3>
+    <p style="font-size:13.5px;">"Surfaces real-time insights, makes actionable recommendations, and keeps workspace context up-to-date." Continuously processes signal across the workspace. Generates weekly updates without being asked.</p>
+  </div>
+</div>
+
+<div class="callout callout-amber">
+  <p><strong>"100s more" pre-built variants</strong> per /brain/ambient-agents. Connected app integration: "work with data from your Google Drive, GitHub, Salesforce, and 20+ other apps." This is the surface that consumes the Qatalog ActionQuery engine most aggressively.</p>
+</div>
+
+<!-- ===== 6. BRAIN MAX ===== -->
+<hr>
+<span class="section-label" id="brain-max">06</span>
+<h2>Brain MAX — The Desktop Super-App</h2>
+
+<div class="cb cb-magenta">
+  <span class="cb-tag">"One AI to Replace them All" · Product Hunt #1 Productivity + AI</span>
+  <h3>Brain MAX is not a feature — it's a standalone downloadable app</h3>
+  <p>Brain MAX positions ClickUp as the <em>desktop OS for AI work</em>, not just a PM tool. Free to download. Mac, Windows, iOS, Android, Chrome extension. Voice-first input. Cross-app universal search.</p>
+</div>
+
+<h3>What Brain MAX gives you on top of base ClickUp</h3>
+<div class="card-grid">
+  <div class="card">
+    <h4>Talk to Text (voice input)</h4>
+    <p style="font-size:13.5px;">"Your voice is the fastest keyboard." ~220 wpm dictation vs ~45 wpm typing. Works across apps to update calendar, assign tasks, send messages, draft Docs. @Mentions auto-connect, tag, notify. Personal vocabulary learns names &amp; jargon.</p>
+  </div>
+  <div class="card">
+    <h4>Universal AI (multi-model premium chat)</h4>
+    <p style="font-size:13.5px;">Chat with multiple premium models — Gemini, OpenAI, Claude, and Brain — without app-switching. Single subscription, switch with one click.</p>
+  </div>
+  <div class="card">
+    <h4>Universal Search</h4>
+    <p style="font-size:13.5px;">Search across connected apps for files, threads, conversations. Web search with citations. Deep search for research answers. Powered by Qatalog ActionQuery.</p>
+  </div>
+  <div class="card">
+    <h4>Chrome extension — work where you browse</h4>
+    <p style="font-size:13.5px;">Summarize and act on any web page in-tab. Send to ClickUp tasks, send to Brain, send to agents — without leaving the page.</p>
+  </div>
+</div>
+
+<div class="callout callout-blue">
+  <p><strong>Status:</strong> Brain MAX is GA — actively downloadable, no beta label. Free for everyone with usage limits; ClickUp AI customers get unlimited queries; Autopilot/Talk-to-Text add-on customers get unlimited Talk to Text.</p>
+</div>
+
+<!-- ===== 7. AI NOTETAKER ===== -->
+<hr>
+<span class="section-label" id="ai-notetaker">07</span>
+<h2>AI Notetaker + SyncUps — Meetings Become Workspace Knowledge</h2>
+
+<p>ClickUp's bet on meeting capture is unusually comprehensive: <strong>SyncUps</strong> (in-product video calls) + <strong>AI Notetaker</strong> (joins Zoom/Teams/Google Meet/any link). Every call becomes searchable workspace knowledge with auto-generated tasks.</p>
+
+<h3>What AI Notetaker captures</h3>
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>Output</th><th>Where it lands</th><th>Notes</th></tr></thead>
+<tbody>
+<tr><td class="fn">Searchable transcript</td><td>Private Doc</td><td>Speaker attribution: "who said what across any of your meetings"</td></tr>
+<tr><td class="fn">Video recording</td><td>Private Doc</td><td>Toggle-controllable (May 2026) — keep recording, transcript, or just summary</td></tr>
+<tr><td class="fn">Smart summary (TL;DR)</td><td>Private Doc</td><td>Default output everyone gets</td></tr>
+<tr><td class="fn">Action items as tasks</td><td>Assigned tasks</td><td>Auto-converted to tasks with assignees</td></tr>
+<tr><td class="fn">Decisions + topics</td><td>Doc + Brain memory</td><td>Searchable via Brain Q&amp;A</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>Activation surfaces</h3>
+<ul>
+  <li><strong>Calendar-attached:</strong> auto-joins any scheduled meeting (configurable per meeting / globally)</li>
+  <li><strong>Via link (Feb 2026):</strong> paste any meeting URL — Zoom, Teams, Meet, ad-hoc — Notetaker joins as a participant</li>
+  <li><strong>Pinned to Workspace top</strong> for one-click access (Feb 2026)</li>
+  <li><strong>SyncUps:</strong> in-product video calls — always captured</li>
+</ul>
+
+<div class="callout callout-blue">
+  <p><strong>Pricing:</strong> AI Notetaker is part of <strong>Everything AI ($28/user/mo)</strong>, OR available as a <strong>standalone add-on starting $12/mo for 60 hours/month</strong>. Includes recording + summary + transcript + action items.</p>
+</div>
+
+<!-- ===== 8. ENTERPRISE SEARCH ===== -->
+<hr>
+<span class="section-label" id="enterprise-search">08</span>
+<h2>Enterprise Search — Qatalog ActionQuery Engine</h2>
+
+<p>The Nov 2025 Qatalog acquisition was the single biggest infrastructure change to ClickUp AI in 2025–2026. Qatalog's <strong>ActionQuery</strong> engine — a "permission-aware, no-index" AI search platform formerly used at Nvidia, Twitter, Airbnb — is now embedded in ClickUp.</p>
+
+<div class="quote">
+  "Qatalog's ActionQuery AI engine — a permission-aware search technology — will be deeply integrated into ClickUp's platform, enabling users to instantly surface information from any connected app without leaving ClickUp."
+  <span class="attrib">— Qatalog acquisition announcement, Nov 12, 2025</span>
+</div>
+
+<h3>What ActionQuery does inside ClickUp</h3>
+<div class="card-grid">
+  <div class="card">
+    <h4>100+ connected enterprise apps</h4>
+    <p style="font-size:13.5px;">Drive, Notion, Slack, Gmail, GitHub, Salesforce, Confluence, Dropbox, MS Teams (logos shown on /brain/agents) — and "20+ other apps" per /brain/ambient-agents.</p>
+  </div>
+  <div class="card">
+    <h4>Permission-aware retrieval</h4>
+    <p style="font-size:13.5px;">Respects per-document, per-app permissions. User only sees what they can see in the source app. No "AI bypass" of access controls.</p>
+  </div>
+  <div class="card">
+    <h4>No-index architecture</h4>
+    <p style="font-size:13.5px;">Doesn't store enterprise data permanently in ClickUp. Queries hit source systems live (similar to Atlassian's "Direct" connector type but native).</p>
+  </div>
+  <div class="card">
+    <h4>Real-time 2-way sync</h4>
+    <p style="font-size:13.5px;">Bidirectional — agents can both <em>read</em> from connected apps and <em>write back</em> via integrations (where the source app supports it).</p>
+  </div>
+</div>
+
+<!-- ===== 9. MCP ===== -->
+<hr>
+<span class="section-label" id="mcp">09</span>
+<h2>ClickUp MCP — Official OAuth Server + Community Variants</h2>
+
+<div class="mcp-box">
+  <h3>Native MCP server, public beta, OAuth-only</h3>
+  <p><strong>Endpoint:</strong> <code style="background:#1a3a6e;color:#7ab8ff;">https://mcp.clickup.com/mcp</code></p>
+  <p><strong>Auth:</strong> OAuth only — "you cannot authenticate using your own API keys or Auth access tokens." Forces multi-user-aware install.</p>
+  <p><strong>Admin gate:</strong> In Team / Enterprise / Edu workspaces, only owners and admins can configure MCP servers.</p>
+  <p><strong>Plan availability:</strong> All plans (public beta).</p>
+  <p><strong>Rate limits (without Everything AI):</strong> Free: 50 calls / 24 h · Unlimited+: 300 calls / 24 h. Higher with Everything AI add-on.</p>
+  <p><strong>Safety constraint:</strong> "For the time being, ClickUp hasn't added any deletion tools as a safety measure." Read + write + update only — no destructive operations exposed to LLM clients.</p>
+</div>
+
+<h3>Setup snippet (works for Cursor, Claude Desktop, VS Code, ChatGPT)</h3>
+<pre>{
+  "mcpServers": {
+    "ClickUp": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://mcp.clickup.com/mcp"]
+    }
+  }
+}
+</pre>
+
+<h3>What ClickUp MCP exposes</h3>
+<p>ClickUp's official docs don't enumerate the full tool surface, but example prompts and the community taazkareem fork suggest coverage of:</p>
+<div style="margin:10px 0;">
+  <span class="mcp-pill">Tasks (create, update, list, comment)</span>
+  <span class="mcp-pill">Lists / Folders / Spaces</span>
+  <span class="mcp-pill">Docs (read, edit)</span>
+  <span class="mcp-pill">Sprints &amp; cycles</span>
+  <span class="mcp-pill">Checklists</span>
+  <span class="mcp-pill">Tags</span>
+  <span class="mcp-pill">Time tracking</span>
+  <span class="mcp-pill">Files / attachments</span>
+  <span class="mcp-pill">Chat messages</span>
+  <span class="mcp-pill">Custom fields read</span>
+  <span class="mcp-pill">⚠ NO deletion tools (safety)</span>
+</div>
+
+<h3>Official vs community MCP — when to use which</h3>
+<div class="card-grid">
+  <div class="card">
+    <h4>ClickUp official MCP (mcp.clickup.com)</h4>
+    <ul>
+      <li>OAuth-only, multi-user safe</li>
+      <li>Zero install — hosted by ClickUp</li>
+      <li>Curated tool set, no deletions</li>
+      <li>Rate-limited per plan</li>
+      <li>Pick when: enterprise, Cursor/Claude/ChatGPT multi-user, no infra to run anything</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h4>Community (taazkareem / nazruden)</h4>
+    <ul>
+      <li>API key / personal token auth</li>
+      <li>Local execution (npx-installed)</li>
+      <li>Complete API coverage including delete</li>
+      <li>Filter flags to shape read-only or task-focused agents</li>
+      <li>Pick when: solo dev, need full surface, want to script behaviour</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ===== 10. CODEGEN ===== -->
+<hr>
+<span class="section-label" id="codegen">10</span>
+<h2>Codegen — The Acquired Coding Agent</h2>
+
+<div class="cb cb-blue">
+  <span class="cb-tag">Acquisition · Dec 23, 2025 · Jay Hack → Head of AI</span>
+  <h3>From standalone "Cursor competitor" → ClickUp Brain core engine</h3>
+  <p>Codegen pre-acquisition was an AI platform for autonomous pull requests — directly competing with Cursor / Cognition. ClickUp bought it for two reasons: (1) the BrainGPT agent architecture became the spine of Super Agents, (2) the <code>@Codegen</code> coding agent became a native ClickUp feature. Standalone Codegen product sunset Jan 16, 2026.</p>
+</div>
+
+<h3>What <code>@Codegen</code> does inside ClickUp (shipped Dec 5, 2025)</h3>
+<ul>
+  <li><strong>Tag <code>@Codegen</code></strong> in any task with a feature/bug description</li>
+  <li>Agent gathers context (task description, attachments, related docs, comments, linked PRs)</li>
+  <li>Writes production-ready code in the connected repo (GitHub / GitLab)</li>
+  <li>Opens a PR with the change</li>
+  <li>Replies in the task with the PR link &amp; summary of what was done</li>
+  <li>Available in <strong>Automations</strong> — automate "from task to shippable code"</li>
+</ul>
+
+<div class="callout callout-magenta">
+  <p><strong>Strategic significance:</strong> ClickUp is the only general-purpose PM tool that owns its own coding agent. Atlassian wraps Rovo Dev around external tools. Linear positions itself as the substrate for external agents (Cursor, Codex, Devin). ClickUp <em>acquired</em> the agent. This puts it head-to-head with Atlassian's DX acquisition for "engineering intelligence inside the PM tool" — but with a coding agent layer Atlassian doesn't yet have.</p>
+</div>
+
+<!-- ===== 11. MULTI-MODEL ===== -->
+<hr>
+<span class="section-label" id="multimodel">11</span>
+<h2>Multi-model Strategy — "Every Model, One Brain"</h2>
+
+<p>ClickUp's most-differentiating commercial claim: a single subscription that aggregates premium frontier models. This is a deliberate moat — it forces competitors who model-lock (Linear, Asana) to either match, expose the cost, or stay narrower.</p>
+
+<div class="card-grid">
+  <div class="cb cb-amber" style="margin:0;">
+    <span class="cb-tag">Foundational models</span>
+    <h3>Brain AI tier</h3>
+    <p style="font-size:13.5px;">"Foundational AI Models" included in $9/user/mo tier. ClickUp doesn't disclose exact models — likely cost-optimized GPT-4o-class + Claude Haiku-class + Gemini Flash-class.</p>
+  </div>
+  <div class="cb cb-magenta" style="margin:0;">
+    <span class="cb-tag">Premium reasoning</span>
+    <h3>Everything AI tier ($200 value)</h3>
+    <p style="font-size:13.5px;">Premium models accessed by name: <strong>GPT-5.2 · Claude Opus · Gemini · "and more."</strong> Per-prompt model toggle. Listed as "$200 value" on the pricing page (i.e. replacing direct ChatGPT Plus + Claude Pro + Gemini Advanced).</p>
+  </div>
+</div>
+
+<div class="callout callout-blue">
+  <p><strong>Memory portability:</strong> ClickUp Brain explicitly supports <strong>importing memory from ChatGPT and Claude</strong>. This is a switch-cost reducer: a user with a year of ChatGPT memory doesn't lose it when consolidating onto ClickUp. The only PM tool offering this as of May 2026.</p>
+</div>
+
+<div class="callout callout-green">
+  <p><strong>Privacy stack (multi-model unified):</strong> <em>"No third-party data training"</em> + <em>"Zero third-party data retention"</em> + <em>"Multi-model unified security"</em> (uniform permissions/privacy across all models). Compliance: SOC 2, ISO 27001, <strong>ISO 42001 (AI management standard)</strong>, GDPR, HIPAA. ISO 42001 is the differentiator — ClickUp and Notion are the only PM tools loudly certified.</p>
+</div>
+
+<!-- ===== 12. PRICING ===== -->
+<hr>
+<span class="section-label" id="pricing">12</span>
+<h2>Pricing — Three AI Tiers + Add-ons + Credits</h2>
+
+<p>ClickUp explicitly sells AI as a layer on top of the base plan — unusual vs Linear (bundled) or Atlassian (bundled in Standard+). The friction is real and frequently cited in reviews, but it lets ClickUp charge enterprise-grade prices for AI without complicating the core PM SKU.</p>
+
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>Tier</th><th>Price</th><th>Includes</th><th>Excludes / trial-only</th></tr></thead>
+<tbody>
+<tr><td class="fn">Free Forever</td><td>$0</td><td>Trial access to most AI features</td><td>Full Brain not unlocked</td></tr>
+<tr><td class="fn">Brain AI</td><td><strong>$9/user/mo</strong> (annual)</td><td>Brain Assistant, Web Search, AI Writing, @Brain, Project Summaries · "Standard" Super Agents, Ambient Answers, Autopilot, AI Fields/Cards/Assign/Prioritize/Time-Blocking, Image Gen</td><td>Talk to Text · Enterprise Search · AI Notetaker · Premium Reasoning Models · Brain MAX</td></tr>
+<tr><td class="fn">Everything AI</td><td><strong>$28/user/mo</strong> (annual)</td><td>Brain MAX desktop · Premium Reasoning Models ($200 value) · "Flexible" Super Agents · <strong>Unlimited</strong>: Ambient Answers, Autopilot, AI Fields/Cards, AI Assign/Prioritize/Time-Blocking, Image Gen, Talk to Text, Enterprise Search, AI Notetaker</td><td>Credits still consumed for some heavy features</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>Standalone add-ons</h3>
+<ul>
+  <li><strong>Talk to Text:</strong> <code>$9/user/mo</code> — unlimited voice dictation</li>
+  <li><strong>AI Notetaker:</strong> from <code>$12/mo</code> for 60 hours — recording + summary + transcript + action items</li>
+  <li><strong>AI Super Credits:</strong> <code>$10 / 10,000 credits</code>. Super Agent calls consume <code>$0.01</code> per credit. Consumes Image Gen, AI Fields, Super Agents.</li>
+  <li><strong>AI Live Training Workshop:</strong> <code>$400</code> one-time, 2h session</li>
+</ul>
+
+<div class="callout callout-amber">
+  <p><strong>"Super Fair Billing Policy":</strong> ClickUp states cost savings on new models are passed through to customers; rate increases are "gradual and transparent." It also subsidizes sudden cost spikes from model providers so credit usage stays predictable. <em>The first vendor in the PM space to put this in writing.</em></p>
+</div>
+
+<!-- ===== 13. GOVERNANCE ===== -->
+<hr>
+<span class="section-label" id="governance">13</span>
+<h2>Governance — Audit, Visibility, Admin Controls</h2>
+
+<p>Two governance surfaces stand out vs other PM tools:</p>
+
+<div class="card-grid">
+  <div class="cb cb-teal" style="margin:0;">
+    <span class="cb-tag">Dec 2025</span>
+    <h3>Real-time AI Usage Dashboard</h3>
+    <p style="font-size:13.5px;">Members, Admins, Owners can track AI Super Credits — used, remaining, trends. Workspace-wide visibility. Lets admins forecast spend and identify usage outliers.</p>
+  </div>
+  <div class="cb cb-purple" style="margin:0;">
+    <span class="cb-tag">Jan 2026</span>
+    <h3>Agent action audit log</h3>
+    <p style="font-size:13.5px;">Every Super Agent action logged with timestamp and location. Activity log distinguishes agent actions from human actions. Granular per-agent permissions; admins can lock down access to public Workspace data only.</p>
+  </div>
+</div>
+
+<div class="callout callout-blue">
+  <p><strong>Privacy stance (verbatim from /brain):</strong> "We forbid third-party AI providers from training on your data" · "We don't allow third-party AI providers to store any of your data" · "Multi-model unified security" — uniform permissions, privacy, security across all models. Admin visibility: <em>Brain conversations are private to the user — admins cannot view them.</em></p>
+</div>
+
+<!-- ===== 14. STRATEGIC VECTOR ===== -->
+<hr>
+<span class="section-label" id="vector">14</span>
+<h2>Strategic Vector — "One AI to Replace them All"</h2>
+
+<div class="cb cb-magenta">
+  <span class="cb-tag">Zeb Evans · CEO · Converged AI Workspace thesis</span>
+  <h3>ClickUp is not a PM tool. It's a "Converged AI Workspace."</h3>
+  <p>ClickUp's marketing language has explicitly shifted in 2025–2026 from "all-in-one productivity platform" to <strong>"Converged AI Workspace"</strong> — the world's first, per their own framing. The bet: knowledge workers will consolidate onto one platform that aggregates all premium AI models + agentic workflows + every connected app. ClickUp wants to be the AI interface, not just the task tracker.</p>
+</div>
+
+<div class="quote">
+  "Software is finally converging, and it's about time. With Qatalog, we're not just adding another feature, we're unlocking the next level of AI transformation. True AI is only possible when it has 100% context."
+  <span class="attrib">— Zeb Evans, Nov 12, 2025</span>
+</div>
+
+<div class="quote">
+  "The future isn't about humans adapting to AI, it's about AI adapting to humans. By bringing Codegen's world-class team and technology together with ClickUp Super Agents, we're realizing the promise of truly intelligent digital coworkers."
+  <span class="attrib">— Zeb Evans, Dec 23, 2025</span>
+</div>
+
+<h3>3 / 6 / 12-month outlook</h3>
+<div class="card-grid">
+  <div class="card">
+    <h4>Next 3 months (May → Aug 2026)</h4>
+    <ul>
+      <li><strong>VibeUp</strong> ships (already marked "Soon" in nav) — likely a vibe-coding / Lovable-style competitor inside ClickUp</li>
+      <li>More Super Agent categories (HR, Finance, Legal templates)</li>
+      <li>@Mentioning Super Agents in Doc comments (open user request)</li>
+      <li>More premium models added — ClickUp ships new model integrations within weeks of release</li>
+      <li>IPO filing window per CFO Dan Zhang's Sep 2025 statement (waiting on market)</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h4>Next 6 months</h4>
+    <ul>
+      <li>Agent Marketplace ("Certified Agents") productized</li>
+      <li>Codegen / @Codegen expansion: full repo navigation, code review, multi-PR sequences</li>
+      <li>Deeper Qatalog ActionQuery — more enterprise connectors past 100</li>
+      <li>Cross-tenant Super Agent sharing (B2B agent distribution)</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h4>Next 12 months</h4>
+    <ul>
+      <li>ClickUp as the desktop AI OS — Brain MAX as primary surface, ClickUp PM as one tab</li>
+      <li>Voice-first interface mainstream — Talk to Text replaces typing for top of funnel</li>
+      <li>Full ISO 42001 enterprise sales push — capturing AI-governance-mature buyers</li>
+      <li>Agent-to-agent commerce — Super Agents from one workspace consumed by another</li>
+    </ul>
+  </div>
+</div>
+
+<div class="callout callout-magenta">
+  <p><strong>The ClickUp vector summary:</strong> <em>AI model aggregator + work OS.</em> Where Linear is narrow + deep on dev workflows, ClickUp is wide + deep on every workflow. The acquisitions tell the story: Qatalog (context infra) + Codegen (agent infra) = own the stack. The exposed risks: ecosystem lock-in (agents can't leave ClickUp), AI add-on pricing friction, and "ClickUp's core UX complexity diminishes AI UX" (recurring user complaint).</p>
+</div>
+
+<!-- ===== 15. TIMELINE ===== -->
+<hr>
+<span class="section-label" id="timeline">15</span>
+<h2>Release Timeline — Nov 2025 → May 2026</h2>
+
+<div class="timeline">
+  <div class="timeline-item"><span class="timeline-date">Nov 12, 2025</span><span class="timeline-title">🛒 Qatalog acquisition ($25.4M-funded)</span><span class="timeline-desc">ActionQuery permission-aware search engine. Brought trust from Nvidia/Twitter/Airbnb. Embedded across Brain, Ambient Agents, Enterprise Search.</span></div>
+  <div class="timeline-item"><span class="timeline-date">Dec 5, 2025</span><span class="timeline-title">Release Notes 3.64 — Codegen Agent + Gmail Brain + AI Usage Dashboard</span><span class="timeline-desc">Tag <code>@Codegen</code> on any task → writes prod code + opens PR. Gmail ↔ Brain. Real-time credit usage visibility.</span></div>
+  <div class="timeline-item"><span class="timeline-date">Dec 10, 2025</span><span class="timeline-title">"To our incredible community" keynote (Zeb Evans)</span><span class="timeline-desc">Calendar &amp; AI Notetaker + AI Agents as "AI workforce" framing locked in.</span></div>
+  <div class="timeline-item"><span class="timeline-date">Dec 12, 2025</span><span class="timeline-title">🚀 ClickUp 4.0 launch + AI-Powered Planner</span><span class="timeline-desc">Brain-powered focus blocks, multi-TZ scheduling, Teams Hub AI standups, My Tasks with Autopilot Agents.</span></div>
+  <div class="timeline-item"><span class="timeline-date">Dec 22–23, 2025</span><span class="timeline-title">🚀 Super Agents preview + 🛒 Codegen acquisition</span><span class="timeline-desc">Initial Super Agents launch on the 22nd → Codegen acquired on the 23rd → Jay Hack joins as Head of AI. Standalone Codegen product sunsets Jan 16, 2026.</span></div>
+  <div class="timeline-item"><span class="timeline-date">Jan 15, 2026</span><span class="timeline-title">Super Agents AMA on Reddit (r/ClickUp)</span><span class="timeline-desc">Senior PM Michael Van Doorn hosts. AMA on Jan 22, 10am–12pm PST.</span></div>
+  <div class="timeline-item"><span class="timeline-date">Jan 29, 2026</span><span class="timeline-title">🚀 Super Agents "Release Notes Takeover" — full launch</span><span class="timeline-desc">500+ skills · Super Agent Builder · audit logs · public-data-default permissions · @mention/assign/DM/schedule/trigger.</span></div>
+  <div class="timeline-item"><span class="timeline-date">Feb 24, 2026</span><span class="timeline-title">Release Notes 4.02 — AI auto-classify Task Types + AI Notetaker via link</span><span class="timeline-desc">Send Notetaker to ad-hoc meetings via URL. Pin Notetaker to Workspace top.</span></div>
+  <div class="timeline-item"><span class="timeline-date">Apr 8, 2026</span><span class="timeline-title">Release Notes 4.03</span><span class="timeline-desc">Mostly Google Drive automations and workload updates. Lighter AI cycle.</span></div>
+  <div class="timeline-item"><span class="timeline-date">May 5, 2026</span><span class="timeline-title">🚀 Release Notes 4.04 — Brain Goes Mobile + ChatGPT App Store + Cursor + Super Agent enhancements</span><span class="timeline-desc">Mobile Brain with dictation + sync · ClickUp inside ChatGPT (all plans) · ClickUp in Cursor (all plans) · Reminders end-to-end · hourly Agent schedules · DM-driven agent tweaks (no Builder needed) · AI Notetaker output toggles (recording / transcript / summary).</span></div>
+</div>
+
+<!-- ===== 16. SENTIMENT ===== -->
+<hr>
+<span class="section-label" id="sentiment">16</span>
+<h2>Adoption Signals &amp; Community Sentiment</h2>
+
+<h3>Adoption metrics ClickUp publishes</h3>
+<ul>
+  <li><strong>$300M ARR</strong> as of Sep 2025 with 20M+ users</li>
+  <li><strong>AI sales 400% YoY · AI usage 800% YoY</strong> through 2025</li>
+  <li><strong>3.3M+ tasks</strong> already automated by Super Agents (counter on /brain/agents)</li>
+  <li><strong>86% claimed cost savings</strong> vs replacing standalone AI tools</li>
+  <li><strong>100% win rate vs ChatGPT &amp; Claude</strong> in blind evaluation (ClickUp's own benchmark)</li>
+  <li>IPO filing on the horizon per CFO Dan Zhang (Sep 2025) — "may wait until market conditions improve"</li>
+</ul>
+
+<h3>Independent sentiment summary</h3>
+<div class="card-grid">
+  <div class="card">
+    <h4>Power-user / partner reviews (bullish)</h4>
+    <p style="font-size:13.5px;"><strong>ZenPilot</strong> (largest ClickUp Solutions Partner, Mar 2026 review of 200+ workspaces): "If you're already on ClickUp, upgrade to 4.0… this is the best version of the platform they've ever shipped. The convergence vision — tasks, chat, docs, AI all in one place — actually works now."</p>
+    <p style="font-size:13.5px;margin-top:6px;">Concrete wins reported: bug triage agent saving leads 30–45 min/day; weekly campaign-status agent generating client-ready summaries without manual compilation.</p>
+  </div>
+  <div class="card">
+    <h4>Cautious / pragmatic (WorkManagementHub, May 2026)</h4>
+    <ul>
+      <li><strong>Data quality dependency:</strong> "Agents reporting on project health are useless if tasks lack due dates, assignees, or status updates"</li>
+      <li><strong>Audit complexity:</strong> agent + human actions intermix in logs</li>
+      <li><strong>Cross-system failure:</strong> multi-system flows fail non-obviously if one integration breaks</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h4>Competitive criticism (Vellum, 2026)</h4>
+    <p style="font-size:13.5px;">"Locked to ClickUp. Super Agents operate inside ClickUp's platform. If your work happens outside ClickUp (local files, email, other apps), the agents can't reach it." Mitigated by Qatalog ActionQuery + MCP but still a real critique.</p>
+  </div>
+  <div class="card">
+    <h4>Pricing friction (multiple reviewers)</h4>
+    <p style="font-size:13.5px;">"AI features are offered as a separate add-on… You choose a plan first, and then add ClickUp AI if you want access." Consistent complaint across G2, Capterra, Reddit — particularly that <em>Brain conversations unlimited but everything good is locked behind Everything AI's $28</em>.</p>
+  </div>
+</div>
+
+<div class="callout callout-amber">
+  <p><strong>Open user request flagged on the feedback board:</strong> "@mention Super Agents in Doc comments." ClickUp staff confirmed early 2026 they are actively working on it. Useful litmus test — when this ships, ClickUp's coverage of agent surfaces matches Linear's.</p>
+</div>
+
+<!-- ===== 17. ACTIVATION ===== -->
+<hr>
+<span class="section-label" id="activation">17</span>
+<h2>Activation &amp; Setup — How to Actually Turn It On</h2>
+
+<div class="callout callout-green">
+  <p><strong>Versus Jira:</strong> No "two switches must both be ON," no business-email-domain trap. <strong>Versus Linear:</strong> More complex than Linear because AI is gated behind a separate paid SKU. The friction is plan-side, not toggle-side.</p>
+</div>
+
+<div class="steps">
+  <div class="step">
+    <div class="step-n">1</div>
+    <div class="step-c">
+      <h3>Pick the AI plan</h3>
+      <p>Free → trial of most features. <strong>Brain AI ($9/user/mo)</strong> → full Brain inline + Standard Super Agents. <strong>Everything AI ($28/user/mo)</strong> → unlimited everything + Brain MAX + premium models. Add-ons: Talk to Text $9, AI Notetaker from $12.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-n">2</div>
+    <div class="step-c">
+      <h3>Enable AI in Workspace settings</h3>
+      <p>Admin toggles AI on at the Workspace level. Single switch — once enabled, Brain &amp; Super Agents become available across all surfaces.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-n">3</div>
+    <div class="step-c">
+      <h3>Connect external apps for context</h3>
+      <p>Google Drive, GitHub, Salesforce, Notion, Slack, Gmail, MS Teams, Confluence, Dropbox — and 90+ more via Qatalog connectors. Each enables ActionQuery to surface that app's data in Brain and Agents.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-n">4</div>
+    <div class="step-c">
+      <h3>Build a Super Agent via Studio</h3>
+      <p>"/brain/agents → Super Agent Studio → describe the job in plain English." Builder defines scope, knowledge, tools, restrictions. Test in DM, then deploy via @mention, assignment, schedule, or trigger.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-n">5</div>
+    <div class="step-c">
+      <h3>Set up MCP (optional)</h3>
+      <p>Admin Hub → MCP Servers (Team/Enterprise/Edu plans: admins only). Add <code>https://mcp.clickup.com/mcp</code> via OAuth. Plug into Cursor / Claude Desktop / VS Code / ChatGPT.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-n">6</div>
+    <div class="step-c">
+      <h3>Install Brain MAX desktop app</h3>
+      <p>Free download for Mac/Windows. iOS &amp; Android on app stores. Chrome extension separate. Talk to Text optional separate download.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-n">7</div>
+    <div class="step-c">
+      <h3>Configure governance</h3>
+      <p>AI Usage Dashboard for credit visibility. Audit logs to differentiate agent vs human actions. Lock agent access to public Workspace data by default; whitelist private scopes per agent.</p>
+    </div>
+  </div>
+</div>
+
+<hr>
+<p style="font-size:12px;color:var(--faint);text-align:center;">
+  ClickUp AI Research Notes — QPM / SA / AI research — May 15, 2026<br>
+  Sources: clickup.com/brain · feedback.clickup.com/changelog · developer.clickup.com · help.clickup.com · BusinessWire (Qatalog &amp; Codegen acquisitions) · ZenPilot · WorkManagementHub · Vellum.<br>
+  <em>Screenshot slots marked throughout — capture from a live workspace when ready. No ClickUp MCP access in this research session.</em>
+</p>
+
+</body>
+</html>

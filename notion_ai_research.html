@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notion AI — Research Notes</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap');
+:root {
+  --bg:#fafaf8; --surface:#fff; --surface2:#f4f3ef; --surface3:#eeecea;
+  --border:#e8e6e0; --border2:#d0cdc5;
+  --text:#1a1916; --muted:#7a7870; --faint:#b0ada6;
+  --blue:#0052cc; --blue-bg:#e8f0fe; --blue-border:#aec6f0; --blue-dark:#003d99;
+  --green:#006644; --green-bg:#e3f5ec; --green-border:#a3d9b8;
+  --amber:#974400; --amber-bg:#fff3e0; --amber-border:#fcd08a;
+  --red:#c0392b; --red-bg:#fde8e6; --red-border:#f5aba3;
+  --purple:#5243aa; --purple-bg:#ede8fb; --purple-border:#c3b7f2;
+  --teal:#006475; --teal-bg:#e0f5f8; --teal-border:#95d8e4;
+  --slate:#374151; --slate-bg:#f0f1f3; --slate-border:#cbd1d9;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:14.5px;line-height:1.7;max-width:1080px;margin:0 auto;padding:56px 36px 120px;}
+h1{font-family:'Syne',sans-serif;font-size:40px;font-weight:800;line-height:1.1;letter-spacing:-.5px;}
+h2{font-family:'Syne',sans-serif;font-size:22px;font-weight:700;color:var(--text);margin:52px 0 18px;padding-top:8px;}
+h3{font-family:'Inter',sans-serif;font-size:15px;font-weight:500;color:var(--text);margin:20px 0 8px;}
+h4{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin:18px 0 8px;font-weight:400;}
+p{color:#3d3b36;margin-bottom:10px;}
+a{color:var(--blue);text-decoration:none;}a:hover{text-decoration:underline;}
+code{font-family:'JetBrains Mono',monospace;font-size:12px;background:var(--surface2);padding:1px 6px;border-radius:3px;color:var(--slate);}
+pre{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:16px 18px;font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.6;overflow-x:auto;margin:12px 0;}
+ul,ol{padding-left:20px;margin-bottom:10px;}
+li{color:#3d3b36;margin-bottom:5px;}
+strong{color:var(--text);font-weight:500;}
+hr{border:none;border-top:1px solid var(--border2);margin:52px 0;}
+
+.header-meta{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;align-items:center;}
+.badge{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:3px 11px;border-radius:3px;border:1px solid;display:inline-block;}
+.badge-blue{color:var(--blue);border-color:var(--blue-border);background:var(--blue-bg);}
+.badge-green{color:var(--green);border-color:var(--green-border);background:var(--green-bg);}
+.badge-amber{color:var(--amber);border-color:var(--amber-border);background:var(--amber-bg);}
+.badge-purple{color:var(--purple);border-color:var(--purple-border);background:var(--purple-bg);}
+.badge-slate{color:var(--slate);border-color:var(--slate-border);background:var(--slate-bg);}
+.badge-gray{color:var(--muted);border-color:var(--border2);background:var(--surface2);}
+
+.section-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--slate);margin-bottom:6px;display:block;}
+
+.callout{border-radius:8px;padding:14px 18px;margin:18px 0;border:1px solid;}
+.callout p{margin:0;font-size:13.5px;}
+.callout-blue{background:var(--blue-bg);border-color:var(--blue-border);} .callout-blue p{color:#1a3a6e;}
+.callout-amber{background:var(--amber-bg);border-color:var(--amber-border);} .callout-amber p{color:#5a2800;}
+.callout-green{background:var(--green-bg);border-color:var(--green-border);} .callout-green p{color:#003320;}
+.callout-red{background:var(--red-bg);border-color:var(--red-border);} .callout-red p{color:#6b1000;}
+.callout-slate{background:var(--slate-bg);border-color:var(--slate-border);} .callout-slate p{color:#1f2937;}
+.callout-gray{background:var(--surface2);border-color:var(--border2);} .callout-gray p{color:var(--muted);}
+
+.cb{border-left:4px solid;padding:16px 20px;border-radius:0 8px 8px 0;margin-bottom:14px;background:var(--surface);border-top:1px solid var(--border);border-right:1px solid var(--border);border-bottom:1px solid var(--border);}
+.cb h3{margin:0 0 8px;font-size:16px;font-family:'Syne',sans-serif;font-weight:700;}
+.cb-tag{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:3px;display:inline-block;margin-bottom:10px;}
+.cb-blue{border-left-color:var(--blue);} .cb-blue h3{color:var(--blue);} .cb-blue .cb-tag{background:var(--blue-bg);color:var(--blue);}
+.cb-purple{border-left-color:var(--purple);} .cb-purple h3{color:var(--purple);} .cb-purple .cb-tag{background:var(--purple-bg);color:var(--purple);}
+.cb-teal{border-left-color:var(--teal);} .cb-teal h3{color:var(--teal);} .cb-teal .cb-tag{background:var(--teal-bg);color:var(--teal);}
+.cb-green{border-left-color:var(--green);} .cb-green h3{color:var(--green);} .cb-green .cb-tag{background:var(--green-bg);color:var(--green);}
+.cb-amber{border-left-color:var(--amber);} .cb-amber h3{color:var(--amber);} .cb-amber .cb-tag{background:var(--amber-bg);color:var(--amber);}
+.cb-slate{border-left-color:var(--slate);} .cb-slate h3{color:var(--slate);} .cb-slate .cb-tag{background:var(--slate-bg);color:var(--slate);}
+.cb-red{border-left-color:var(--red);} .cb-red h3{color:var(--red);} .cb-red .cb-tag{background:var(--red-bg);color:var(--red);}
+
+.card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:18px 22px;margin-bottom:14px;}
+.card-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0;}
+.card-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin:14px 0;}
+@media(max-width:760px){.card-grid,.card-grid-3{grid-template-columns:1fr;}}
+
+.ss-block{margin:20px 0;}
+.ss-label{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:7px;letter-spacing:.06em;display:flex;align-items:center;gap:7px;}
+.ss-label::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--amber);}
+.ss-placeholder{width:100%;border:1px dashed var(--border2);border-radius:8px;padding:30px 18px;text-align:center;background:var(--surface2);color:var(--muted);font-size:12px;font-family:'JetBrains Mono',monospace;}
+.ss-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:20px 0;}
+@media(max-width:760px){.ss-grid{grid-template-columns:1fr;}}
+
+.mcp-box{background:#0a1f3a;border:2px solid #4a9eff;border-radius:10px;padding:24px 28px;margin:22px 0;}
+.mcp-box h3{color:#4a9eff;font-family:'Syne',sans-serif;font-size:18px;font-weight:700;margin-bottom:10px;}
+.mcp-box p{color:#b8d4f8;margin-bottom:8px;font-size:13.5px;}
+.mcp-pill{display:inline-block;background:#1a3a6e;border:1px solid #4a9eff;border-radius:4px;padding:3px 10px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#7ab8ff;margin:3px;}
+
+.formula{background:var(--surface2);border:1px solid var(--border2);border-radius:8px;padding:18px 22px;margin:14px 0;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.8;}
+.formula .line{display:flex;gap:10px;margin:3px 0;}
+.formula .op{color:var(--slate);font-weight:500;}
+.formula .val{color:var(--text);}
+.formula .comment{color:var(--faint);font-size:11px;margin-left:8px;}
+
+.anatomy{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:14px 0;}
+@media(max-width:760px){.anatomy{grid-template-columns:1fr;}}
+.anatomy-block{border:1px solid var(--border);border-radius:8px;padding:14px 16px;background:var(--surface);}
+.anatomy-label{font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;}
+.anatomy-desc{font-size:12.5px;color:var(--muted);line-height:1.5;}
+
+.steps{margin:12px 0;}
+.step{display:flex;gap:14px;padding:12px 0;border-bottom:1px solid var(--border);}
+.step:last-child{border-bottom:none;}
+.step-n{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--slate-border);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--slate);flex-shrink:0;margin-top:2px;}
+.step-c h3{margin:0 0 4px;font-size:14px;}
+.step-c p{margin:0;font-size:13.5px;color:var(--muted);}
+
+.plan-tag{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;padding:2px 7px;border-radius:3px;letter-spacing:.04em;white-space:nowrap;}
+.plan-free{background:var(--surface2);color:var(--muted);}
+.plan-plus{background:var(--blue-bg);color:var(--blue);}
+.plan-bus{background:var(--purple-bg);color:var(--purple);}
+.plan-e{background:#1a1916;color:#e8e6e0;}
+.plan-credits{background:var(--amber-bg);color:var(--amber);}
+.feat-ga{color:var(--green);font-family:'JetBrains Mono',monospace;font-size:11px;}
+.feat-beta{color:var(--amber);font-family:'JetBrains Mono',monospace;font-size:11px;}
+.feat-alpha{color:var(--slate);font-family:'JetBrains Mono',monospace;font-size:11px;}
+.feat-soon{color:var(--blue);font-family:'JetBrains Mono',monospace;font-size:11px;}
+
+.tbl-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:8px;margin:18px 0;}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:700px;}
+thead th{background:var(--surface2);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;font-weight:400;color:var(--muted);padding:10px 14px;text-align:left;border-bottom:1px solid var(--border2);white-space:nowrap;}
+tbody td{padding:10px 14px;border-bottom:1px solid var(--border);vertical-align:top;color:#3d3b36;}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr:hover td{background:var(--surface2);}
+.fn{font-weight:500;color:var(--text);}
+
+.quote{background:var(--surface);border-left:3px solid var(--slate);padding:14px 18px;margin:14px 0;font-style:italic;color:#3d3b36;font-size:13.5px;}
+.quote .attrib{display:block;margin-top:8px;font-style:normal;font-size:12px;color:var(--muted);}
+
+.toc{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:20px 24px;margin:28px 0 44px;}
+.toc h4{margin-top:0;}
+.toc ol{padding-left:18px;}
+.toc li{margin:4px 0;font-size:13px;}
+.toc a{color:var(--muted);}
+.toc a:hover{color:var(--slate);}
+
+.timeline{margin:18px 0;border-left:2px solid var(--slate-border);padding-left:20px;}
+.timeline-item{position:relative;margin-bottom:18px;}
+.timeline-item::before{content:"";position:absolute;left:-26px;top:6px;width:10px;height:10px;border-radius:50%;background:var(--slate);}
+.timeline-date{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--slate);letter-spacing:.04em;display:block;margin-bottom:2px;}
+.timeline-title{font-weight:500;color:var(--text);font-size:14px;display:block;margin-bottom:3px;}
+.timeline-desc{font-size:13px;color:var(--muted);}
+
+.tool-pill{display:inline-block;background:var(--surface);border:1px solid var(--border2);border-radius:14px;padding:3px 11px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text);margin:3px;}
+.tool-pill.new{border-color:var(--green-border);color:var(--green);background:var(--green-bg);}
+.tool-pill.beta{border-color:var(--amber-border);color:var(--amber);background:var(--amber-bg);}
+
+.metric{display:inline-block;text-align:center;padding:12px 18px;background:var(--surface);border:1px solid var(--border);border-radius:8px;margin:4px;min-width:140px;}
+.metric-value{font-family:'Syne',sans-serif;font-size:22px;font-weight:700;color:var(--slate);display:block;}
+.metric-label{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.04em;text-transform:uppercase;}
+
+.comparison-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0;}
+@media(max-width:760px){.comparison-grid{grid-template-columns:1fr;}}
+.comparison-col{padding:18px 22px;border-radius:8px;border:1px solid;}
+.comparison-col.jira{background:var(--blue-bg);border-color:var(--blue-border);}
+.comparison-col.notion{background:var(--slate-bg);border-color:var(--slate-border);}
+.comparison-col h4{color:var(--text);}
+.verdict-box{background:var(--surface);border:2px solid var(--slate);border-radius:10px;padding:20px 24px;margin:20px 0;}
+.verdict-box h3{color:var(--slate);font-family:'Syne',sans-serif;font-size:18px;font-weight:700;margin-bottom:10px;}
+.verdict-yes{color:var(--green);font-weight:500;}
+.verdict-no{color:var(--red);font-weight:500;}
+.verdict-mid{color:var(--amber);font-weight:500;}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div style="margin-bottom:52px;border-bottom:1px solid var(--border2);padding-bottom:40px;">
+  <div class="header-meta">
+    <span class="badge badge-slate">Research Notes</span>
+    <span class="badge badge-purple">Notion</span>
+    <span class="badge badge-blue">Notion 3.0 · Agents · MCP · Developer Platform 3.5</span>
+    <span class="badge badge-amber">Lens: PM tool + Wiki (Jira+Confluence equivalent)</span>
+    <span class="badge badge-gray">QPM / SA — May 2026</span>
+  </div>
+  <h1>Notion AI</h1>
+  <p style="font-size:17px;color:var(--muted);margin-top:14px;font-weight:300;max-width:760px;">
+    Research notes on Notion's AI surface — Notion 3.0 Agents (Sep 18, 2025), Notion AI Meeting Notes, Enterprise Search, multi-model gateway (GPT-5, Claude Opus 4.7, o3, MiniMax M2.5), Custom Agents with credit billing, the Developer Platform 3.5 (May 13, 2026: External Agents API, Notion Workers, CLI, Agent SDK), and the Notion MCP server.
+  </p>
+  <p style="font-size:15px;color:var(--text);margin-top:16px;background:var(--slate-bg);border:1px solid var(--slate-border);border-radius:6px;padding:12px 16px;">
+    <strong>Reading lens for this doc:</strong> Notion as a Jira + Confluence equivalent — i.e. one tool covering both <em>task tracking / project management</em> and <em>wiki / documentation</em>. Every section evaluates whether the feature in question makes Notion a credible Atlassian replacement, and where it doesn't.
+  </p>
+  <p style="margin-top:12px;font-size:13px;color:var(--faint);">Primary sources: <a href="https://www.notion.com/product/ai">notion.com/product/ai</a> · <a href="https://www.notion.com/releases">notion.com/releases</a> · <a href="https://www.notion.com/blog/introducing-notion-3-0">"Introducing Notion 3.0" (Sep 18, 2025)</a> · <a href="https://openai.com/index/notion/">OpenAI — "Notion's GPT-5 rebuild unlocks autonomous AI workflows"</a> · <a href="https://www.notion.com/help/notion-mcp">notion.com/help/notion-mcp</a> · <a href="https://developers.notion.com/docs/mcp">developers.notion.com/docs/mcp</a> · <a href="https://www.notion.com/product/ai-meeting-notes">/product/ai-meeting-notes</a> · <a href="https://www.notion.com/help/custom-agent-pricing">/help/custom-agent-pricing</a> · <a href="https://techcrunch.com/2025/09/18/notion-launches-agents-for-data-analysis-and-task-automation/">TechCrunch — Notion Agents launch</a></p>
+</div>
+
+<!-- TOC -->
+<div class="toc">
+  <h4>Contents</h4>
+  <ol>
+    <li><a href="#pm-wiki-verdict">The PM+wiki verdict — can Notion replace Jira + Confluence?</a></li>
+    <li><a href="#three-pillars">The three pillars: Notion Agent / Custom Agents / Enterprise Search</a></li>
+    <li><a href="#notion-3">Notion 3.0 — the GPT-5 rebuild, 20-min autonomous work</a></li>
+    <li><a href="#notion-ai-formula">Notion AI formula — Pages-as-memory + multi-model + connectors</a></li>
+    <li><a href="#notion-agent">Notion Agent (personal) — in-product assistant</a></li>
+    <li><a href="#custom-agents">Custom Agents — scheduled, triggered, autonomous</a></li>
+    <li><a href="#ai-meeting-notes">AI Meeting Notes — Granola-style native transcription</a></li>
+    <li><a href="#enterprise-search">Enterprise Search Beta — Slack, Drive, GitHub, Jira, Linear, Teams</a></li>
+    <li><a href="#dev-platform-35">Developer Platform 3.5 — External Agents API + Notion Workers + CLI</a></li>
+    <li><a href="#mcp">Notion MCP — Cursor, Claude, ChatGPT, Copilot</a></li>
+    <li><a href="#pm-features">Notion as PM tool — databases, projects, dependencies, AI autofill</a></li>
+    <li><a href="#wiki-features">Notion as wiki — knowledge base, "Verify any page", AI citations</a></li>
+    <li><a href="#pricing">Pricing — Free / Plus $10 / Business $20 / Enterprise + Notion Credits</a></li>
+    <li><a href="#governance">Governance — MCP Governance, Agent guardrails, audit, "no training"</a></li>
+    <li><a href="#vector">Strategic vector — the all-in-one AI workspace</a></li>
+    <li><a href="#timeline">Release timeline — Sep 2025 → May 2026</a></li>
+    <li><a href="#sentiment">Adoption signals &amp; sentiment</a></li>
+    <li><a href="#activation">Activation &amp; setup</a></li>
+  </ol>
+</div>
+
+<!-- ===== 1. PM+WIKI VERDICT ===== -->
+<span class="section-label" id="pm-wiki-verdict">01</span>
+<h2>The PM+Wiki Verdict — Can Notion Replace Jira + Confluence?</h2>
+
+<div class="verdict-box">
+  <h3>Short answer: Notion replaces Confluence well, partially replaces Jira, depends on team type.</h3>
+  <p style="font-size:14px;color:var(--text);margin-top:8px;">For <strong>startups, SMBs (under ~150 people), and non-engineering teams</strong> (product, design, marketing, ops, HR): <span class="verdict-yes">YES</span> — Notion is a credible Jira + Confluence replacement, and Notion AI 3.0 makes the consolidation actively better than running two tools. For <strong>serious agile software development at scale</strong> (200+ engineers, sprint velocity tracking, deep Git workflow integration, regulated documentation): <span class="verdict-no">NO</span> — Jira remains irreplaceable for execution, and Confluence's native Jira link is the moat.</p>
+</div>
+
+<h3>Where Notion wins vs Atlassian for this combined use case</h3>
+<div class="comparison-grid">
+  <div class="comparison-col notion">
+    <h4>✓ Notion advantages</h4>
+    <ul style="font-size:13.5px;">
+      <li><strong>One tool, one mental model</strong> — pages, databases, blocks all unify tasks + docs</li>
+      <li><strong>AI 3.0 Agents</strong> can work across docs <em>and</em> task databases in a single autonomous run (Atlassian's Rovo agents still feel split between Jira and Confluence)</li>
+      <li><strong>"Verify any page"</strong> — verified badge appears in search results AND AI citations. Confluence has nothing equivalent</li>
+      <li><strong>Multi-model gateway</strong> — pick GPT-5 / Claude Opus 4.7 / o3 / MiniMax M2.5 per workflow. Atlassian Intelligence is opaque on model choice</li>
+      <li><strong>AI Meeting Notes</strong> bundled — Atlassian's equivalent (Loom AI) is a separate purchase</li>
+      <li><strong>Easier setup</strong> — no Rovo "two switches + business domain" headache (see Jira research)</li>
+      <li><strong>Block-based composability</strong> — no rigid page-tree, no fixed task schema; PM databases are user-built</li>
+    </ul>
+  </div>
+  <div class="comparison-col jira">
+    <h4>✗ Where Atlassian still beats Notion</h4>
+    <ul style="font-size:13.5px;">
+      <li><strong>Native Jira ↔ Confluence two-way sync</strong> — "doc never stale vs ticket" guarantee. No third-party integration matches</li>
+      <li><strong>Agile depth</strong> — sprint velocity, burndown, complex issue-type hierarchies, formal scrum/kanban frameworks</li>
+      <li><strong>Git integration depth</strong> — Bitbucket-native, smart commits, deep PR linkage</li>
+      <li><strong>JSM ticketing</strong> — Notion has no incident management equivalent</li>
+      <li><strong>Indefinite page version history</strong> on standard Confluence vs Notion's 30/90-day cap (Enterprise only for longer)</li>
+      <li><strong>Unified Jira+Confluence search</strong> via Atlassian Intelligence — Notion's Enterprise Search <em>connects to</em> Jira but doesn't natively own the data</li>
+      <li><strong>Bundled pricing</strong> — for orgs already on Atlassian, Confluence Standard ($6.05) is cheaper than Notion Plus ($10) and Premium ($11.55) is cheaper than Business ($20)</li>
+    </ul>
+  </div>
+</div>
+
+<h3>The strategic fit decision tree</h3>
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>Team profile</th><th>Recommendation</th><th>Why</th></tr></thead>
+<tbody>
+<tr><td class="fn">Startup / SMB &lt; 50 people</td><td><span class="verdict-yes">Notion replaces both</span></td><td>Notion 3.0 Agents work cross-database + cross-page; one tool one bill; flexibility outweighs governance gaps at this size.</td></tr>
+<tr><td class="fn">SMB 50–150 people, mostly non-eng</td><td><span class="verdict-yes">Notion replaces both</span></td><td>Marketing / product / design / HR / ops thrive in Notion. The agentic AI makes task tracking + docs in one tool a clear win.</td></tr>
+<tr><td class="fn">Engineering-heavy org, 50–200 people</td><td><span class="verdict-mid">Hybrid: Notion for wiki, Jira/Linear for tickets</span></td><td>Notion AI Enterprise Search <em>connects to</em> Jira/Linear so search is unified; primary execution stays in the issue tracker; docs in Notion.</td></tr>
+<tr><td class="fn">Engineering org 200+ people</td><td><span class="verdict-no">Stay on Jira + Confluence</span></td><td>Atlassian's Jira-Confluence linkage + Rovo unified search + compliance posture is hard to replicate. Switching costs too high.</td></tr>
+<tr><td class="fn">Regulated industry (finance, health, gov)</td><td><span class="verdict-no">Stay on Atlassian (or use Notion Enterprise carefully)</span></td><td>Notion's 30/90-day version history on lower tiers is a compliance blocker. Enterprise + HIPAA closes most gaps but at premium pricing.</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="callout callout-amber">
+  <p><strong>Real-world user voices on this question:</strong><br>
+  <em>"Notion is great. It combines the project management features of Confluence and Jira in one environment. It's great for documenting how things work, how stuff was done, etc."</em><br>
+  vs<br>
+  <em>"Because Notion tries to be everything, it's a little bit of everything but it's still worse than any of its individual competitors (e.g. Trello/Jira is better for board use than Notion)."</em></p>
+</div>
+
+<!-- ===== 2. THREE PILLARS ===== -->
+<hr>
+<span class="section-label" id="three-pillars">02</span>
+<h2>The Three Pillars of Notion AI</h2>
+
+<p>Notion's AI surface (as of Notion 3.0 in Sep 2025, refined through May 2026) clusters into three coherent pillars — plus a fourth horizontal layer for connecting external AI tools.</p>
+
+<div class="card-grid-3">
+  <div class="cb cb-slate" style="margin:0;">
+    <span class="cb-tag">Pillar 1 · in-product agent</span>
+    <h3>Notion Agent (personal)</h3>
+    <p style="font-size:13.5px;">"Does work for you. Completes complex, multi-step tasks." Runs up to <strong>20 minutes</strong> of autonomous work across <strong>hundreds of pages</strong>. Can build, edit, and act anywhere in Notion. Multi-model: pick GPT-5 / Claude / o3 per task.</p>
+  </div>
+  <div class="cb cb-purple" style="margin:0;">
+    <span class="cb-tag">Pillar 2 · proactive · credits</span>
+    <h3>Custom Agents</h3>
+    <p style="font-size:13.5px;">User-configured agents that run on triggers (schedule, Slack, email, database change). <strong>$10 per 1,000 credits</strong> from May 4, 2026. 1M+ created since beta. Now manageable via dedicated Library directory.</p>
+  </div>
+  <div class="cb cb-blue" style="margin:0;">
+    <span class="cb-tag">Pillar 3 · cross-tool search</span>
+    <h3>Enterprise Search <span style="font-size:9px;color:var(--amber);">(beta)</span></h3>
+    <p style="font-size:13.5px;">"Find answers across all your apps." Connectors: Slack · Google Drive · GitHub · <strong>Jira</strong> · <strong>Linear</strong> · Microsoft Teams · SharePoint · OneDrive · Notion. Natural-language Q&amp;A across the connected graph.</p>
+  </div>
+</div>
+
+<div class="callout callout-slate">
+  <p><strong>Horizontal layer:</strong> <strong>Notion MCP</strong> + <strong>Developer Platform 3.5</strong> (May 13, 2026). MCP exposes Notion to Claude/Cursor/ChatGPT/Copilot. Developer Platform 3.5 adds External Agents API (bring Claude/Codex/Decagon agents into Notion), Database Sync (pull data from any API), Custom Agent Tools (deterministic code-based tools), Webhook triggers, Notion Workers (hosted runtime), Notion CLI, and the Agent SDK.</p>
+</div>
+
+<h3>The Notion AI metrics published</h3>
+<div style="margin:14px 0;display:flex;flex-wrap:wrap;gap:8px;">
+  <div class="metric"><span class="metric-value">20 min</span><span class="metric-label">Max autonomous agent run</span></div>
+  <div class="metric"><span class="metric-value">100s</span><span class="metric-label">Pages an agent can work across in one run</span></div>
+  <div class="metric"><span class="metric-value">1M+</span><span class="metric-label">Custom Agents created (since Feb 24, 2026 beta)</span></div>
+  <div class="metric"><span class="metric-value">3×</span><span class="metric-label">Fewer tool errors with Claude Opus 4.7 (Apr 2026)</span></div>
+  <div class="metric"><span class="metric-value">35–50%</span><span class="metric-label">Cheaper agent runs (Apr 2026 — Notion 3.4)</span></div>
+  <div class="metric"><span class="metric-value">10×</span><span class="metric-label">Per-run credit reduction with new lightweight models</span></div>
+</div>
+
+<!-- ===== 3. NOTION 3.0 ===== -->
+<hr>
+<span class="section-label" id="notion-3">03</span>
+<h2>Notion 3.0 — The GPT-5 Rebuild</h2>
+
+<div class="cb cb-slate">
+  <span class="cb-tag">Sep 18, 2025 · biggest release in Notion's history</span>
+  <h3>"Notion 1.0 introduced a collaborative canvas. Notion 2.0 brought databases and integrations. Notion 3.0 — we taught Notion AI to use those building blocks so your Agent can finish real work."</h3>
+  <p>The Notion 3.0 launch was an architectural rewrite, not a feature add. Per Notion's published technical post with OpenAI: "Instead of patching their existing stack, Notion rebuilt it. They replaced task-specific prompt chains with a central reasoning model that coordinates modular sub-agents."</p>
+</div>
+
+<div class="quote">
+  "As models advanced — and users began asking agents to complete entire workflows — Notion's team saw limits in their system architecture. The old pattern of prompting models to do isolated tasks was limiting the ceiling of what was capable on their platform. Agents needed to make decisions, orchestrate tools, and reason through ambiguity, and that shift required more than prompt engineering."
+  <span class="attrib">— OpenAI customer story on Notion's GPT-5 rebuild</span>
+</div>
+
+<h3>What changed under the hood (per OpenAI's case study)</h3>
+<ul>
+  <li><strong>Central reasoning model</strong> coordinates modular sub-agents</li>
+  <li><strong>Sub-agents search</strong> across Notion, Slack, or web; add/edit databases; synthesize responses with whatever tools the task requires</li>
+  <li><strong>Memory system</strong> uses Notion pages and databases as the memory store — Notion's own structured surface <em>is</em> the agent memory</li>
+  <li><strong>Multi-step reasoning</strong> with planning + tool orchestration replaces prompt chains</li>
+  <li><strong>Permissions-aware</strong> at every step — agent only sees what the invoking user can see</li>
+</ul>
+
+<div class="callout callout-blue">
+  <p><strong>Notion's structural advantage:</strong> Pages and databases <em>are</em> the agent memory. Where ClickUp/monday had to design separate "agent memory" abstractions, Notion's agents store decisions, plans, and project history natively as Notion docs — which humans can also read, edit, and verify. <em>"Notion is the memory layer of its own agents."</em></p>
+</div>
+
+<h3>Example use case Notion quotes</h3>
+<div class="quote">
+  Sample prompt: <em>"compile customer feedback from Slack, Notion, and email into actionable insights"</em><br>
+  → Agent researches across tools, synthesizes findings, creates a structured database, then notifies when done.
+  <span class="attrib">— "Introducing Notion 3.0" by Akshay Kothari, co-founder</span>
+</div>
+
+<!-- ===== 4. NOTION AI FORMULA ===== -->
+<hr>
+<span class="section-label" id="notion-ai-formula">04</span>
+<h2>Notion AI Formula</h2>
+
+<div class="formula">
+  <div class="line"><span class="op">Notion AI</span><span class="val">= Central reasoning model</span><span class="comment">// GPT-5 default — coordinates sub-agents</span></div>
+  <div class="line"><span class="op">         </span><span class="val">+ Modular sub-agents</span><span class="comment">// search · DB read · DB write · synthesis · web · connector tools</span></div>
+  <div class="line"><span class="op">         </span><span class="val">+ Pages-and-databases-as-memory</span><span class="comment">// Notion's own structured surface IS the agent memory</span></div>
+  <div class="line"><span class="op">         </span><span class="val">+ Multi-model gateway</span><span class="comment">// GPT-5, Claude Opus 4.7, o3, MiniMax M2.5, Haiku 4.5</span></div>
+  <div class="line"><span class="op">         </span><span class="val">+ Permission-aware retrieval</span><span class="comment">// granular page + DB-row permissions enforced at every step</span></div>
+  <div class="line"><span class="op">         </span><span class="val">+ AI Connectors</span><span class="comment">// Slack, Drive, GitHub, Jira, Linear, MS Teams, SharePoint, OneDrive</span></div>
+  <div class="line"><span class="op">         </span><span class="val">+ "No training on your data"</span><span class="comment">// Zero retention on Enterprise; 30-day on others; SOC 2 / ISO 27001 / HIPAA-E</span></div>
+</div>
+
+<!-- ===== 5. NOTION AGENT ===== -->
+<hr>
+<span class="section-label" id="notion-agent">05</span>
+<h2>Notion Agent — The Personal AI Teammate</h2>
+
+<p>The default agent inside the Notion editor and chat. Available across all pages, databases, and connected apps. <strong>Does not consume Notion Credits</strong> — bundled in Business+ plans.</p>
+
+<div class="ss-grid">
+  <div class="ss-block" style="margin:0;">
+    <div class="ss-label">📸 Notion Agent chat panel with multi-step plan visible</div>
+    <div class="ss-placeholder">[screenshot slot — capture from /chat or sidebar]</div>
+  </div>
+  <div class="ss-block" style="margin:0;">
+    <div class="ss-label">📸 Model picker (GPT-5 / Claude / o3 toggle)</div>
+    <div class="ss-placeholder">[screenshot slot — capture from agent model selector]</div>
+  </div>
+</div>
+
+<h3>What Notion Agent can do</h3>
+<div class="card-grid">
+  <div class="card">
+    <h4>Document work (Confluence equivalent)</h4>
+    <ul>
+      <li>Create docs, wiki pages, knowledge-base entries</li>
+      <li>Improve / fix / summarize / brainstorm inline</li>
+      <li>Research a topic with web access → cite + draft report</li>
+      <li>Compile feedback from multiple pages into structured notes</li>
+      <li>Apply "Verified" badge to up-to-date pages — citations honour it</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h4>PM / task work (Jira equivalent)</h4>
+    <ul>
+      <li>Create databases (tasks, projects, sprints) from a prompt</li>
+      <li>Autofill database properties — status, priority, owner, tags</li>
+      <li>Build formulas via NL — no manual expression syntax</li>
+      <li>Break a goal into tasks across multiple databases</li>
+      <li>"Build a launch plan, break it into tasks, assign them, draft docs to give the team a head start"</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h4>Cross-tool work</h4>
+    <ul>
+      <li>Pull context from Slack, Drive, GitHub, MS Teams</li>
+      <li>Read from Jira / Linear via Enterprise Search connectors</li>
+      <li>Schedule meetings + draft emails (Apr 17, 2026 mail/calendar integration)</li>
+      <li>Send messages, route work to other tools</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h4>Plan Mode (May 7, 2026)</h4>
+    <ul>
+      <li>For complex requests (bulk rewrites, multi-database updates) agent <em>first asks clarifying questions</em> + builds a detailed plan before acting</li>
+      <li>Reduces drift in multi-step work</li>
+      <li>Plan is editable — user approves before execution</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ===== 6. CUSTOM AGENTS ===== -->
+<hr>
+<span class="section-label" id="custom-agents">06</span>
+<h2>Custom Agents — Proactive, Triggered, Autonomous</h2>
+
+<p>Custom Agents launched in beta <strong>February 24, 2026</strong>. They run on schedules or triggers — Slack messages, emails, database changes, webhooks — without an explicit user request. Over <strong>1M Custom Agents created</strong> within the first two months of beta. Credit billing began <strong>May 4, 2026</strong>.</p>
+
+<div class="anatomy">
+  <div class="anatomy-block">
+    <div class="anatomy-label" style="color:var(--slate);">Triggers</div>
+    <div class="anatomy-desc">Schedule (cron-style) · Slack message (incl. private channels from May 1, 2026) · Email arrival · Database change · Webhook (Dev Platform 3.5)</div>
+  </div>
+  <div class="anatomy-block">
+    <div class="anatomy-label" style="color:var(--purple);">Scope &amp; permissions</div>
+    <div class="anatomy-desc">Per-agent precise scoping: which databases, pages, tools the agent can touch. Agents run as the workspace, not as a user.</div>
+  </div>
+  <div class="anatomy-block">
+    <div class="anatomy-label" style="color:var(--blue);">Sharing</div>
+    <div class="anatomy-desc">Shareable with entire team. Ideal for org-wide workflows. Custom Agent Directory (May 6, 2026) — browse, pin, create.</div>
+  </div>
+  <div class="anatomy-block">
+    <div class="anatomy-label" style="color:var(--amber);">Guardrails</div>
+    <div class="anatomy-desc">Per-agent credit limits · workspace-wide caps (Enterprise) · Email/in-app alerts near limits · agents pause when credits run out · fast-spending new agents auto-pause</div>
+  </div>
+  <div class="anatomy-block">
+    <div class="anatomy-label" style="color:var(--teal);">Admin gates</div>
+    <div class="anatomy-desc">Restrict who can create agents (individuals or groups) · Member requests require admin approval · Disable runaway agents</div>
+  </div>
+  <div class="anatomy-block">
+    <div class="anatomy-label" style="color:var(--green);">Tracking</div>
+    <div class="anatomy-desc">Credits dashboard — usage by agent · spend trends · status · recent activity. Admin can audit every agent action.</div>
+  </div>
+</div>
+
+<h3>Use cases (Notion's published catalogue)</h3>
+<ul>
+  <li><strong>Triage product feedback</strong> — scan Slack/email/forms → file into a Notion database with tags</li>
+  <li><strong>Automate weekly reporting</strong> — pull from project DB + Slack → generate a markdown summary → notify team</li>
+  <li><strong>Onboarding</strong> — when a new hire is added, agent creates their starter pages + assigns checklist tasks</li>
+  <li><strong>Support ticket triage</strong> — read Slack help channel → file as ticket in Notion DB → notify owner</li>
+  <li><strong>Daily standup digest</strong> — every morning, scan task DBs → post status summary in Slack</li>
+</ul>
+
+<div class="callout callout-amber">
+  <p><strong>Cost watch-out (per Connex Digital case):</strong> "One team recently discovered they had consumed 150,000 credits in a single month — the equivalent of $1,500 at the new rate." Custom Agents that read large databases or run frequently can rack up cost quickly. Notion ships per-agent credit limits as the mitigation — set them before deploying.</p>
+</div>
+
+<!-- ===== 7. AI MEETING NOTES ===== -->
+<hr>
+<span class="section-label" id="ai-meeting-notes">07</span>
+<h2>AI Meeting Notes — Granola-style Native Transcription</h2>
+
+<p>Launched May 13, 2025 (Notion 2.51), matured significantly through 2026. Captures system audio so it works with <strong>Zoom, Google Meet, Microsoft Teams, Slack Huddles, FaceTime, even YouTube videos and phone calls</strong> — no bot needed. The first major PM-tool incumbent to compete directly with standalone notetakers like Granola, tl;dv, and Fireflies.</p>
+
+<h3>Capabilities</h3>
+<div class="card-grid">
+  <div class="card">
+    <h4>Capture</h4>
+    <ul>
+      <li>System audio + microphone input</li>
+      <li>Works with any platform via desktop capture (no bot joins the call)</li>
+      <li>Speaker labeling on desktop app</li>
+      <li>Live transcription during the call</li>
+      <li>Add typed notes while AI transcribes</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h4>Output (lands in Notion docs)</h4>
+    <ul>
+      <li>Searchable transcript</li>
+      <li>Smart summary adapts to meeting type (1:1, sync, client, brainstorm)</li>
+      <li>Key decisions + action items</li>
+      <li>Transcript-linked summaries (Nov 2026, Notion 3.1) — jump to source</li>
+      <li>Notion AI search across all meeting notes</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h4>Integrations</h4>
+    <ul>
+      <li>Slack — auto-share summaries in channels</li>
+      <li>Calendar (Google + Notion) — search upcoming meetings, analyse schedule</li>
+      <li>Notion Agent — automatic task creation from action items with owners, priority, due dates</li>
+      <li>Enterprise Search — Q&amp;A across all meeting transcripts</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h4>Pricing &amp; limits</h4>
+    <ul>
+      <li>Business+ only ($20/user/mo) — <strong>not</strong> on Plus ($10)</li>
+      <li>Marked beta on /product/ai-meeting-notes page</li>
+      <li>Subject to fair-use limits</li>
+      <li>Falls under HIPAA on Enterprise tier</li>
+    </ul>
+  </div>
+</div>
+
+<div class="callout callout-amber">
+  <p><strong>Review-based limitations (tl;dv, Summarize Meeting reviews):</strong> "No speaker identification" (contradicts official docs — may be inconsistent rollout) · "no auto-join" · "no video" · "no timestamps" · "limited structure or automation." Multilingual quality flagged: "If the AI misunderstands something, there's no notification or confidence score." <em>"Not a serious meeting assistant"</em> for high-stakes client calls — but excellent for lightweight team meetings already happening in Notion.</p>
+</div>
+
+<!-- ===== 8. ENTERPRISE SEARCH ===== -->
+<hr>
+<span class="section-label" id="enterprise-search">08</span>
+<h2>Enterprise Search — The Cross-Tool Brain</h2>
+
+<div class="cb cb-blue">
+  <span class="cb-tag">Beta · Business+</span>
+  <h3>"Find answers across all your apps in seconds."</h3>
+  <p>Notion's enterprise search is the most important feature for the <strong>"Notion as Jira+Confluence replacement"</strong> question — it's the bridge that lets Notion AI reason over data that <em>doesn't live in Notion</em>. The connector list explicitly includes Jira and Linear, which means even teams who keep their issue tracker can have Notion's agents reason across both surfaces.</p>
+</div>
+
+<h3>Connector list (Enterprise Search Beta)</h3>
+<div style="margin:10px 0;">
+  <span class="tool-pill new">Slack</span>
+  <span class="tool-pill new">Google Drive</span>
+  <span class="tool-pill new">GitHub</span>
+  <span class="tool-pill new">Jira</span>
+  <span class="tool-pill new">Linear</span>
+  <span class="tool-pill new">Microsoft Teams</span>
+  <span class="tool-pill new">SharePoint</span>
+  <span class="tool-pill new">OneDrive</span>
+  <span class="tool-pill new">Notion (native)</span>
+  <span class="tool-pill">Google + Notion Calendars (Nov 2026)</span>
+</div>
+
+<div class="callout callout-slate">
+  <p><strong>The PM+wiki implication:</strong> If your team uses Jira/Linear for sprint execution and Notion for everything else, Enterprise Search means asking Notion Agent <em>"what's blocking the payments migration?"</em> can surface BOTH the architectural decision record in a Notion doc AND the linked sprint tickets in Jira/Linear in the same answer. This is the strongest argument for using Notion as the documentation hub while keeping your tracker.</p>
+</div>
+
+<h3>Verified pages → AI citations</h3>
+<div class="cb cb-green">
+  <span class="cb-tag">"Verify any page"</span>
+  <h3>The most underrated Confluence-replacement feature in Notion</h3>
+  <p style="font-size:13.5px;">"Add a verified badge to pages that are up to date. <strong>Appears in search results and AI citations.</strong>" When Notion AI cites information in an answer, verified-source pages are ranked higher and labelled — so users can trust which knowledge is current. Confluence has no equivalent: there, "stale" pages just look the same as fresh ones, and users have to manually check version history.</p>
+</div>
+
+<!-- ===== 9. DEVELOPER PLATFORM 3.5 ===== -->
+<hr>
+<span class="section-label" id="dev-platform-35">09</span>
+<h2>Notion Developer Platform 3.5 — The Programmable Layer</h2>
+
+<div class="cb cb-purple">
+  <span class="cb-tag">May 13, 2026 · Developer Platform launch</span>
+  <h3>Notion is now a programmable AI substrate for external agents</h3>
+  <p>Where Notion 3.0 made Notion Agent powerful inside Notion, Developer Platform 3.5 makes Notion <em>useful to every other AI agent in the world</em>. Eight components shipped simultaneously — comparable in scope to Atlassian's Forge platform but explicitly designed for the agent era.</p>
+</div>
+
+<h3>The 8 components of Developer Platform 3.5</h3>
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>Component</th><th>Status</th><th>What it does</th></tr></thead>
+<tbody>
+<tr><td class="fn">External Agents API</td><td><span class="feat-alpha">● ALPHA</span></td><td>Bring 3rd-party agents (Claude, Codex, Decagon, custom-built) into Notion as orchestrated workers. Notion becomes the orchestration layer for many agents.</td></tr>
+<tr><td class="fn">Database Sync</td><td><span class="feat-beta">● BETA</span></td><td>Pull data from any API source into Notion databases via Workers.</td></tr>
+<tr><td class="fn">Custom Agent Tools</td><td><span class="feat-beta">● BETA</span></td><td>Deterministic code-based tools — "a fraction of the token cost" vs prompting. Run alongside agentic tools in the same workflow.</td></tr>
+<tr><td class="fn">Webhook triggers</td><td><span class="feat-beta">● BETA</span></td><td>Any app can now trigger Notion workflows. Closes the loop with external systems.</td></tr>
+<tr><td class="fn">Notion Workers</td><td><span class="feat-beta">● BETA</span></td><td>Hosted runtime sandbox for custom code. Free during beta → Notion Credits billing from <strong>Aug 11, 2026</strong>.</td></tr>
+<tr><td class="fn">Notion CLI</td><td><span class="feat-ga">● GA</span></td><td>Command-line tool built for devs AND coding agents.</td></tr>
+<tr><td class="fn">Agent SDK</td><td><span class="feat-alpha">● ALPHA WAITLIST</span></td><td>Embed Notion Agents <em>inside</em> other apps — CRM, MS Teams, Discord, Amplitude, Hex.</td></tr>
+<tr><td class="fn">Connections tab</td><td><span class="feat-ga">● GA</span></td><td>Unified mgmt for personal/workspace connections, PATs, internal API connections.</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>Agents "Hall of Fame" templates</h3>
+<p>Public library of agent templates from real customers: <strong>Ramp, Clay, Vercel</strong>. Lower the build floor — copy a proven agent rather than building from scratch.</p>
+
+<div class="callout callout-blue">
+  <p><strong>Strategic significance:</strong> External Agents API is Notion's bet that it can be the orchestration substrate for <em>everyone else's agents</em> — similar to Linear's Agent Interaction SDK strategy, but for knowledge work rather than dev work. If this works, the "Notion as Jira+Confluence" question becomes moot: external agents (Claude, Codex, etc.) operate on Notion data through one well-known platform regardless of where the docs/tasks happen to live.</p>
+</div>
+
+<!-- ===== 10. MCP ===== -->
+<hr>
+<span class="section-label" id="mcp">10</span>
+<h2>Notion MCP — Connect Notion to Cursor, Claude, ChatGPT</h2>
+
+<div class="mcp-box">
+  <h3>Notion MCP — official remote server, OAuth, full permission inheritance</h3>
+  <p><strong>Server URL:</strong> <code style="background:#1a3a6e;color:#7ab8ff;">https://mcp.notion.com/mcp</code></p>
+  <p><strong>Auth:</strong> User-based OAuth (no bearer tokens). "A user must complete the OAuth flow to authorize access."</p>
+  <p><strong>Permission model:</strong> "MCP tools act with your full Notion permissions — they can access everything you can access."</p>
+  <p><strong>Plan availability:</strong> Personal MCP connection is broadly available. <strong>Admin governance is Enterprise-only.</strong></p>
+  <p style="color:#7ab8ff;font-size:13px;margin-top:10px;">Apr 2026 update (Notion 3.4): MCP now works with Meeting Notes and block comments. <strong>91% more token-efficient</strong> for creating/updating databases.</p>
+</div>
+
+<h3>Setup snippets</h3>
+<pre>// Cursor — .cursor/mcp.json
+{
+  "mcpServers": {
+    "notion": { "url": "https://mcp.notion.com/mcp" }
+  }
+}
+</pre>
+<pre>// Claude Desktop — local stdio bridge for older clients
+{
+  "mcpServers": {
+    "notion": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://mcp.notion.com/mcp"]
+    }
+  }
+}
+</pre>
+
+<h3>Supported clients</h3>
+<div class="card-grid">
+  <div class="card"><h4>Claude (Anthropic)</h4><p style="font-size:13px;">Claude Desktop + Claude.ai via Settings → Connectors. Pro / Max / Team / Enterprise plans.</p></div>
+  <div class="card"><h4>Cursor</h4><p style="font-size:13px;">.cursor/mcp.json config. Project-scoped or user-scoped (Cursor Settings).</p></div>
+  <div class="card"><h4>ChatGPT</h4><p style="font-size:13px;">ChatGPT Pro. Listed as supported tool in Notion's docs.</p></div>
+  <div class="card"><h4>Claude Code</h4><p style="font-size:13px;">Official Notion plugin (<a href="https://github.com/makenotion/claude-code-notion-plugin">github.com/makenotion/claude-code-notion-plugin</a>) — bundles MCP server + pre-built Skills + slash commands. One-click install.</p></div>
+</div>
+
+<h3>MCP Governance (Enterprise only)</h3>
+<div class="cb cb-amber">
+  <span class="cb-tag">Settings → Connections → Permissions</span>
+  <h3>Approve specific AI apps that can connect to Notion MCP</h3>
+  <p style="font-size:13.5px;">Enterprise admins can set "Restrict AI apps members can connect to" → "Only from approved list." Notion blocks every call from any non-approved app at the API layer. Audit log captures connection URL even after a tool is renamed. <strong>Bulk reset:</strong> "Disconnect All Users" button forces re-authentication across the workspace.</p>
+</div>
+
+<div class="callout callout-red">
+  <p><strong>Security caveat (per Strac DLP analysis):</strong> "By itself, the Notion MCP server is not secure for regulated data without an additional DLP layer. The Notion MCP server honors the authorizing user's permissions but returns whatever that user can see, including PII, PHI, credentials, source code, and other regulated content." For regulated industries (health, finance, gov), pair MCP with an MCP-layer DLP control that inspects + redacts tool responses before they reach the model.</p>
+</div>
+
+<!-- ===== 11. NOTION AS PM TOOL ===== -->
+<hr>
+<span class="section-label" id="pm-features">11</span>
+<h2>Notion as a PM Tool — The Jira Lens</h2>
+
+<p>This is the half of the doc that asks: <em>if I'm tracking tasks, sprints, and projects in Notion, what does Notion AI bring me that Jira AI doesn't (and what does Jira AI bring me that Notion can't)?</em></p>
+
+<h3>Native PM capabilities (no AI required)</h3>
+<ul>
+  <li><strong>Databases</strong> — fully relational. Tasks, sprints, projects, initiatives all live as DBs.</li>
+  <li><strong>Subtasks &amp; dependencies</strong> — supported on Free tier and up</li>
+  <li><strong>Custom properties</strong> — status, priority, owner, due date, multi-select tags, formulas</li>
+  <li><strong>Views</strong> — Board (kanban), Timeline (Gantt-lite), Calendar, Table, List, Gallery</li>
+  <li><strong>Database row-level permissions</strong> — granular access control</li>
+  <li><strong>Rollups</strong> with number formatting (Apr 27, 2026) — currency, percent, decimals for budget views</li>
+  <li><strong>Projects product</strong> (notion.com/product/projects) — pre-built project-management templates</li>
+</ul>
+
+<h3>AI on PM data</h3>
+<div class="card-grid">
+  <div class="card">
+    <h4>Database Autofill</h4>
+    <p style="font-size:13.5px;">AI auto-populates database properties — status, owner, priority, sentiment, category — from task description. Works on hundreds of rows at once.</p>
+  </div>
+  <div class="card">
+    <h4>NL → Formula</h4>
+    <p style="font-size:13.5px;">Write monday-style formula expressions from English. "Average days from creation to completion for tasks where priority = high" → formula generated.</p>
+  </div>
+  <div class="card">
+    <h4>Agent creates &amp; updates DBs at scale</h4>
+    <p style="font-size:13.5px;">"With databases, [the Agent] works at a scale no person could — updating or creating hundreds of pages at once." Bulk-edit tasks via natural language.</p>
+  </div>
+  <div class="card">
+    <h4>Plan creation</h4>
+    <p style="font-size:13.5px;">"Build a launch plan, break it into tasks, assign them, draft docs to give the team a head start" — Notion Agent decomposes a goal into a full project plan.</p>
+  </div>
+</div>
+
+<h3>The Jira capabilities Notion AI does <em>not</em> match</h3>
+<ul>
+  <li>❌ Sprint velocity charts &amp; burndown</li>
+  <li>❌ Complex issue-type hierarchies (Epic → Story → Sub-task → Bug with type-specific workflows)</li>
+  <li>❌ Native Git integration (smart commits, PR-issue linking, branch creation from issue)</li>
+  <li>❌ JSM ticketing (SLA, queues, customer portal)</li>
+  <li>❌ Built-in agile board ceremonies (planning poker, retro templates as first-class)</li>
+  <li>❌ Rovo Dev for engineering intelligence + DORA metrics</li>
+</ul>
+
+<div class="callout callout-amber">
+  <p><strong>Workaround pattern:</strong> Teams who use Notion for everything <em>except</em> issue tracking can connect Jira and Linear via Enterprise Search. Notion Agent can then <em>reason</em> across Notion docs + Jira tickets in the same query — but it can't <em>execute</em> deeply on Jira (e.g. update sprint, create epic). For execution in Jira, you still go to Jira or Atlassian's Rovo MCP.</p>
+</div>
+
+<!-- ===== 12. NOTION AS WIKI ===== -->
+<hr>
+<span class="section-label" id="wiki-features">12</span>
+<h2>Notion as a Wiki — The Confluence Lens</h2>
+
+<p>This is where Notion wins more decisively. The block-based editor is widely considered better-than-Confluence's by most reviewers, and the AI agent design assumes "documentation that AI can read" is the default state.</p>
+
+<h3>Native wiki capabilities</h3>
+<ul>
+  <li><strong>Block-based editor</strong> — text, headings, callouts, toggles, columns, embeds, code, math, databases-as-blocks</li>
+  <li><strong>Page tree</strong> — freeform hierarchy, no rigid space taxonomy</li>
+  <li><strong>Knowledge Base product</strong> (notion.com/product/knowledge-base) — pre-built KB templates</li>
+  <li><strong>Private Teamspaces</strong> — sensitive content scoped per team</li>
+  <li><strong>Granular page + database permissions</strong></li>
+  <li><strong>Page version history</strong> — 30 days (Free/Plus) / 90 days (Business) / unlimited (Enterprise)</li>
+  <li><strong>"Verify any page"</strong> — verified badge in search + AI citations</li>
+</ul>
+
+<h3>AI on wiki data</h3>
+<div class="card-grid">
+  <div class="card">
+    <h4>Inline AI Blocks</h4>
+    <p style="font-size:13.5px;">"Improve writing or generate drafts directly in your pages." Slash command surface inside any page.</p>
+  </div>
+  <div class="card">
+    <h4>Research Mode</h4>
+    <p style="font-size:13.5px;">"Dive deep on a topic to generate detailed reports and summaries." Multi-source, cited research workflow.</p>
+  </div>
+  <div class="card">
+    <h4>Verified-aware AI citations</h4>
+    <p style="font-size:13.5px;">When Notion AI cites a page in an answer, verified pages are ranked higher and labelled. <strong>The single feature Confluence most needs and doesn't have.</strong></p>
+  </div>
+  <div class="card">
+    <h4>Cross-page Agent work</h4>
+    <p style="font-size:13.5px;">Agent can read hundreds of pages and synthesize a single answer. E.g. "what did we decide about X across all team retros?"</p>
+  </div>
+</div>
+
+<h3>Confluence advantages Notion still doesn't match</h3>
+<ul>
+  <li>❌ Indefinite version history on standard tier (Notion Enterprise required)</li>
+  <li>❌ Native Jira ↔ Confluence two-way sync (Notion has connectors, not a sync)</li>
+  <li>❌ 20+ pre-built Rovo documentation agents (Notion has agent templates but smaller library)</li>
+  <li>❌ Whiteboards-as-first-class (Notion has them via integrations, not as a core product surface to Confluence's degree)</li>
+</ul>
+
+<div class="callout callout-green">
+  <p><strong>Where Notion wins decisively as wiki:</strong> the block-based editor is widely considered better UX than Confluence's; AI is bundled into Business+ at the same price tier rather than gated behind Rovo activation; "Verify any page" is genuinely unique; multi-model gateway lets you pick the right model per workflow; database-as-page makes structured + unstructured docs live in the same surface.</p>
+</div>
+
+<!-- ===== 13. PRICING ===== -->
+<hr>
+<span class="section-label" id="pricing">13</span>
+<h2>Pricing — Plans + Notion Credits</h2>
+
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>Plan</th><th>Price</th><th>AI access</th><th>PM+wiki suitability</th></tr></thead>
+<tbody>
+<tr><td class="fn">Free</td><td>$0</td><td>Limited trial of AI features only</td><td>Personal docs / very small teams</td></tr>
+<tr><td class="fn">Plus</td><td>$10/user/mo (annual)</td><td>Limited trial of AI only — <strong>no full Notion AI</strong></td><td>Small team — docs + light PM; AI gap forces upgrade</td></tr>
+<tr><td class="fn">Business</td><td><strong>$20/user/mo</strong> (annual)</td><td>Full Notion AI: Notion Agent · Custom Agents (credits) · AI Meeting Notes · Enterprise Search · Database Autofill · multi-model</td><td><strong>Sweet spot</strong> for Jira+Confluence replacement at SMB scale</td></tr>
+<tr><td class="fn">Enterprise</td><td>Custom (sales)</td><td>Everything above + SCIM · audit logs · unlimited version history · MCP Governance · HIPAA · 0-day data retention · dedicated CSM</td><td>Required for serious enterprise + regulated industries</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>Notion Credits (Custom Agents add-on)</h3>
+<ul>
+  <li><strong>Rate:</strong> $10 per 1,000 credits</li>
+  <li><strong>Shared across workspace</strong> · reset monthly · <strong>no rollover</strong></li>
+  <li><strong>Effective:</strong> May 4, 2026 (Custom Agents went paid; were free during beta from Feb 24)</li>
+  <li><strong>Consumption variable:</strong> "How much the agent reads · how many actions it takes · how often it runs"</li>
+  <li><strong>Simple Custom Agent run:</strong> "a fraction of a credit." Long multi-step run: "dozens of credits in one go"</li>
+  <li><strong>Notion Workers</strong> (hosted runtime) also moves to credits Aug 11, 2026</li>
+</ul>
+
+<div class="callout callout-green">
+  <p><strong>What DOESN'T consume credits</strong> (mitigates much of the pricing pain): Notion Agent (the included in-editor assistant) · AI writing tools · Database Autofill · Notion AI search · AI Meeting Notes (subject to fair-use) · monday-magic-style page generation. Only <strong>Custom Agents</strong> burn credits.</p>
+</div>
+
+<div class="callout callout-amber">
+  <p><strong>Recent efficiency wins (Apr 2026 — Notion 3.4):</strong> Custom Agents became <strong>35–50% cheaper to run</strong>. New lightweight models — GPT-5.4 Mini, GPT-5.4 Nano, Haiku 4.5, MiniMax M2.5 — can reduce per-run consumption by up to <strong>10×</strong> for simple flows.</p>
+</div>
+
+<!-- ===== 14. GOVERNANCE ===== -->
+<hr>
+<span class="section-label" id="governance">14</span>
+<h2>Governance — Trust the AI Output, Govern the AI Spend</h2>
+
+<h3>Data privacy</h3>
+<div class="card-grid">
+  <div class="card">
+    <h4>"No training on your data"</h4>
+    <p style="font-size:13.5px;">"Contractual prohibitions with AI subprocessors" — model providers (Anthropic, OpenAI) are not allowed to train on customer data.</p>
+  </div>
+  <div class="card">
+    <h4>Data retention</h4>
+    <p style="font-size:13.5px;"><strong>Zero-day retention</strong> on Enterprise · <strong>30-day retention</strong> for non-Enterprise tiers (AI subprocessor side).</p>
+  </div>
+  <div class="card">
+    <h4>Compliance</h4>
+    <p style="font-size:13.5px;">SOC 2 Type 2 · ISO 27001 · GDPR · CCPA · <strong>HIPAA on Enterprise</strong>. TLS 1.2+ encryption in transit.</p>
+  </div>
+  <div class="card">
+    <h4>Permissions inheritance</h4>
+    <p style="font-size:13.5px;">Every AI surface (Notion Agent, Custom Agents, MCP, External Agents) operates within the invoking user's permissions. Database row-level permissions enforced at agent step level.</p>
+  </div>
+</div>
+
+<h3>Custom Agent admin controls (May 5, 2026)</h3>
+<ul>
+  <li><strong>Guardrails:</strong> Restrict who can create agents (individuals or groups); set per-agent credit limits; Enterprise can set workspace-wide caps</li>
+  <li><strong>Tracking:</strong> Credits dashboard — usage by agent, spend trends, status, recent activity</li>
+  <li><strong>Built-in protections:</strong> Email + in-app alerts near credit limits · agents auto-pause when credits run out · fast-spending new agents auto-pause</li>
+  <li><strong>Approval flow:</strong> Member agent-creation requests require admin approval</li>
+  <li><strong>Disable runaway agents:</strong> Admin can kill a misbehaving agent in real time</li>
+</ul>
+
+<h3>MCP Governance (Enterprise only)</h3>
+<ul>
+  <li>Approve specific AI apps and MCP clients that can connect to Notion MCP</li>
+  <li>Block any tool that is not explicitly approved</li>
+  <li>Settings → Connections → Permissions → AI apps → "Only from approved list"</li>
+  <li>Audit log records all name-change events and connection URLs (persists across renames)</li>
+  <li>"Disconnect All Users" → force re-authentication workspace-wide</li>
+</ul>
+
+<!-- ===== 15. STRATEGIC VECTOR ===== -->
+<hr>
+<span class="section-label" id="vector">15</span>
+<h2>Strategic Vector — The All-in-One AI Workspace</h2>
+
+<div class="cb cb-slate">
+  <span class="cb-tag">Akshay Kothari · co-founder · Notion 3.0 launch</span>
+  <h3>"Context, collaboration, and now action — all in one place."</h3>
+  <p>Notion's bet is that the workspace itself — where docs, tasks, and conversations already live — becomes the substrate where agents do real work. Where ClickUp and monday are building <em>around</em> AI, Notion already had a structured knowledge graph; AI is the activation energy.</p>
+</div>
+
+<div class="quote">
+  "Notion 1.0 introduced a collaborative canvas for your docs and knowledge. Notion 2.0 brought databases and integrations. Notion 3.0 — we taught Notion AI to use those building blocks so your Agent can finish real work."
+  <span class="attrib">— Akshay Kothari, co-founder, Sep 18, 2025</span>
+</div>
+
+<h3>3 / 6 / 12-month outlook</h3>
+<div class="card-grid">
+  <div class="card">
+    <h4>Next 3 months (May → Aug 2026)</h4>
+    <ul>
+      <li><strong>Notion Workers</strong> moves from free beta to credit billing (Aug 11, 2026)</li>
+      <li>Custom Agent Directory matures — internal "agent marketplace" form factor</li>
+      <li>External Agents API moves from alpha → beta</li>
+      <li>Agent SDK exits waitlist — Notion Agents embedded in MS Teams / Discord / Hex / Amplitude</li>
+      <li>Enterprise Search Beta → GA</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h4>Next 6 months</h4>
+    <ul>
+      <li>External agent marketplace — Ramp / Clay / Vercel-style templates as productised distribution</li>
+      <li>Deeper Jira / Linear connector parity (action capability, not just read)</li>
+      <li>More efficiency wins on credits — model selection per workflow at admin level</li>
+      <li>Notion CLI matures into a real coding-agent target (rivals the linear.new pattern)</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h4>Next 12 months</h4>
+    <ul>
+      <li>Notion as the agent substrate of choice for knowledge work (similar to Linear's bet on dev work)</li>
+      <li>Pages-as-memory becomes the architectural moat — competitors have to build separate memory layers</li>
+      <li>Database Sync + Workers + Webhook triggers = Notion competes with Zapier / n8n for AI-native automation</li>
+      <li>Migration from Atlassian for SMB / mid-market becomes a real volume play</li>
+    </ul>
+  </div>
+</div>
+
+<div class="callout callout-slate">
+  <p><strong>The Notion vector summary:</strong> <em>The all-in-one AI workspace where knowledge work, task tracking, and agentic execution share one substrate.</em> Notion's structural advantage is that <strong>pages and databases are the agent memory</strong> — competitors had to invent that primitive. Notion's risk: it's still weak for serious agile engineering (Jira's moat), and the Custom Agents credit model is fresh enough that pricing volatility is real.</p>
+</div>
+
+<!-- ===== 16. TIMELINE ===== -->
+<hr>
+<span class="section-label" id="timeline">16</span>
+<h2>Release Timeline — Sep 2025 → May 2026</h2>
+
+<div class="timeline">
+  <div class="timeline-item"><span class="timeline-date">May 13, 2025</span><span class="timeline-title">AI Meeting Notes (Notion 2.51)</span><span class="timeline-desc">Native transcription. Captures Zoom, Meet, Teams, Slack Huddles, FaceTime, YouTube. No bot. First major PM-incumbent to compete with Granola/tl;dv.</span></div>
+  <div class="timeline-item"><span class="timeline-date">Sep 18, 2025</span><span class="timeline-title">🚀🚀 Notion 3.0 — GPT-5 rebuild, AI Agents launch</span><span class="timeline-desc">Biggest release in Notion's history. 20-min autonomous agent runs · hundreds of pages per run · multi-model gateway (GPT-5, Claude, o3, o1-mini) · database row permissions · new AI connectors · MCP integrations.</span></div>
+  <div class="timeline-item"><span class="timeline-date">Feb 24, 2026</span><span class="timeline-title">🚀 Custom Agents beta launches</span><span class="timeline-desc">Proactive agents on triggers/schedules. Business+ only. Free during beta. 1M+ created in two months.</span></div>
+  <div class="timeline-item"><span class="timeline-date">Apr 16, 2026</span><span class="timeline-title">Claude Opus 4.7 integrated</span><span class="timeline-desc">"Uses fewer tokens, makes 3× fewer tool errors, handles complex workflows more reliably."</span></div>
+  <div class="timeline-item"><span class="timeline-date">Apr 17, 2026</span><span class="timeline-title">Mail &amp; Calendar settings</span><span class="timeline-desc">Dedicated settings tab. Notion AI can schedule meetings + draft emails across connected mail/calendar.</span></div>
+  <div class="timeline-item"><span class="timeline-date">Apr 27, 2026</span><span class="timeline-title">Rollups as currency, percent, more</span><span class="timeline-desc">Number formatting in rollups — useful for budget totals in PM databases.</span></div>
+  <div class="timeline-item"><span class="timeline-date">Apr 2026 (Notion 3.4)</span><span class="timeline-title">Custom Agents 35–50% cheaper · lightweight models</span><span class="timeline-desc">GPT-5.4 Mini, GPT-5.4 Nano, Haiku 4.5, MiniMax M2.5 added. Per-run credit consumption reduced up to 10×.</span></div>
+  <div class="timeline-item"><span class="timeline-date">May 1, 2026</span><span class="timeline-title">Custom Agents in private Slack channels</span><span class="timeline-desc">Custom Agents can now read and reply in private channels they're invited to.</span></div>
+  <div class="timeline-item"><span class="timeline-date">May 4, 2026</span><span class="timeline-title">⚠ Notion Credits billing starts ($10/1000)</span><span class="timeline-desc">Custom Agents move from free beta to credit-based billing. Workspace-shared, monthly reset, no rollover.</span></div>
+  <div class="timeline-item"><span class="timeline-date">May 5, 2026</span><span class="timeline-title">Custom Agent admin controls launch</span><span class="timeline-desc">Guardrails · tracking · per-agent limits · workspace-wide caps · auto-pause runaways · admin approval flow.</span></div>
+  <div class="timeline-item"><span class="timeline-date">May 6, 2026</span><span class="timeline-title">New Custom Agent Directory</span><span class="timeline-desc">Library → Agents — browse, pin, create. Internal marketplace surface.</span></div>
+  <div class="timeline-item"><span class="timeline-date">May 7, 2026</span><span class="timeline-title">Plan Mode</span><span class="timeline-desc">Agent asks clarifying questions + builds detailed plan before complex actions. Reduces drift in multi-step work.</span></div>
+  <div class="timeline-item"><span class="timeline-date">May 13, 2026</span><span class="timeline-title">🚀🚀 Notion 3.5 — Developer Platform</span><span class="timeline-desc">External Agents API (alpha) · Database Sync (beta) · Custom Agent Tools (beta) · Webhook triggers (beta) · Notion Workers (beta, free until Aug 11) · Notion CLI · Agent SDK (alpha waitlist) · Connections tab · Markdown API · MCP 91% more token-efficient.</span></div>
+</div>
+
+<!-- ===== 17. SENTIMENT ===== -->
+<hr>
+<span class="section-label" id="sentiment">17</span>
+<h2>Adoption Signals &amp; Sentiment</h2>
+
+<h3>Notion-published metrics</h3>
+<ul>
+  <li><strong>1M+ Custom Agents created</strong> in 2 months of beta</li>
+  <li>Featured agent templates from Ramp · Clay · Vercel</li>
+  <li>Notion is OpenAI's published case study for GPT-5 in production</li>
+  <li>Notion 3.0 captured significant TechCrunch / The Verge / Datamation press at launch (Sep 18, 2025)</li>
+</ul>
+
+<h3>Positive sentiment</h3>
+<div class="card-grid">
+  <div class="card">
+    <h4>Knowledge-work users</h4>
+    <p style="font-size:13.5px;">"Notion 3.0 Agents are genuinely impressive for knowledge-heavy work." Reviewers consistently praise Notion's AI for documentation, research, and multi-page synthesis — work where structured context is the bottleneck.</p>
+  </div>
+  <div class="card">
+    <h4>AI Meeting Notes praised for low friction</h4>
+    <p style="font-size:13.5px;">"Typed notes, AI summary, and transcript all feel naturally integrated. @mention team members, link to project databases, create follow-up tasks — same way as anywhere else in Notion. No learning curve."</p>
+  </div>
+  <div class="card">
+    <h4>Multi-model = "the reason I stayed"</h4>
+    <p style="font-size:13.5px;">Bundled GPT-5 + Claude Opus + o3 = "I don't need to pay for ChatGPT Plus + Claude Pro separately for documentation work."</p>
+  </div>
+  <div class="card">
+    <h4>"Verify any page" — underrated feature</h4>
+    <p style="font-size:13.5px;">Multiple Confluence-migrant reviewers cite the verified-badge → AI-citation linkage as the single feature they didn't realise they needed.</p>
+  </div>
+</div>
+
+<h3>Critical sentiment</h3>
+<div class="card-grid">
+  <div class="card">
+    <h4>"Underwhelming for pure PM"</h4>
+    <p style="font-size:13.5px;">"Notion AI is incredible for docs; useless for tracking sprint velocity." Recurring engineering-team complaint. Notion remains weak for serious agile execution.</p>
+  </div>
+  <div class="card">
+    <h4>Pricing friction (May 2025 reshuffle)</h4>
+    <p style="font-size:13.5px;">AI features moved to Business plan ($20/user/month) in May 2025. AI no longer on Plus plan. Significant SMB backlash on Reddit. New Custom Agents credits (May 2026) add a second metering layer.</p>
+  </div>
+  <div class="card">
+    <h4>Credit cost surprises</h4>
+    <p style="font-size:13.5px;">"One team consumed 150,000 credits in a single month — $1,500 at the new rate." Heavy Custom Agent users hit unexpected bills. Notion mitigates via per-agent limits.</p>
+  </div>
+  <div class="card">
+    <h4>AI Meeting Notes not yet serious</h4>
+    <p style="font-size:13.5px;">"No speaker identification, no auto-join, no timestamps, very limited structure." Reviewers prefer Granola / tl;dv for client-facing meetings. Notion's edge is internal sync notes that already live in Notion.</p>
+  </div>
+</div>
+
+<!-- ===== 18. ACTIVATION ===== -->
+<hr>
+<span class="section-label" id="activation">18</span>
+<h2>Activation &amp; Setup</h2>
+
+<div class="callout callout-blue">
+  <p><strong>Setup verdict for the PM+wiki use case:</strong> The simplest of all 5 competitors we've researched so far. No "two toggles" trap (Jira), no AI add-on plan friction (ClickUp), no credit minimum mandatory at signup (monday). The friction is plan-side: you must be on Business ($20) or Enterprise to unlock real AI.</p>
+</div>
+
+<div class="steps">
+  <div class="step">
+    <div class="step-n">1</div>
+    <div class="step-c">
+      <h3>Pick the right plan</h3>
+      <p><strong>Business ($20/user/mo)</strong> for SMB/team Jira+Confluence replacement. Enterprise for regulated/audit/HIPAA needs. Plus ($10) is NOT enough — AI is gated above it.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-n">2</div>
+    <div class="step-c">
+      <h3>Build the PM databases</h3>
+      <p>Tasks DB, Sprints DB, Projects DB, Initiatives DB. Or use the pre-built Projects template. Add custom properties (priority, owner, due date, dependencies, formulas).</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-n">3</div>
+    <div class="step-c">
+      <h3>Build the wiki structure</h3>
+      <p>Knowledge Base from template. Private Teamspaces for sensitive content. Apply "Verify" badge to authoritative pages — they outrank in AI citations.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-n">4</div>
+    <div class="step-c">
+      <h3>Connect external apps (Enterprise Search)</h3>
+      <p>Slack · Google Drive · GitHub · Jira · Linear · MS Teams · SharePoint · OneDrive. Each connector enables Notion Agent to reason over that app's data with the user's permissions.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-n">5</div>
+    <div class="step-c">
+      <h3>Use Notion Agent</h3>
+      <p><code>Cmd/Ctrl + I</code> in any page or chat. Pick model (GPT-5 / Claude Opus 4.7 / o3 / Haiku 4.5). Use Plan Mode for complex multi-page work.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-n">6</div>
+    <div class="step-c">
+      <h3>Build Custom Agents (with credit budget)</h3>
+      <p>Library → Agents → Create. Set trigger (schedule / Slack / email / DB change). Scope permissions (DBs, pages, tools). Set per-agent credit limit. Set workspace-wide cap (Enterprise).</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-n">7</div>
+    <div class="step-c">
+      <h3>(Optional) Install Notion MCP</h3>
+      <p>For workflows where Notion data is consumed by Cursor / Claude / ChatGPT. Add <code>https://mcp.notion.com/mcp</code> via OAuth. Enterprise: configure MCP Governance approved-list.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-n">8</div>
+    <div class="step-c">
+      <h3>(Developer) Use Developer Platform 3.5</h3>
+      <p>External Agents API to bring Claude/Codex into Notion. Notion CLI for scripting. Notion Workers for hosted code. Agent SDK to embed Notion Agents in MS Teams / Discord / Hex.</p>
+    </div>
+  </div>
+</div>
+
+<hr>
+<p style="font-size:12px;color:var(--faint);text-align:center;">
+  Notion AI Research Notes — QPM / SA / AI research — May 15, 2026<br>
+  Sources: notion.com/product/ai · /releases · /blog · /help · developers.notion.com · OpenAI customer case study · TechCrunch · tl;dv blog · Summarize Meeting · Connex Digital · Strac DLP analysis · Nuclino + Atlassian + Trackr + Docsie comparisons.<br>
+  <em>Screenshot slots marked throughout — capture from a live workspace when ready. No Notion MCP / playwright access in this research session.</em>
+</p>
+
+</body>
+</html>
