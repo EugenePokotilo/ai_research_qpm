@@ -82,6 +82,7 @@ tr:hover td{background:#fbfaf7}
 .footer ul{list-style:none;padding-left:0}
 .footer li{padding:4px 0}
 .scroll{overflow-x:auto;margin:20px -8px;padding:0 8px}
+.feat-table .ex{display:block;margin-top:5px;font-family:'Inter',sans-serif;font-weight:400;font-size:10.5px;font-style:italic;color:var(--muted);line-height:1.4;letter-spacing:0}
 </style>
 </head>
 <body>
@@ -105,7 +106,7 @@ tr:hover td{background:#fbfaf7}
 <ol>
 <li><a href="#01">Executive synopsis</a></li>
 <li><a href="#02">How to read this doc</a></li>
-<li><a href="#03">Capability matrix — 14 features × 7 competitors + QPM</a></li>
+<li><a href="#03">Capability matrix (with feature samples)</a></li>
 <li><a href="#04">12-month AI strategic vectors</a></li>
 <li><a href="#05">Dimension: Pricing models</a></li>
 <li><a href="#06">Dimension: MCP support</a></li>
@@ -167,7 +168,7 @@ tr:hover td{background:#fbfaf7}
 <div class="section-label">03 · Capability matrix</div>
 <h2>14 features × 7 competitors + QPM</h2>
 
-<p>Rows grouped by capability area. Each cell names the competitor's feature and when first delivered. <span class="tag yes">YES</span> / <span class="tag no">NO</span> / <span class="tag partial">PARTIAL</span> tags indicate maturity.</p>
+<p>Rows grouped by capability area. Each cell names the competitor's feature, when first delivered, and (in italics) concrete sample features. <span class="tag yes">YES</span> / <span class="tag no">NO</span> / <span class="tag partial">PARTIAL</span> tags indicate maturity.</p>
 
 <div class="scroll">
 <table class="feat-table">
@@ -191,13 +192,13 @@ tr:hover td{background:#fbfaf7}
 
 <tr>
 <td class="row-label">1. Conversational assistant</td>
-<td>Atlassian Intelligence <span class="tag yes">2024</span></td>
-<td>Linear Ask <span class="tag yes">2024</span></td>
-<td>ClickUp Brain² <span class="tag yes">2023→25</span></td>
-<td>Sidekick (formerly AI Blocks) <span class="tag yes">2023→26</span></td>
-<td>Notion AI <span class="tag yes">2023</span></td>
-<td>Plane AI – Ask mode <span class="tag yes">Nov 2025</span></td>
-<td>Asana AI (Smart Fields, summaries) <span class="tag yes">2023</span></td>
+<td>Atlassian Intelligence <span class="tag yes">2024</span><span class="ex">e.g. summarize issues, suggest priority, rewrite text in Jira/Confluence</span></td>
+<td>Linear Ask <span class="tag yes">2024</span><span class="ex">e.g. Cmd+K Ask, summarize issues, draft replies in command bar</span></td>
+<td>ClickUp Brain² <span class="tag yes">2023→25</span><span class="ex">e.g. Q&amp;A across tasks/docs/chat, auto-summary, /ai inline</span></td>
+<td>Sidekick (formerly AI Blocks) <span class="tag yes">2023→26</span><span class="ex">e.g. board-level Q&amp;A, AI column actions, status drafts</span></td>
+<td>Notion AI <span class="tag yes">2023</span><span class="ex">e.g. /ai inline anywhere, page transforms, multi-page summary</span></td>
+<td>Plane AI – Ask mode <span class="tag yes">Nov 2025</span><span class="ex">e.g. side-panel Ask, workspace Q&amp;A on BYO Anthropic/OpenAI</span></td>
+<td>Asana AI <span class="tag yes">2023</span><span class="ex">e.g. Smart Status, Smart Fields, Smart Summaries pulled from Work Graph</span></td>
 <td>LLM + RAG over workspace data</td>
 <td class="qpm-cell">TODO</td>
 <td class="qpm-cell">TODO</td>
@@ -206,13 +207,13 @@ tr:hover td{background:#fbfaf7}
 
 <tr>
 <td class="row-label">2. Autonomous multi-step agents</td>
-<td>Rovo Agents <span class="tag yes">2024</span></td>
-<td>Linear Agent <span class="tag yes">Mar 24, 2026</span></td>
-<td>Super Agents <span class="tag yes">Dec 22, 2025</span></td>
-<td>AI Agents triad (Sidekick/Vibe/Agents) <span class="tag yes">2026</span></td>
-<td>Notion Agent (20-min autonomous) <span class="tag yes">Sep 18, 2025</span></td>
-<td>Plane AI – Assign mode <span class="tag yes">Nov 2025</span></td>
-<td>AI Teammates <span class="tag partial">GA Q1 FY27</span></td>
+<td>Rovo Agents <span class="tag yes">2024</span><span class="ex">e.g. triage agent, planning agent, approval flow agents</span></td>
+<td>Linear Agent <span class="tag yes">Mar 24, 2026</span><span class="ex">e.g. Triage Intelligence (auto-label, route, dedup); Agent Sessions API</span></td>
+<td>Super Agents <span class="tag yes">Dec 22, 2025</span><span class="ex">e.g. end-to-end project setup, cross-task automation, workflow execution</span></td>
+<td>Sidekick / Vibe / Agents <span class="tag yes">2026</span><span class="ex">e.g. Sidekick (ambient), Vibe (creative), Agents (autonomous workflows)</span></td>
+<td>Notion Agent <span class="tag yes">Sep 18, 2025</span><span class="ex">e.g. 20-min autonomous runs, multi-page reports, GPT-5 reasoning</span></td>
+<td>Plane AI – Assign mode <span class="tag yes">Nov 2025</span><span class="ex">e.g. delegate full ticket to AI, multi-step execution, Agent Run lifecycle</span></td>
+<td>AI Teammates <span class="tag partial">GA Q1 FY27</span><span class="ex">e.g. AI Project Manager, AI Sprint Planner, AI Marketing Manager (21 prebuilts)</span></td>
 <td>Agent SDK + lifecycle webhooks + LLM tool-use</td>
 <td class="qpm-cell">TODO</td>
 <td class="qpm-cell">TODO</td>
@@ -221,13 +222,13 @@ tr:hover td{background:#fbfaf7}
 
 <tr>
 <td class="row-label">3. No-code agent / workflow builder</td>
-<td>Rovo Studio <span class="tag yes">2024</span></td>
+<td>Rovo Studio <span class="tag yes">2024</span><span class="ex">e.g. agent builder, trigger chains, Atlassian templates</span></td>
 <td>— <span class="tag no">NO</span></td>
-<td>Brain MAX / Custom Agents <span class="tag yes">2025</span></td>
-<td>AI Agent builder <span class="tag yes">2026</span></td>
-<td>Custom Agents <span class="tag yes">Feb 24, 2026 beta</span></td>
-<td>Plane AI – Build mode + ADK <span class="tag yes">Nov 2025</span></td>
-<td>AI Studio <span class="tag yes">2024</span></td>
+<td>Brain MAX / Custom Agents <span class="tag yes">2025</span><span class="ex">e.g. custom agent UI, prompt editor, workflow nodes</span></td>
+<td>AI Agent builder <span class="tag yes">2026</span><span class="ex">e.g. visual canvas, AI block recipes, Agentalent templates</span></td>
+<td>Custom Agents <span class="tag yes">Feb 24, 2026 beta</span><span class="ex">e.g. instructions + knowledge + tool definitions per agent</span></td>
+<td>Plane AI – Build mode + ADK <span class="tag yes">Nov 2025</span><span class="ex">e.g. Agent Development Kit, CLI scaffolding, prompt+tool defs</span></td>
+<td>AI Studio <span class="tag yes">2024</span><span class="ex">e.g. drag-drop canvas, trigger→action chains, credit-metered execution</span></td>
 <td>Visual workflow canvas + LLM tool catalog</td>
 <td class="qpm-cell">TODO</td>
 <td class="qpm-cell">TODO</td>
@@ -236,13 +237,13 @@ tr:hover td{background:#fbfaf7}
 
 <tr>
 <td class="row-label">4. Agent marketplace / prebuilts</td>
-<td>Atlassian Marketplace <span class="tag yes">legacy</span></td>
-<td>External agents via SDK (Cursor/Codex/Devin) <span class="tag yes">2026</span></td>
-<td>Super Agents library <span class="tag yes">2025</span></td>
-<td>Agentalent.ai <span class="tag yes">Mar 23, 2026</span></td>
-<td>Custom Agents catalog <span class="tag yes">2026</span></td>
-<td>Agent Marketplace <span class="tag yes">2025</span></td>
-<td>21 prebuilt AI Teammates <span class="tag yes">2026</span></td>
+<td>Atlassian Marketplace <span class="tag yes">legacy</span><span class="ex">e.g. 3rd-party agent installs, vetted catalog, paid + free agents</span></td>
+<td>External agents via SDK <span class="tag yes">2026</span><span class="ex">e.g. Cursor, Codex, Devin, Replit hooked via Agent Interaction SDK</span></td>
+<td>Super Agents library <span class="tag yes">2025</span><span class="ex">e.g. in-product curated agents, one-click install, role-tagged</span></td>
+<td>Agentalent.ai <span class="tag yes">Mar 23, 2026</span><span class="ex">e.g. AWS+Anthropic backed, $2K/mo per agent, certified catalog</span></td>
+<td>Custom Agents catalog <span class="tag yes">2026</span><span class="ex">e.g. credit-priced, shareable agents, workspace-scoped distribution</span></td>
+<td>Agent Marketplace <span class="tag yes">2025</span><span class="ex">e.g. open-source agents, community-built, forkable definitions</span></td>
+<td>21 prebuilt AI Teammates <span class="tag yes">2026</span><span class="ex">e.g. 7 Marketing, 6 Ops/PMO, 5 IT, 3 Product/Eng (no 3rd-party)</span></td>
 <td>Marketplace infra + per-agent pricing</td>
 <td class="qpm-cell">TODO</td>
 <td class="qpm-cell">TODO</td>
@@ -251,12 +252,12 @@ tr:hover td{background:#fbfaf7}
 
 <tr>
 <td class="row-label">5. MCP server (external integration)</td>
-<td>Atlassian Remote MCP <span class="tag yes">2025</span></td>
-<td>Linear MCP <span class="tag yes">2025</span></td>
-<td>mcp.clickup.com/mcp <span class="tag yes">2025</span></td>
-<td>mcp.monday.com/mcp <span class="tag yes">2025</span></td>
-<td>mcp.notion.com/mcp <span class="tag yes">2025</span></td>
-<td>Open-source MCP, 55+ tools <span class="tag yes">2025</span></td>
+<td>Atlassian Remote MCP <span class="tag yes">2025</span><span class="ex">e.g. Jira+Confluence+Bitbucket access, OAuth, cross-product context</span></td>
+<td>Linear MCP <span class="tag yes">2025</span><span class="ex">e.g. read/write issues from Claude/Cursor/Codex, OAuth+PAT, dev-flow tuned</span></td>
+<td>mcp.clickup.com/mcp <span class="tag yes">2025</span><span class="ex">e.g. OAuth, omits delete tools by design, workspace-scoped</span></td>
+<td>mcp.monday.com/mcp <span class="tag yes">2025</span><span class="ex">e.g. OAuth, boards/items access, tied to Agentalent flows</span></td>
+<td>mcp.notion.com/mcp <span class="tag yes">2025</span><span class="ex">e.g. permission inheritance through calls, pages+DB access, OAuth</span></td>
+<td>mcp.plane.so + Stdio <span class="tag yes">2025</span><span class="ex">e.g. 55+ tools, HTTP+PAT+Stdio transports, open source, self-host friendly</span></td>
 <td>— <span class="tag no">NO public MCP</span></td>
 <td>MCP protocol (OAuth/PAT/Stdio transports)</td>
 <td class="qpm-cell">TODO</td>
@@ -266,13 +267,13 @@ tr:hover td{background:#fbfaf7}
 
 <tr>
 <td class="row-label">6. Multi-model gateway / BYO keys</td>
-<td>Bedrock + OpenAI (bundled) <span class="tag partial">Bundled</span></td>
-<td>Claude baseline (Anthropic) <span class="tag partial">Single</span></td>
-<td>Multi-model (Claude/GPT/Gemini/o3/MiniMax) <span class="tag yes">2025</span></td>
-<td>AI Platform Gateway <span class="tag yes">2026</span></td>
-<td>GPT-5 + Claude <span class="tag yes">Sep 2025</span></td>
-<td>BYO Anthropic OR OpenAI direct <span class="tag yes">Nov 2025</span></td>
-<td>OpenAI + Anthropic multi-LLM <span class="tag yes">2024</span></td>
+<td>Bedrock + OpenAI (bundled) <span class="tag partial">Bundled</span><span class="ex">e.g. vendor-managed, no model picker, auto-routing under Atlassian Intelligence</span></td>
+<td>Claude baseline (Anthropic) <span class="tag partial">Single</span><span class="ex">e.g. Claude Sonnet, deliberately single-model, no picker exposed</span></td>
+<td>Multi-model <span class="tag yes">2025</span><span class="ex">e.g. Claude / GPT / Gemini / o3 / MiniMax with Brain MAX picker</span></td>
+<td>AI Platform Gateway <span class="tag yes">2026</span><span class="ex">e.g. multi-model abstraction, AWS+Anthropic partnership, vendor-managed</span></td>
+<td>GPT-5 + Claude <span class="tag yes">Sep 2025</span><span class="ex">e.g. GPT-5 for Notion Agent, Claude for editor flows, task-routed</span></td>
+<td>BYO Anthropic OR OpenAI <span class="tag yes">Nov 2025</span><span class="ex">e.g. direct provider keys, customer pays provider direct, self-host bypass</span></td>
+<td>OpenAI + Anthropic <span class="tag yes">2024</span><span class="ex">e.g. multi-LLM orchestration, vendor-managed, no customer picker</span></td>
 <td>Model abstraction layer</td>
 <td class="qpm-cell">TODO</td>
 <td class="qpm-cell">TODO</td>
@@ -281,13 +282,13 @@ tr:hover td{background:#fbfaf7}
 
 <tr>
 <td class="row-label">7. Memory / context substrate</td>
-<td>Issue graph + Confluence pages <span class="tag yes">legacy</span></td>
-<td>Issue graph (structured tickets) <span class="tag yes">legacy</span></td>
-<td>Brain Workspace + ActionQuery <span class="tag yes">2025</span></td>
-<td>mondayDB <span class="tag yes">2024</span></td>
-<td>Pages-as-memory <span class="tag yes">legacy moat</span></td>
-<td>Workspace context (projects+docs) <span class="tag yes">2025</span></td>
-<td>Work Graph® + Memory Associations <span class="tag yes">2024</span></td>
+<td>Issue graph + Confluence pages <span class="tag yes">legacy</span><span class="ex">e.g. linked issues, Confluence page refs, cross-product retrieval</span></td>
+<td>Issue graph (structured tickets) <span class="tag yes">legacy</span><span class="ex">e.g. parent/sub-issues, cycle+project links, label graph</span></td>
+<td>Brain Workspace + ActionQuery <span class="tag yes">2025</span><span class="ex">e.g. workspace context, Qatalog ActionQuery, cross-list refs</span></td>
+<td>mondayDB <span class="tag yes">2024</span><span class="ex">e.g. columnar DB, board relations, cross-board mirroring</span></td>
+<td>Pages-as-memory <span class="tag yes">legacy moat</span><span class="ex">e.g. workspace pages, linked databases, backlinks as context</span></td>
+<td>Workspace context <span class="tag yes">2025</span><span class="ex">e.g. projects + docs + pages, workspace-scoped, BYO context layer</span></td>
+<td>Work Graph® + Memory Associations <span class="tag yes">2024</span><span class="ex">e.g. relational graph (Goals→Projects→Tasks), text-fact memory (not vector)</span></td>
 <td>Vector DB / graph DB / text-fact store</td>
 <td class="qpm-cell">TODO</td>
 <td class="qpm-cell">TODO</td>
@@ -296,13 +297,13 @@ tr:hover td{background:#fbfaf7}
 
 <tr>
 <td class="row-label">8. Enterprise search (cross-tool)</td>
-<td>Rovo Search <span class="tag yes">2024</span></td>
+<td>Rovo Search <span class="tag yes">2024</span><span class="ex">e.g. cross-Atlassian search, Confluence+Jira+Bitbucket, permission-aware</span></td>
 <td>— <span class="tag no">limited</span></td>
-<td>Brain MAX (Qatalog acq) <span class="tag yes">Nov 12, 2025</span></td>
+<td>Brain MAX (Qatalog acq) <span class="tag yes">Nov 12, 2025</span><span class="ex">e.g. ActionQuery engine, 30+ connectors, permission-aware</span></td>
 <td>— <span class="tag partial">limited</span></td>
-<td>Enterprise Search + AI Connectors <span class="tag yes">2025</span></td>
+<td>Enterprise Search + AI Connectors <span class="tag yes">2025</span><span class="ex">e.g. Slack/GDrive/GitHub/Jira, permission inheritance, citation-linked</span></td>
 <td>Workspace-scoped <span class="tag partial">limited</span></td>
-<td>AI Connectors (OpenAI/Slack/Notion) <span class="tag yes">2025</span></td>
+<td>AI Connectors <span class="tag yes">2025</span><span class="ex">e.g. OpenAI, Slack, Notion connectors (no Drive/GitHub yet)</span></td>
 <td>RAG over connected sources + permission inheritance</td>
 <td class="qpm-cell">TODO</td>
 <td class="qpm-cell">TODO</td>
@@ -311,12 +312,12 @@ tr:hover td{background:#fbfaf7}
 
 <tr>
 <td class="row-label">9. Slack / Teams AI intake</td>
-<td>AI in Slack via Rovo <span class="tag yes">2024</span></td>
-<td>Linear Asks (Slack) <span class="tag yes">2024</span></td>
-<td>ClickUp Brain in Slack <span class="tag yes">2024</span></td>
+<td>AI in Slack via Rovo <span class="tag yes">2024</span><span class="ex">e.g. Rovo agents in Slack, ticket creation, status updates</span></td>
+<td>Linear Asks (Slack) <span class="tag yes">2024</span><span class="ex">e.g. intake → triage → ticket flow, @mention, channel-to-Linear</span></td>
+<td>ClickUp Brain in Slack <span class="tag yes">2024</span><span class="ex">e.g. full task context, cross-channel queries, @ClickUp commands</span></td>
 <td>Slack integration <span class="tag partial">basic</span></td>
 <td>Slack integration <span class="tag partial">basic</span></td>
-<td>@Plane in any channel (Claude Sonnet 4.0) <span class="tag yes">Nov 15, 2025</span></td>
+<td>@Plane in any channel <span class="tag yes">Nov 15, 2025</span><span class="ex">e.g. "AGI-like" agent, Claude Sonnet 4.0 default, cross-channel intake</span></td>
 <td>Slack integration <span class="tag partial">basic</span></td>
 <td>Chat-platform agent runtime + workspace OAuth</td>
 <td class="qpm-cell">TODO</td>
@@ -326,13 +327,13 @@ tr:hover td{background:#fbfaf7}
 
 <tr>
 <td class="row-label">10. Code / dev-tool intelligence</td>
-<td>DX + Forge <span class="tag partial">legacy</span></td>
-<td>Code Intelligence + external dev agents <span class="tag yes">May 14, 2026 beta</span></td>
-<td>Codegen acq <span class="tag yes">Dec 23, 2025</span></td>
+<td>DX + Forge <span class="tag partial">legacy</span><span class="ex">e.g. dev panels, Forge apps, Bitbucket linking</span></td>
+<td>Code Intelligence + external dev agents <span class="tag yes">May 14, 2026 beta</span><span class="ex">e.g. PR↔issue linking, Cursor/Codex/Devin hooks, code-aware tickets</span></td>
+<td>Codegen acq <span class="tag yes">Dec 23, 2025</span><span class="ex">e.g. AI codegen agents, $10/10K credits, IDE-style flows</span></td>
 <td>— <span class="tag no">limited</span></td>
 <td>— <span class="tag no">limited</span></td>
-<td>GitHub integration + dev-focused <span class="tag partial">core feature</span></td>
-<td>3 Product/Eng teammates <span class="tag partial">narrow</span></td>
+<td>GitHub integration + dev-focused <span class="tag partial">core</span><span class="ex">e.g. PR linking, branch-issue refs, developer-DNA product</span></td>
+<td>3 Product/Eng teammates <span class="tag partial">narrow</span><span class="ex">e.g. AI Engineering Manager, AI QA, AI Release Manager (no IDE)</span></td>
 <td>Code-aware LLM + IDE/agent integration</td>
 <td class="qpm-cell">TODO</td>
 <td class="qpm-cell">TODO</td>
@@ -341,13 +342,13 @@ tr:hover td{background:#fbfaf7}
 
 <tr>
 <td class="row-label">11. Governance / human-in-the-loop</td>
-<td>Atlassian admin controls <span class="tag yes">legacy</span></td>
+<td>Atlassian admin controls <span class="tag yes">legacy</span><span class="ex">e.g. Trust Center, admin gates, Bedrock data isolation</span></td>
 <td>Standard <span class="tag partial">basic</span></td>
-<td>Workspace permissions <span class="tag partial">basic</span></td>
+<td>Workspace perms + no-delete MCP <span class="tag partial">basic</span><span class="ex">e.g. role-based perms, MCP omits delete tools, audit log</span></td>
 <td>Standard <span class="tag partial">basic</span></td>
-<td>Verify-any-page citations + AI Connectors <span class="tag yes">2025</span></td>
-<td>Air-gapped + no prompt storage <span class="tag yes">2025</span></td>
-<td>"Context, checkpoints, controls" + explicit user approval <span class="tag yes">2024</span></td>
+<td>Verify-any-page + AI Connectors <span class="tag yes">2025</span><span class="ex">e.g. citation per AI answer, permission inheritance, audit log</span></td>
+<td>Air-gap + no prompt storage <span class="tag yes">2025</span><span class="ex">e.g. air-gap mode, zero outbound, customer-owned prompts</span></td>
+<td>"Context, checkpoints, controls" <span class="tag yes">2024</span><span class="ex">e.g. explicit user approval required, action audit log, Asana Gov tier</span></td>
 <td>HITL gates + audit + permission inheritance</td>
 <td class="qpm-cell">TODO</td>
 <td class="qpm-cell">TODO</td>
@@ -356,12 +357,12 @@ tr:hover td{background:#fbfaf7}
 
 <tr>
 <td class="row-label">12. Self-hosted / air-gapped</td>
-<td>Data Center <span class="tag partial">legacy on-prem, AI limited</span></td>
+<td>Data Center <span class="tag partial">legacy</span><span class="ex">e.g. on-prem Jira DC, Atlassian Intelligence support limited</span></td>
 <td>— <span class="tag no">NO</span></td>
 <td>— <span class="tag no">NO</span></td>
 <td>— <span class="tag no">NO</span></td>
 <td>— <span class="tag no">NO</span></td>
-<td>Docker/K8s/air-gapped, full AI parity <span class="tag yes">core</span></td>
+<td>Docker/K8s/air-gap, full AI parity <span class="tag yes">core</span><span class="ex">e.g. Docker compose, Helm chart, air-gap installer, BYO LLM endpoint</span></td>
 <td>— <span class="tag no">NO</span></td>
 <td>Containerized deploy + BYO model keys</td>
 <td class="qpm-cell">TODO</td>
@@ -371,13 +372,13 @@ tr:hover td{background:#fbfaf7}
 
 <tr>
 <td class="row-label">13. Pricing model (AI bundling)</td>
-<td>AI in Premium/Enterprise tier <span class="tag partial">bundled</span></td>
-<td>AI bundled in seat <span class="tag yes">simple</span></td>
-<td>ClickUp Brain $7/user + Codegen credits <span class="tag partial">hybrid</span></td>
-<td>$0.01/credit metering <span class="tag partial">credits</span></td>
-<td>$10/1000 credits (Custom Agents) <span class="tag partial">credits</span></td>
-<td>AI on every plan, BYO keys <span class="tag yes">no upcharge</span></td>
-<td>AI Studio: 50K/100K/5M credits per quarter by tier <span class="tag partial">credits</span></td>
+<td>AI in Premium+ <span class="tag partial">bundled</span><span class="ex">e.g. AI in Premium $13.53, Rovo agents metered separately</span></td>
+<td>AI bundled in seat <span class="tag yes">simple</span><span class="ex">e.g. all-in seat price, no AI SKU, no metering</span></td>
+<td>Brain $7/user + Codegen credits <span class="tag partial">hybrid</span><span class="ex">e.g. ClickUp Brain $7/user add-on + Codegen $10/10K credits</span></td>
+<td>$0.01/credit metering <span class="tag partial">credits</span><span class="ex">e.g. per-credit metering, agent runs charged, forecastable per agent</span></td>
+<td>$10/1000 credits <span class="tag partial">credits</span><span class="ex">e.g. Custom Agents credit packs, launched May 4 2026, per-1000 unit</span></td>
+<td>AI every plan + BYO keys <span class="tag yes">no upcharge</span><span class="ex">e.g. zero AI seat fee, customer pays provider direct for self-host</span></td>
+<td>AI Studio quarterly quotas <span class="tag partial">credits</span><span class="ex">e.g. 50K Starter / 100K Plus / 5M Pro credits per quarter by tier</span></td>
 <td>—</td>
 <td class="qpm-cell">TODO</td>
 <td class="qpm-cell">TODO</td>
@@ -391,7 +392,7 @@ tr:hover td{background:#fbfaf7}
 <td>— <span class="tag no">NO</span></td>
 <td>— <span class="tag no">NO</span></td>
 <td>— <span class="tag no">NO</span></td>
-<td>github.com/makeplane/plane <span class="tag yes">YES</span></td>
+<td>github.com/makeplane/plane <span class="tag yes">YES</span><span class="ex">e.g. open-source core, forkable, community PRs, public roadmap</span></td>
 <td>— <span class="tag no">NO</span></td>
 <td>Source-available license + community contribution</td>
 <td class="qpm-cell">TODO</td>

@@ -23,6 +23,232 @@ This synthesis draws from the 7 per-competitor research bundles already in this 
 
 ---
 
+## Feature samples per capability
+
+Concrete examples of what each capability looks like in practice, plus standout per-competitor angles. Mirrors §03 "Feature samples per capability" section of the HTML.
+
+### 01. Conversational assistant
+
+**Common feature samples**
+- Q&A over workspace data ("what's blocking the auth project?")
+- Summarize long threads, comments, status updates
+- Draft emails, status updates, project briefs
+- Rewrite, translate, adjust tone
+- Inline slash-commands in editors
+
+**Notable per competitor**
+- **Linear:** Ask in Cmd+K command bar — keyboard-first
+- **Notion:** /ai inline; long-context transforms over whole docs
+- **Asana:** Smart Status auto-pulls latest project state
+- **Plane:** Ask mode runs on BYO Anthropic/OpenAI keys
+- **ClickUp:** Brain² lives across tasks/docs/chat without switching context
+
+### 02. Autonomous multi-step agents
+
+**Common feature samples**
+- Triage incoming work — label, assign, link duplicates
+- Generate project plan from one-line brief
+- Run reviews across an epic (security, compliance, scope)
+- Auto-close stale issues; escalate blocked work
+- Multi-step report generation across pages/projects
+
+**Notable per competitor**
+- **Linear:** Triage Intelligence auto-labels, routes, dedups (Mar 24, 2026)
+- **Notion:** 20-minute autonomous research/report runs (Notion 3.0, Sep 2025)
+- **Asana:** 21 prebuilt teammates — AI Project Manager, AI Sprint Planner, etc.
+- **ClickUp:** Super Agents for end-to-end project setup
+- **Plane:** Assign mode hands ticket to AI
+
+### 03. No-code agent / workflow builder
+
+**Common feature samples**
+- Drag-drop canvas with AI nodes
+- Trigger → AI action → outcome chains
+- Template library
+- Custom prompts + conditional logic
+- Test/preview mode
+
+**Notable per competitor**
+- **Asana:** AI Studio — credit-metered
+- **Plane:** Build mode + Agent Development Kit (developer-leaning)
+- **Notion:** Custom Agents builder + Agent SDK + Notion Workers
+- **monday:** Visual builder with AI block recipes
+- **Linear:** deliberately absent — bets on external agents
+
+### 04. Agent marketplace / prebuilts
+
+**Common feature samples**
+- Curated agent catalog by persona
+- Third-party agent installation
+- Per-agent pricing + billing
+- Verified/certified badges
+- Activity logs + performance metrics
+
+**Notable per competitor**
+- **monday:** Agentalent.ai — $2K/mo per agent (AWS+Anthropic, Mar 2026)
+- **Asana:** 21 prebuilt teammates by job function
+- **Linear:** Cursor/Codex/Devin/Replit as external agents via SDK
+- **Plane:** Open-source agent marketplace
+- **ClickUp:** Super Agents library
+
+### 05. MCP server
+
+**Common feature samples**
+- Read tasks/projects/users via Claude/Cursor/Codex/IDE
+- Write tasks (create, update, comment, move)
+- Query workspace state with natural language
+- Cross-tool agent workflows
+- OAuth per-user permission scopes
+
+**Notable per competitor**
+- **Plane:** 55+ tools, HTTP + PAT + Stdio transports, open source
+- **ClickUp:** omits delete tools by design
+- **Notion:** permission inheritance preserved through MCP calls
+- **Linear:** built for Claude/Cursor/Codex flows
+- **Asana:** absent — only competitor without public MCP
+
+### 06. Multi-model gateway / BYO keys
+
+**Common feature samples**
+- Pick model per task
+- BYO API keys (Anthropic/OpenAI direct)
+- Cost transparency per call/user/project
+- Failover between providers
+- Visible model picker in UI
+
+**Notable per competitor**
+- **ClickUp:** widest menu — Claude, GPT, Gemini, o3, MiniMax in Brain MAX
+- **Plane:** BYO direct-to-provider Anthropic OR OpenAI
+- **Linear:** deliberately single-model (Claude)
+- **Asana:** orchestrated, not user-pickable
+- **Notion:** GPT-5 + Claude, task-dependent routing
+
+### 07. Memory / context substrate
+
+**Common feature samples**
+- AI references past project decisions without re-prompting
+- Cross-project relationship awareness
+- Persistent "memory" facts across sessions
+- Inheritance from parent/child entities
+- Permission-aware retrieval
+
+**Notable per competitor**
+- **Asana:** Work Graph® + Memory Associations (text-fact, deliberately not vector DB)
+- **Notion:** pages-as-memory — natural moat from existing user docs
+- **ClickUp:** ActionQuery via Qatalog ($25.4M acquisition)
+- **monday:** mondayDB columnar substrate
+- **Linear/Jira:** structured issue graph
+
+### 08. Enterprise search (cross-tool)
+
+**Common feature samples**
+- Search across Slack/Gmail/Drive/GitHub/Jira simultaneously
+- Permission-aware retrieval
+- Citations linked to source
+- Federated answers from multiple connectors
+- Saved searches + alerts
+
+**Notable per competitor**
+- **Notion:** AI Connectors with permission inheritance — cleanest enterprise model
+- **ClickUp:** Brain MAX (Qatalog ActionQuery)
+- **Jira:** Rovo Search across Atlassian suite
+- **Asana:** AI Connectors — OpenAI/Slack/Notion
+- **Plane/Linear/monday:** workspace-scoped, limited
+
+### 09. Slack / Teams AI intake
+
+**Common feature samples**
+- @mention to create tickets from chat
+- Standup summaries into PM tool
+- Notification triage
+- Conversational task management in chat
+- Cross-tool slash-commands
+
+**Notable per competitor**
+- **Plane:** @Plane in any channel, "AGI-like" framing, Claude Sonnet 4.0 (Nov 15, 2025)
+- **Linear:** Linear Asks — intake → triage → ticket flow
+- **ClickUp:** Brain in Slack with task context
+- **Jira:** Rovo agents in Slack
+- **monday/Notion/Asana:** standard integrations, less AI-native
+
+### 10. Code / dev-tool intelligence
+
+**Common feature samples**
+- PR ↔ issue automatic linking
+- Code-aware ticket summaries
+- AI code review on linked PRs
+- Test/regression suggestions from diff
+- IDE plugins (VS Code, Cursor, JetBrains)
+
+**Notable per competitor**
+- **Linear:** Code Intelligence beta (May 14, 2026) + Cursor/Codex/Devin/Replit
+- **ClickUp:** Codegen acq (Dec 23, 2025) at $10/10K credits
+- **Plane:** GitHub native, dev DNA
+- **Asana:** 3 Product/Eng teammates — narrow
+- **monday/Notion:** weak
+
+### 11. Governance / human-in-the-loop
+
+**Common feature samples**
+- Approval gates before consequential actions
+- Audit log of AI actions
+- Permission inheritance through AI retrieval
+- AI citation/source linking
+- Data exclusion zones
+- Per-user/workspace AI on/off toggle
+
+**Notable per competitor**
+- **Asana:** every consequential action requires user approval ("context, checkpoints, controls")
+- **Notion:** "Verify any page" — every AI answer cites a page
+- **Plane:** "no prompt storage" + air-gap
+- **ClickUp:** MCP omits delete tools
+- **Jira:** Atlassian Trust Center + admin controls
+
+### 12. Self-hosted / air-gapped
+
+**Common feature samples**
+- Docker/K8s deployment
+- BYO LLM endpoint
+- No outbound calls (full air-gap)
+- Customer-controlled data residency
+- Full AI feature parity with cloud
+
+**Notable per competitor**
+- **Plane:** only one with full AI parity self-hosted — Fortune 10, Lithuania, France
+- **Jira:** Data Center legacy on-prem, AI limited
+- **Others:** no self-host
+
+### 13. Pricing model (AI bundling)
+
+**Common feature samples**
+- Flat AI in higher seat tier
+- Per-credit metering for autonomous work
+- Quarterly credit quotas by tier
+- Per-agent monthly fees (marketplace)
+- BYO keys = customer pays provider direct
+
+**Notable per competitor**
+- **Linear:** cleanest — AI bundled, no separate SKU
+- **Asana:** quarterly quotas (50K/100K/5M per tier) — enterprise forecasting
+- **monday:** $0.01/credit — most usage-flexible
+- **ClickUp:** hybrid add-on + credits — most complex
+- **Plane:** AI every plan + BYO keys for self-host
+
+### 14. Open source
+
+**Common feature samples**
+- Public GitHub repo
+- Community contributions
+- Forkable codebase
+- Permissive / source-available license
+- Public roadmap
+
+**Notable per competitor**
+- **Plane:** github.com/makeplane/plane — only OSS competitor
+- **All others:** closed-source SaaS
+
+---
+
 ## Capability matrix — raw data (14 rows × 7 competitors)
 
 The data underlying §03 of the HTML, in tabular form for downstream filtering/import.
