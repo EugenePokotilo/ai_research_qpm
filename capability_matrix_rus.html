@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>AI Research — Матрица возможностей</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+:root{
+  --bg:#fafaf8; --surface:#fff; --surface2:#f4f3ef;
+  --text:#1a1916; --muted:#7a7870; --line:#e8e6df;
+  --accent:#5b3df5;
+  --c-jira:#0052cc; --c-linear:#d946ef; --c-clickup:#7b68ee; --c-monday:#84cc16;
+  --c-notion:#475569; --c-plane:#06b6d4; --c-asana:#f97316; --c-qpm:#dc2626;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:15px}
+.container{max-width:1400px;margin:0 auto;padding:48px 32px}
+h1{font-family:'Syne',sans-serif;font-weight:800;font-size:48px;line-height:1.05;letter-spacing:-0.02em;margin-bottom:16px}
+h2{font-family:'Syne',sans-serif;font-weight:700;font-size:28px;letter-spacing:-0.01em;margin:32px 0 16px}
+p{margin-bottom:12px}
+a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent;transition:border-color .15s}
+a:hover{border-color:var(--accent)}
+code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:var(--surface2);padding:2px 6px;border-radius:4px}
+.header{border-bottom:1px solid var(--line);padding-bottom:24px;margin-bottom:24px}
+.section-label{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:8px}
+.subtitle{font-size:17px;color:var(--muted);max-width:880px;margin-top:8px}
+.meta-row{display:flex;gap:16px;margin-top:16px;flex-wrap:wrap}
+.badge{font-family:'JetBrains Mono',monospace;font-size:11px;padding:5px 10px;background:var(--surface2);border:1px solid var(--line);border-radius:4px;color:var(--muted)}
+.callout{background:var(--surface);border-left:3px solid var(--accent);padding:18px 22px;margin:20px 0;border-radius:0 6px 6px 0}
+.callout.warn{border-left-color:#ea580c;background:#fff7ed}
+.callout strong{color:var(--text)}
+table{width:100%;border-collapse:collapse;margin:20px 0;font-size:13px;background:var(--surface);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+th{background:var(--surface2);font-family:'Syne',sans-serif;font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:0.06em;padding:12px 10px;text-align:left;border-bottom:1px solid var(--line);color:var(--text)}
+td{padding:12px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#fbfaf7}
+.feat-table{font-size:12px}
+.feat-table th{font-size:11px;padding:10px 8px}
+.feat-table td{padding:10px 8px;font-size:12px;line-height:1.45}
+.feat-table .row-label{font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:var(--text);background:#fafaf8;border-right:1px solid var(--line)}
+.feat-table .qpm-cell{background:#fef2f2;border-left:2px solid var(--c-qpm);color:var(--c-qpm);font-style:italic;font-weight:500}
+.feat-table .comment-cell{background:#fbfaf7;font-style:italic;color:var(--muted);font-size:11px}
+.col-jira{border-top:3px solid var(--c-jira)}
+.col-linear{border-top:3px solid var(--c-linear)}
+.col-clickup{border-top:3px solid var(--c-clickup)}
+.col-monday{border-top:3px solid var(--c-monday)}
+.col-notion{border-top:3px solid var(--c-notion)}
+.col-plane{border-top:3px solid var(--c-plane)}
+.col-asana{border-top:3px solid var(--c-asana)}
+.col-qpm{border-top:3px solid var(--c-qpm);background:#fef2f2}
+.tag{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;padding:2px 6px;border-radius:3px;background:var(--surface2);color:var(--muted);margin-right:4px;white-space:nowrap}
+.tag.yes{background:#dcfce7;color:#166534}
+.tag.no{background:#fee2e2;color:#991b1b}
+.tag.partial{background:#fef3c7;color:#92400e}
+.scroll{overflow-x:auto;margin:20px -8px;padding:0 8px}
+.feat-table .ex{display:block;margin-top:5px;font-family:'Inter',sans-serif;font-weight:400;font-size:10.5px;font-style:italic;color:var(--muted);line-height:1.4;letter-spacing:0}
+.footer{margin-top:48px;padding-top:24px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+.footer a{color:var(--muted);border-bottom:1px dotted var(--line)}
+.footer a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="header">
+<div class="section-label">Матрица возможностей · v1.0</div>
+<h1>14 возможностей × 7 конкурентов + QPM</h1>
+<p class="subtitle">Карта возможностей AI в PM-инструментах: для каждой возможности — фича конкурента, дата первой поставки и (курсивом) конкретные примеры. Извлечено из <a href="cross_competitor_synthesis_rus.html">кросс-конкурентного синтеза</a>.</p>
+<div class="meta-row">
+<span class="badge">Дата · 2026-05-15</span>
+<span class="badge">Конкурентов · 7</span>
+<span class="badge">Строк возможностей · 14</span>
+<span class="badge">Ячейки QPM · TODO</span>
+</div>
+</div>
+
+<p>Строки сгруппированы по областям возможностей. В каждой ячейке указаны фича конкурента, дата первой поставки и (курсивом) конкретные примеры. Теги <span class="tag yes">YES</span> / <span class="tag no">NO</span> / <span class="tag partial">PARTIAL</span> показывают, насколько зрелая реализация.</p>
+
+<div class="scroll">
+<table class="feat-table">
+<thead>
+<tr>
+<th style="width:140px">Возможность</th>
+<th class="col-jira">Jira</th>
+<th class="col-linear">Linear</th>
+<th class="col-clickup">ClickUp</th>
+<th class="col-monday">monday</th>
+<th class="col-notion">Notion</th>
+<th class="col-plane">Plane</th>
+<th class="col-asana">Asana</th>
+<th>Технологическая основа</th>
+<th class="col-qpm">Есть у QPM?</th>
+<th class="col-qpm">План QPM?</th>
+<th style="width:140px">Комментарий</th>
+</tr>
+</thead>
+<tbody>
+
+<tr>
+<td class="row-label">1. Диалоговый ассистент</td>
+<td>Atlassian Intelligence <span class="tag yes">2024</span><span class="ex">напр. суммаризация задач, предложение приоритета, переписывание текста в Jira/Confluence</span></td>
+<td>Linear Ask <span class="tag yes">2024</span><span class="ex">напр. Cmd+K Ask, суммаризация задач, черновики ответов в command bar</span></td>
+<td>ClickUp Brain² <span class="tag yes">2023→25</span><span class="ex">напр. Q&amp;A по tasks/docs/chat, авто-суммаризация, /ai inline</span></td>
+<td>Sidekick (ранее AI Blocks) <span class="tag yes">2023→26</span><span class="ex">напр. Q&amp;A на уровне доски, AI-действия в колонках, черновики статусов</span></td>
+<td>Notion AI <span class="tag yes">2023</span><span class="ex">напр. /ai inline везде, трансформации страниц, мульти-страничная суммаризация</span></td>
+<td>Plane AI – режим Ask <span class="tag yes">ноябрь 2025</span><span class="ex">напр. боковая панель Ask, workspace Q&amp;A на BYO Anthropic/OpenAI</span></td>
+<td>Asana AI <span class="tag yes">2023</span><span class="ex">напр. Smart Status, Smart Fields, Smart Summaries из Work Graph</span></td>
+<td>LLM + RAG по данным workspace</td>
+<td class="qpm-cell">TODO</td>
+<td class="qpm-cell">TODO</td>
+<td class="comment-cell">Table stakes. Есть у всех конкурентов. Дифференциация — в глубине контекста (строки 7-8 ниже).</td>
+</tr>
+
+<tr>
+<td class="row-label">2. Автономные мульти-шаговые агенты</td>
+<td>Rovo Agents <span class="tag yes">2024</span><span class="ex">напр. агент triage, агент планирования, агенты approval-флоу</span></td>
+<td>Linear Agent <span class="tag yes">24 марта 2026</span><span class="ex">напр. Triage Intelligence (авто-лейбл, маршрутизация, дедуп); Agent Sessions API</span></td>
+<td>Super Agents <span class="tag yes">22 дек. 2025</span><span class="ex">напр. сквозная настройка проекта, автоматизация между задачами, выполнение workflow</span></td>
+<td>Sidekick / Vibe / Agents <span class="tag yes">2026</span><span class="ex">напр. Sidekick (амбиентный), Vibe (креативный), Agents (автономные workflow)</span></td>
+<td>Notion Agent <span class="tag yes">18 сент. 2025</span><span class="ex">напр. автономные прогоны 20 мин, мульти-страничные отчёты, reasoning GPT-5</span></td>
+<td>Plane AI – режим Assign <span class="tag yes">ноябрь 2025</span><span class="ex">напр. делегирование полного тикета AI, мульти-шаговое выполнение, lifecycle Agent Run</span></td>
+<td>AI Teammates <span class="tag partial">GA Q1 FY27</span><span class="ex">напр. AI Project Manager, AI Sprint Planner, AI Marketing Manager (21 prebuilt)</span></td>
+<td>Agent SDK + lifecycle webhooks + LLM tool-use</td>
+<td class="qpm-cell">TODO</td>
+<td class="qpm-cell">TODO</td>
+<td class="comment-cell">Notion лидирует по длительности runtime (20 мин). Linear лидирует по качеству SDK. Asana доходит до GA последней из всех.</td>
+</tr>
+
+<tr>
+<td class="row-label">3. No-code конструктор агентов / workflow</td>
+<td>Rovo Studio <span class="tag yes">2024</span><span class="ex">напр. конструктор агентов, цепочки триггеров, шаблоны Atlassian</span></td>
+<td>— <span class="tag no">NO</span></td>
+<td>Brain MAX / Custom Agents <span class="tag yes">2025</span><span class="ex">напр. UI кастомных агентов, редактор промптов, узлы workflow</span></td>
+<td>AI Agent builder <span class="tag yes">2026</span><span class="ex">напр. визуальный канвас, AI block recipes, шаблоны Agentalent</span></td>
+<td>Custom Agents <span class="tag yes">бета 24 фев. 2026</span><span class="ex">напр. инструкции + знания + определения инструментов на каждого агента</span></td>
+<td>Plane AI – режим Build + ADK <span class="tag yes">ноябрь 2025</span><span class="ex">напр. Agent Development Kit, CLI scaffolding, определения промптов и инструментов</span></td>
+<td>AI Studio <span class="tag yes">2024</span><span class="ex">напр. drag-drop канвас, цепочки trigger→action, выполнение с тарификацией по кредитам</span></td>
+<td>Визуальный workflow-канвас + каталог LLM-инструментов</td>
+<td class="qpm-cell">TODO</td>
+<td class="qpm-cell">TODO</td>
+<td class="comment-cell">Linear намеренно это пропускает — ставит на внешнюю экосистему агентов. Смелый выбор.</td>
+</tr>
+
+<tr>
+<td class="row-label">4. Маркетплейс агентов / prebuilt</td>
+<td>Atlassian Marketplace <span class="tag yes">legacy</span><span class="ex">напр. установка сторонних агентов, проверенный каталог, платные + бесплатные агенты</span></td>
+<td>Внешние агенты через SDK <span class="tag yes">2026</span><span class="ex">напр. Cursor, Codex, Devin, Replit подключены через Agent Interaction SDK</span></td>
+<td>Библиотека Super Agents <span class="tag yes">2025</span><span class="ex">напр. курируемые in-product агенты, установка в один клик, с тегами по ролям</span></td>
+<td>Agentalent.ai <span class="tag yes">23 марта 2026</span><span class="ex">напр. поддержка AWS+Anthropic, $2K/мес за агента, сертифицированный каталог</span></td>
+<td>Каталог Custom Agents <span class="tag yes">2026</span><span class="ex">напр. цены в кредитах, шарящиеся агенты, дистрибуция в рамках workspace</span></td>
+<td>Agent Marketplace <span class="tag yes">2025</span><span class="ex">напр. open-source агенты, community-built, определения, доступные для форка</span></td>
+<td>21 prebuilt AI Teammates <span class="tag yes">2026</span><span class="ex">напр. 7 Marketing, 6 Ops/PMO, 5 IT, 3 Product/Eng (без 3rd-party)</span></td>
+<td>Инфраструктура маркетплейса + цена за агента</td>
+<td class="qpm-cell">TODO</td>
+<td class="qpm-cell">TODO</td>
+<td class="comment-cell">Agentalent от monday ($2K/мес/агент, AWS+Anthropic) — самая агрессивная монетизация. 21 prebuilt у Asana — самое курируемое.</td>
+</tr>
+
+<tr>
+<td class="row-label">5. MCP-сервер (внешняя интеграция)</td>
+<td>Atlassian Remote MCP <span class="tag yes">2025</span><span class="ex">напр. доступ к Jira+Confluence+Bitbucket, OAuth, кросс-продуктовый контекст</span></td>
+<td>Linear MCP <span class="tag yes">2025</span><span class="ex">напр. read/write задач из Claude/Cursor/Codex, OAuth+PAT, заточен под dev-flow</span></td>
+<td>mcp.clickup.com/mcp <span class="tag yes">2025</span><span class="ex">напр. OAuth, намеренно без delete-инструментов, в рамках workspace</span></td>
+<td>mcp.monday.com/mcp <span class="tag yes">2025</span><span class="ex">напр. OAuth, доступ к boards/items, связан с потоками Agentalent</span></td>
+<td>mcp.notion.com/mcp <span class="tag yes">2025</span><span class="ex">напр. наследование прав через вызовы, доступ к pages+DB, OAuth</span></td>
+<td>mcp.plane.so + Stdio <span class="tag yes">2025</span><span class="ex">напр. 55+ инструментов, транспорты HTTP+PAT+Stdio, open source, удобен для self-host</span></td>
+<td>— <span class="tag no">NO публичного MCP</span></td>
+<td>Протокол MCP (транспорты OAuth/PAT/Stdio)</td>
+<td class="qpm-cell">TODO</td>
+<td class="qpm-cell">TODO</td>
+<td class="comment-cell">Asana — единственный без MCP. Plane — единственный open-source. ClickUp намеренно без delete-инструментов.</td>
+</tr>
+
+<tr>
+<td class="row-label">6. Мульти-модельный шлюз / BYO-ключи</td>
+<td>Bedrock + OpenAI (бандл) <span class="tag partial">Bundled</span><span class="ex">напр. под управлением вендора, без model picker, авто-маршрутизация под Atlassian Intelligence</span></td>
+<td>Claude как baseline (Anthropic) <span class="tag partial">Single</span><span class="ex">напр. Claude Sonnet, намеренно одна модель, picker не выставлен</span></td>
+<td>Multi-model <span class="tag yes">2025</span><span class="ex">напр. Claude / GPT / Gemini / o3 / MiniMax с picker'ом Brain MAX</span></td>
+<td>AI Platform Gateway <span class="tag yes">2026</span><span class="ex">напр. абстракция мульти-модели, партнёрство AWS+Anthropic, под управлением вендора</span></td>
+<td>GPT-5 + Claude <span class="tag yes">сент. 2025</span><span class="ex">напр. GPT-5 для Notion Agent, Claude для редакторских потоков, маршрутизация по задаче</span></td>
+<td>BYO Anthropic ИЛИ OpenAI <span class="tag yes">ноябрь 2025</span><span class="ex">напр. ключи провайдера напрямую, клиент платит провайдеру напрямую, обход через self-host</span></td>
+<td>OpenAI + Anthropic <span class="tag yes">2024</span><span class="ex">напр. оркестрация мульти-LLM, под управлением вендора, без customer picker</span></td>
+<td>Слой абстракции моделей</td>
+<td class="qpm-cell">TODO</td>
+<td class="qpm-cell">TODO</td>
+<td class="comment-cell">Plane уникален BYO-ключами напрямую к провайдеру. У ClickUp Brain MAX — самое широкое меню моделей.</td>
+</tr>
+
+<tr>
+<td class="row-label">7. Память / контекстный субстрат</td>
+<td>Граф задач + страницы Confluence <span class="tag yes">legacy</span><span class="ex">напр. связанные задачи, ссылки на страницы Confluence, кросс-продуктовый retrieval</span></td>
+<td>Граф задач (структурированные тикеты) <span class="tag yes">legacy</span><span class="ex">напр. parent/sub-issues, ссылки cycle+project, граф лейблов</span></td>
+<td>Brain Workspace + ActionQuery <span class="tag yes">2025</span><span class="ex">напр. контекст workspace, ActionQuery от Qatalog, кросс-листовые ссылки</span></td>
+<td>mondayDB <span class="tag yes">2024</span><span class="ex">напр. колоночная БД, связи между досками, кросс-доска mirroring</span></td>
+<td>Pages-as-memory <span class="tag yes">legacy moat</span><span class="ex">напр. страницы workspace, связанные базы данных, backlinks как контекст</span></td>
+<td>Контекст workspace <span class="tag yes">2025</span><span class="ex">напр. проекты + docs + pages, в рамках workspace, BYO context layer</span></td>
+<td>Work Graph® + Memory Associations <span class="tag yes">2024</span><span class="ex">напр. реляционный граф (Goals→Projects→Tasks), память text-fact (не вектор)</span></td>
+<td>Vector DB / graph DB / хранилище text-fact</td>
+<td class="qpm-cell">TODO</td>
+<td class="qpm-cell">TODO</td>
+<td class="comment-cell">Pages-as-memory у Notion — сильнейший естественный moat. Work Graph у Asana — самая явная формулировка «реляционный граф».</td>
+</tr>
+
+<tr>
+<td class="row-label">8. Enterprise-поиск (кросс-инструментальный)</td>
+<td>Rovo Search <span class="tag yes">2024</span><span class="ex">напр. кросс-Atlassian поиск, Confluence+Jira+Bitbucket, с учётом прав доступа</span></td>
+<td>— <span class="tag no">ограничен</span></td>
+<td>Brain MAX (приобретение Qatalog) <span class="tag yes">12 нояб. 2025</span><span class="ex">напр. движок ActionQuery, 30+ коннекторов, с учётом прав доступа</span></td>
+<td>— <span class="tag partial">ограничен</span></td>
+<td>Enterprise Search + AI Connectors <span class="tag yes">2025</span><span class="ex">напр. Slack/GDrive/GitHub/Jira, наследование прав, со ссылками-цитатами</span></td>
+<td>В рамках workspace <span class="tag partial">ограничен</span></td>
+<td>AI Connectors <span class="tag yes">2025</span><span class="ex">напр. коннекторы OpenAI, Slack, Notion (Drive/GitHub пока нет)</span></td>
+<td>RAG по подключённым источникам + наследование прав</td>
+<td class="qpm-cell">TODO</td>
+<td class="qpm-cell">TODO</td>
+<td class="comment-cell">AI Connectors у Notion с наследованием прав — самая чистая enterprise-модель. ClickUp заплатил $25.4M за Qatalog, чтобы сюда добраться.</td>
+</tr>
+
+<tr>
+<td class="row-label">9. AI-приём из Slack / Teams</td>
+<td>AI в Slack через Rovo <span class="tag yes">2024</span><span class="ex">напр. Rovo-агенты в Slack, создание тикетов, обновления статусов</span></td>
+<td>Linear Asks (Slack) <span class="tag yes">2024</span><span class="ex">напр. intake → triage → ticket-флоу, @mention, channel-to-Linear</span></td>
+<td>ClickUp Brain в Slack <span class="tag yes">2024</span><span class="ex">напр. полный контекст задач, кросс-канальные запросы, команды @ClickUp</span></td>
+<td>Интеграция со Slack <span class="tag partial">базовая</span></td>
+<td>Интеграция со Slack <span class="tag partial">базовая</span></td>
+<td>@Plane в любом канале <span class="tag yes">15 нояб. 2025</span><span class="ex">напр. «AGI-like» агент, Claude Sonnet 4.0 по умолчанию, кросс-канальный приём</span></td>
+<td>Интеграция со Slack <span class="tag partial">базовая</span></td>
+<td>Agent runtime в чат-платформе + workspace OAuth</td>
+<td class="qpm-cell">TODO</td>
+<td class="qpm-cell">TODO</td>
+<td class="comment-cell">«AGI-like» Slack-агент у Plane — самый агрессивный в этой нише. Linear Asks — самый зрелый для intake.</td>
+</tr>
+
+<tr>
+<td class="row-label">10. Интеллект кода / dev-инструментов</td>
+<td>DX + Forge <span class="tag partial">legacy</span><span class="ex">напр. dev-панели, Forge-приложения, связь с Bitbucket</span></td>
+<td>Code Intelligence + внешние dev-агенты <span class="tag yes">бета 14 мая 2026</span><span class="ex">напр. связь PR↔issue, хуки Cursor/Codex/Devin, code-aware тикеты</span></td>
+<td>Приобретение Codegen <span class="tag yes">23 дек. 2025</span><span class="ex">напр. AI codegen-агенты, $10/10K кредитов, потоки в стиле IDE</span></td>
+<td>— <span class="tag no">ограничен</span></td>
+<td>— <span class="tag no">ограничен</span></td>
+<td>GitHub-интеграция + dev-фокус <span class="tag partial">core</span><span class="ex">напр. PR-линкинг, ссылки branch-issue, developer-DNA продукт</span></td>
+<td>3 Product/Eng teammates <span class="tag partial">узко</span><span class="ex">напр. AI Engineering Manager, AI QA, AI Release Manager (без IDE)</span></td>
+<td>Code-aware LLM + интеграция с IDE/агентами</td>
+<td class="qpm-cell">TODO</td>
+<td class="qpm-cell">TODO</td>
+<td class="comment-cell">Linear здесь доминирует. ClickUp купил Codegen с $10/10K кредитов. monday/Notion/Asana слабы в dev-инструментах.</td>
+</tr>
+
+<tr>
+<td class="row-label">11. Governance / human-in-the-loop</td>
+<td>Admin-контролы Atlassian <span class="tag yes">legacy</span><span class="ex">напр. Trust Center, admin-гейты, изоляция данных Bedrock</span></td>
+<td>Стандарт <span class="tag partial">базовый</span></td>
+<td>Права workspace + MCP без delete <span class="tag partial">базовый</span><span class="ex">напр. role-based права, MCP без delete-инструментов, audit log</span></td>
+<td>Стандарт <span class="tag partial">базовый</span></td>
+<td>Verify-any-page + AI Connectors <span class="tag yes">2025</span><span class="ex">напр. цитата на каждый AI-ответ, наследование прав, audit log</span></td>
+<td>Air-gap + без хранения промптов <span class="tag yes">2025</span><span class="ex">напр. режим air-gap, нулевой outbound, промпты остаются у клиента</span></td>
+<td>«Context, checkpoints, controls» <span class="tag yes">2024</span><span class="ex">напр. требуется явное одобрение пользователя, audit log действий, тариф Asana Gov</span></td>
+<td>HITL-гейты + аудит + наследование прав</td>
+<td class="qpm-cell">TODO</td>
+<td class="qpm-cell">TODO</td>
+<td class="comment-cell">Asana владеет брендом. Plane владеет технической моделью. Цитаты Notion — уникальное преимущество по части доверия.</td>
+</tr>
+
+<tr>
+<td class="row-label">12. Self-hosted / air-gapped</td>
+<td>Data Center <span class="tag partial">legacy</span><span class="ex">напр. on-prem Jira DC, поддержка Atlassian Intelligence ограничена</span></td>
+<td>— <span class="tag no">NO</span></td>
+<td>— <span class="tag no">NO</span></td>
+<td>— <span class="tag no">NO</span></td>
+<td>— <span class="tag no">NO</span></td>
+<td>Docker/K8s/air-gap, полный паритет AI <span class="tag yes">core</span><span class="ex">напр. Docker compose, Helm chart, air-gap installer, BYO LLM endpoint</span></td>
+<td>— <span class="tag no">NO</span></td>
+<td>Контейнерный деплой + BYO model keys</td>
+<td class="qpm-cell">TODO</td>
+<td class="qpm-cell">TODO</td>
+<td class="comment-cell">Plane — единственный SaaS-конкурент с полным AI-паритетом в self-hosted. Это moat регулируемого/гос-сегмента.</td>
+</tr>
+
+<tr>
+<td class="row-label">13. Pricing model (AI bundling)</td>
+<td>AI в Premium+ <span class="tag partial">в бандле</span><span class="ex">напр. AI в Premium $13.53, Rovo-агенты с отдельной тарификацией</span></td>
+<td>AI в стоимости seat <span class="tag yes">просто</span><span class="ex">напр. all-in цена места, без AI SKU, без тарификации</span></td>
+<td>Brain $7/user + кредиты Codegen <span class="tag partial">гибрид</span><span class="ex">напр. add-on ClickUp Brain $7/user + Codegen $10/10K кредитов</span></td>
+<td>Тарификация $0.01/кредит <span class="tag partial">кредиты</span><span class="ex">напр. тарификация по кредиту, оплата за прогон агента, прогнозируемо на агента</span></td>
+<td>$10/1000 кредитов <span class="tag partial">кредиты</span><span class="ex">напр. кредитные паки Custom Agents, запуск 4 мая 2026, цена за 1000</span></td>
+<td>AI на каждом плане + BYO-ключи <span class="tag yes">без наценки</span><span class="ex">напр. нулевая надбавка к месту за AI, в self-host клиент платит провайдеру напрямую</span></td>
+<td>Квартальные квоты AI Studio <span class="tag partial">кредиты</span><span class="ex">напр. 50K Starter / 100K Plus / 5M Pro кредитов в квартал по тарифам</span></td>
+<td>—</td>
+<td class="qpm-cell">TODO</td>
+<td class="qpm-cell">TODO</td>
+<td class="comment-cell">Plane и Linear — самые простые. Квартальные кредитные квоты Asana — самые enterprise-friendly. Per-credit у monday — самый гибкий по использованию.</td>
+</tr>
+
+<tr>
+<td class="row-label">14. Open source</td>
+<td>— <span class="tag no">NO</span></td>
+<td>— <span class="tag no">NO</span></td>
+<td>— <span class="tag no">NO</span></td>
+<td>— <span class="tag no">NO</span></td>
+<td>— <span class="tag no">NO</span></td>
+<td>github.com/makeplane/plane <span class="tag yes">YES</span><span class="ex">напр. open-source ядро, доступен для форка, PR от сообщества, публичный roadmap</span></td>
+<td>— <span class="tag no">NO</span></td>
+<td>Source-available лицензия + контрибуции сообщества</td>
+<td class="qpm-cell">TODO</td>
+<td class="qpm-cell">TODO</td>
+<td class="comment-cell">Plane — структурно нестандартный игрок. Этот единственный выбор распространяется на все остальные направления.</td>
+</tr>
+
+</tbody>
+</table>
+</div>
+
+<div class="callout warn" style="margin-top:24px">
+<strong>Паттерн, на который стоит обратить внимание.</strong> Строки 11-12-14 для Plane сильно скоррелированы: governance, self-hosting и open source — это <em>одно решение</em>, а не три. Для Asana строки 7-11 (Work Graph + Memory + бренд governance) — одно решение. Для Linear строки 2-4-10 (Agent SDK + отказ от no-code конструктора + Code Intelligence) — одно решение: Linear позиционирует себя как <em>интерфейс</em> для dev-агентов, а не как runtime для них.
+</div>
+
+<div class="footer">
+Извлечено из <a href="cross_competitor_synthesis_rus.html">кросс-конкурентного синтеза</a> · полный контекст и рекомендации см. там.
+</div>
+
+</div>
+</body>
+</html>
