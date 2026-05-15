@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI Research — Index</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+:root{
+  --bg:#fafaf8; --surface:#fff; --surface2:#f4f3ef;
+  --text:#1a1916; --muted:#7a7870; --line:#e8e6df;
+  --accent:#5b3df5;
+  --c-jira:#0052cc; --c-linear:#d946ef; --c-clickup:#7b68ee; --c-monday:#84cc16;
+  --c-notion:#475569; --c-plane:#06b6d4; --c-asana:#f97316; --c-qpm:#dc2626;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:15px}
+.container{max-width:1200px;margin:0 auto;padding:48px 32px}
+h1{font-family:'Syne',sans-serif;font-weight:800;font-size:54px;line-height:1.05;letter-spacing:-0.02em;margin-bottom:16px}
+h2{font-family:'Syne',sans-serif;font-weight:700;font-size:28px;letter-spacing:-0.01em;margin:48px 0 20px}
+a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent;transition:border-color .15s}
+a:hover{border-color:var(--accent)}
+.header{border-bottom:1px solid var(--line);padding-bottom:32px;margin-bottom:32px}
+.section-label{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:8px}
+.subtitle{font-size:19px;color:var(--muted);max-width:780px;margin-top:8px}
+.meta-row{display:flex;gap:16px;margin-top:20px;flex-wrap:wrap}
+.badge{font-family:'JetBrains Mono',monospace;font-size:11px;padding:5px 10px;background:var(--surface2);border:1px solid var(--line);border-radius:4px;color:var(--muted)}
+
+.featured{background:linear-gradient(135deg,#faf9ff,#fff);border:1px solid var(--line);border-left:4px solid var(--accent);padding:28px 32px;margin:24px 0 40px;border-radius:0 10px 10px 0}
+.featured .section-label{margin-bottom:6px}
+.featured h3{font-family:'Syne',sans-serif;font-weight:700;font-size:26px;margin:4px 0 10px}
+.featured h3 a{color:var(--text);border-bottom:none}
+.featured h3 a:hover{color:var(--accent)}
+.featured p{color:var(--muted);font-size:15px;max-width:760px}
+.featured .meta{margin-top:14px;display:flex;gap:12px;flex-wrap:wrap}
+.featured .meta .badge{background:#fff}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px;margin:20px 0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:22px 24px;border-top:4px solid var(--accent);transition:transform .15s, box-shadow .15s}
+.card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(26,25,22,0.06)}
+.card .focus{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;display:block}
+.card h3{font-family:'Syne',sans-serif;font-weight:600;font-size:19px;margin:0 0 8px}
+.card h3 a{color:var(--text);border-bottom:none}
+.card h3 a:hover{color:var(--accent)}
+.card p{font-size:13px;color:var(--muted);margin:0 0 12px}
+.card .links{margin-top:10px;padding-top:10px;border-top:1px dashed var(--line);font-size:12px;display:flex;gap:14px;flex-wrap:wrap;font-family:'JetBrains Mono',monospace}
+.card .links a{color:var(--muted)}
+.card .links a:hover{color:var(--accent)}
+
+.card.jira{border-top-color:var(--c-jira)}
+.card.linear{border-top-color:var(--c-linear)}
+.card.clickup{border-top-color:var(--c-clickup)}
+.card.monday{border-top-color:var(--c-monday)}
+.card.notion{border-top-color:var(--c-notion)}
+.card.plane{border-top-color:var(--c-plane)}
+.card.asana{border-top-color:var(--c-asana)}
+.card.archive{border-top-color:var(--muted);opacity:0.85}
+
+.archive-section{margin-top:48px}
+.archive-section h2{font-size:22px;margin-bottom:8px}
+.archive-section .note{color:var(--muted);font-size:14px;margin-bottom:16px}
+
+.footer{margin-top:64px;padding-top:32px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+.footer a{color:var(--muted);border-bottom:1px dotted var(--line)}
+.footer a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+.footer code{font-family:'JetBrains Mono',monospace;font-size:12px;background:var(--surface2);padding:2px 6px;border-radius:3px}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="section-label">AI Research · QPM · Index</div>
+    <h1>AI in PM Tools, 2026<br>Research index.</h1>
+    <p class="subtitle">A navigation hub for the AI-in-PM competitor research pages — synthesis up top, individual deep-dives below. All pages are static HTML served from GitHub Pages.</p>
+    <div class="meta-row">
+      <span class="badge">7 competitors</span>
+      <span class="badge">8 deep-dives</span>
+      <span class="badge">1 synthesis</span>
+      <span class="badge">Updated May 2026</span>
+    </div>
+  </div>
+
+  <div class="featured">
+    <div class="section-label">Start here · Cross-competitor synthesis</div>
+    <h3><a href="cross_competitor_synthesis.html">AI in PM Tools, 2026 — Side-by-side, 7 competitors</a></h3>
+    <p>The decision-grade synthesis across Jira, Linear, ClickUp, monday.com, Notion, Plane, and Asana — capability map, 12-month strategic vectors, and dimension-by-dimension recommendations for QPM positioning.</p>
+    <div class="meta">
+      <span class="badge">v1.0</span>
+      <span class="badge">Executive synopsis · Capability matrix · Strategic vectors</span>
+    </div>
+  </div>
+
+  <h2>Competitor deep-dives</h2>
+  <div class="grid">
+
+    <div class="card jira">
+      <span class="focus">Atlassian</span>
+      <h3><a href="jira_ai_research.html">Jira AI</a></h3>
+      <p>Research notes on Atlassian Intelligence and Jira's AI surface area — rich screenshots, large document.</p>
+      <div class="links">
+        <a href="jira_ai_research.html">HTML →</a>
+      </div>
+    </div>
+
+    <div class="card linear">
+      <span class="focus">Linear</span>
+      <h3><a href="linear_ai_research.html">Linear AI</a></h3>
+      <p>Notes on Linear's AI features, agents, and how they fit the engineering-velocity narrative.</p>
+      <div class="links">
+        <a href="linear_ai_research.html">HTML →</a>
+        <a href="linear_ai_research_summary.md">Summary</a>
+        <a href="linear_ai_research_raw_notes.md">Raw notes</a>
+      </div>
+    </div>
+
+    <div class="card clickup">
+      <span class="focus">ClickUp</span>
+      <h3><a href="clickup_ai_research.html">ClickUp AI</a></h3>
+      <p>ClickUp Brain and the all-in-one AI bet — capability surface, pricing tiers, integration story.</p>
+      <div class="links">
+        <a href="clickup_ai_research.html">HTML →</a>
+        <a href="clickup_ai_research_summary.md">Summary</a>
+        <a href="clickup_ai_research_raw_notes.md">Raw notes</a>
+      </div>
+    </div>
+
+    <div class="card monday">
+      <span class="focus">monday.com</span>
+      <h3><a href="monday_ai_research.html">monday.com AI</a></h3>
+      <p>monday AI features, automations, and how the platform layers AI on top of its work-OS positioning.</p>
+      <div class="links">
+        <a href="monday_ai_research.html">HTML →</a>
+        <a href="monday_ai_research_summary.md">Summary</a>
+        <a href="monday_ai_research_raw_notes.md">Raw notes</a>
+      </div>
+    </div>
+
+    <div class="card notion">
+      <span class="focus">Notion</span>
+      <h3><a href="notion_ai_research.html">Notion AI</a></h3>
+      <p>Notion AI's document-native approach and how Projects + AI is being positioned against dedicated PM tools.</p>
+      <div class="links">
+        <a href="notion_ai_research.html">HTML →</a>
+        <a href="notion_ai_research_summary.md">Summary</a>
+        <a href="notion_ai_research_raw_notes.md">Raw notes</a>
+      </div>
+    </div>
+
+    <div class="card plane">
+      <span class="focus">Plane</span>
+      <h3><a href="plane_ai_research.html">Plane AI</a></h3>
+      <p>Plane's AI direction in the open-source PM segment — feature surface and self-host implications.</p>
+      <div class="links">
+        <a href="plane_ai_research.html">HTML →</a>
+        <a href="plane_ai_research_summary.md">Summary</a>
+        <a href="plane_ai_research_raw_notes.md">Raw notes</a>
+      </div>
+    </div>
+
+    <div class="card asana">
+      <span class="focus">Asana</span>
+      <h3><a href="asana_ai_research.html">Asana AI</a></h3>
+      <p>Asana Intelligence and AI Studio — workflows, smart goals, and the enterprise-rollup angle.</p>
+      <div class="links">
+        <a href="asana_ai_research.html">HTML →</a>
+        <a href="asana_ai_research_summary.md">Summary</a>
+        <a href="asana_ai_research_raw_notes.md">Raw notes</a>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="archive-section">
+    <h2>Earlier research</h2>
+    <p class="note">Earlier broader scan, kept for reference; superseded by the per-competitor deep-dives above.</p>
+    <div class="grid">
+      <div class="card archive">
+        <span class="focus">April 2026 · Broader scan</span>
+        <h3><a href="ai_pm_competitor_research.html">AI Features in Project Management Tools — Competitor Research</a></h3>
+        <p>The original competitor scan that seeded this research line.</p>
+        <div class="links">
+          <a href="ai_pm_competitor_research.html">HTML →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    Source: <a href="https://github.com/EugenePokotilo/ai_research_qpm">github.com/EugenePokotilo/ai_research_qpm</a> · Published via GitHub Pages from <code>main</code>.
+  </div>
+
+</div>
+</body>
+</html>
