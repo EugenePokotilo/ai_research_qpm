@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>AI Research — Стратегические векторы на 12 месяцев</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+:root{
+  --bg:#fafaf8; --surface:#fff; --surface2:#f4f3ef;
+  --text:#1a1916; --muted:#7a7870; --line:#e8e6df;
+  --accent:#5b3df5;
+  --c-jira:#0052cc; --c-linear:#d946ef; --c-clickup:#7b68ee; --c-monday:#84cc16;
+  --c-notion:#475569; --c-plane:#06b6d4; --c-asana:#f97316; --c-qpm:#dc2626;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:15px}
+.container{max-width:1280px;margin:0 auto;padding:48px 32px}
+h1{font-family:'Syne',sans-serif;font-weight:800;font-size:48px;line-height:1.05;letter-spacing:-0.02em;margin-bottom:16px}
+h2{font-family:'Syne',sans-serif;font-weight:700;font-size:28px;letter-spacing:-0.01em;margin:32px 0 16px}
+h3{font-family:'Syne',sans-serif;font-weight:600;font-size:20px;margin:24px 0 12px}
+p{margin-bottom:12px}
+a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent;transition:border-color .15s}
+a:hover{border-color:var(--accent)}
+code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:var(--surface2);padding:2px 6px;border-radius:4px}
+.header{border-bottom:1px solid var(--line);padding-bottom:24px;margin-bottom:24px}
+.section-label{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:8px}
+.subtitle{font-size:17px;color:var(--muted);max-width:880px;margin-top:8px}
+.meta-row{display:flex;gap:16px;margin-top:16px;flex-wrap:wrap}
+.badge{font-family:'JetBrains Mono',monospace;font-size:11px;padding:5px 10px;background:var(--surface2);border:1px solid var(--line);border-radius:4px;color:var(--muted)}
+.callout{background:var(--surface);border-left:3px solid var(--accent);padding:18px 22px;margin:20px 0;border-radius:0 6px 6px 0}
+.callout strong{color:var(--text)}
+.vector-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin:24px 0}
+.vector-card{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:20px 22px;border-top:4px solid var(--accent)}
+.vector-card.jira{border-top-color:var(--c-jira)}
+.vector-card.linear{border-top-color:var(--c-linear)}
+.vector-card.clickup{border-top-color:var(--c-clickup)}
+.vector-card.monday{border-top-color:var(--c-monday)}
+.vector-card.notion{border-top-color:var(--c-notion)}
+.vector-card.plane{border-top-color:var(--c-plane)}
+.vector-card.asana{border-top-color:var(--c-asana)}
+.vector-card h3{font-size:18px;margin:0 0 8px}
+.vector-card .focus{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;display:block}
+.vector-card .why{margin-top:10px;padding-top:10px;border-top:1px dashed var(--line);font-size:13px}
+.vector-card .why strong{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);display:block;margin-bottom:4px}
+.footer{margin-top:48px;padding-top:24px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+.footer a{color:var(--muted);border-bottom:1px dotted var(--line)}
+.footer a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="header">
+<div class="section-label">Стратегические векторы · v1.0</div>
+<h1>Куда движется каждый конкурент<br>(май 2026 → май 2027)</h1>
+<p class="subtitle">AI-ставки 7 конкурентов на следующие 12 месяцев: основная ставка, самое сильное публичное обязательство и объяснение, почему компания её делает. Извлечено из <a href="cross_competitor_synthesis_rus.html">кросс-конкурентного синтеза</a>.</p>
+<div class="meta-row">
+<span class="badge">Дата · 2026-05-15</span>
+<span class="badge">Конкурентов · 7</span>
+<span class="badge">Горизонт · 12 мес.</span>
+</div>
+</div>
+
+<p>В каждой карточке сформулирована основная AI-ставка конкурента на следующие 12 месяцев, самое сильное публичное обязательство за ней и объяснение, почему он её делает.</p>
+
+<div class="vector-grid">
+
+<div class="vector-card jira">
+<span class="focus">Jira / Atlassian</span>
+<h3>Расширение Rovo + AI-moat по всему Atlassian-стеку</h3>
+<p>Углубление Atlassian Intelligence в Jira, Confluence, Loom и Compass. Масштабирование платформы агентов Rovo Studio. Forge как runtime AI-расширяемости. AI-поиск → Rovo Search становится кросс-продуктовым слоем контекста.</p>
+<div class="why">
+<strong>Почему</strong>
+Защитить накопленную клиентскую базу в 300K+ от подрывной угрозы со стороны Linear. AI — это история удержания, а не привлечения. Давление на акцию реально, но менее острое, чем у ASAN.
+</div>
+</div>
+
+<div class="vector-card linear">
+<span class="focus">Linear</span>
+<h3>«Issue tracking is dead» — стать слоем оркестрации для dev-агентов</h3>
+<p>GA Code Intelligence + IDE-интеграции. Масштабирование внешней экосистемы агентов (Cursor/Codex/Devin/Replit). Agent Interaction SDK как основа. Тезис Karri Saarinen + Akshay Kothari: Linear — это интерфейс, а не runtime.</p>
+<div class="why">
+<strong>Почему</strong>
+Занять точку взаимодействия с dev-агентами раньше других. Избежать ловушки превращения в обычный AI workspace — сделать чёткую ставку на разработчиков и AI-агентов для кода.
+</div>
+</div>
+
+<div class="vector-card clickup">
+<span class="focus">ClickUp</span>
+<h3>Brain² + Codegen + Qatalog → AI work-OS через приобретения</h3>
+<p>Интеграция Codegen (приобретение 23 дек. 2025) для dev-AI. Интеграция Qatalog (12 нояб. 2025, финансирование $25.4M) для enterprise-поиска ActionQuery. Super Agents в масштабе. Brain MAX как мульти-модельный шлюз. Ambient Agents.</p>
+<div class="why">
+<strong>Почему</strong>
+Движение к единому work-OS. Zeb Evans покупает возможности, которые ClickUp не может достаточно быстро построить собственными силами. Ставка: клиенты хотят один инструмент, а не семь.
+</div>
+</div>
+
+<div class="vector-card monday">
+<span class="focus">monday.com</span>
+<h3>«All In on AI» + маркетплейс Agentalent в масштабе</h3>
+<p>Триада Sidekick/Vibe/Agents как бренд AI Work Platform. Маркетплейс Agentalent.ai (AWS+Anthropic, $2K/мес за агента) становится слоем коммерции агентов. AI Platform Gateway для мульти-модели. Roy Mann + Eran Zinman делают ставку на mid-market AI-workflow.</p>
+<div class="why">
+<strong>Почему</strong>
+Захватить mid-market траты на AI-workflow. Экономика маркетплейса — это moat: если на monday сидят и клиенты, и разработчики агентов, такая позиция защитима. monday — публичная компания, но более стабильна, чем ASAN, и может позволить себе эту ставку.
+</div>
+</div>
+
+<div class="vector-card notion">
+<span class="focus">Notion</span>
+<h3>Workspace-as-memory + verify-any-page + Developer Platform 3.5</h3>
+<p>Перезапуск Notion 3.0 на GPT-5 (сент. 2025) → автономные прогоны Notion Agent по 20 мин. GA Custom Agents + цены в кредитах ($10/1000, 4 мая 2026). Developer Platform 3.5 (13 мая 2026): External Agents API, Notion Workers, Agent SDK, CLI. Доминирование в Enterprise Search.</p>
+<div class="why">
+<strong>Почему</strong>
+Занять контекстный слой workspace раньше других. Pages-as-memory — естественный moat: конкурентам ещё надо строить графы контекста, а клиенты Notion их уже создали.
+</div>
+</div>
+
+<div class="vector-card plane">
+<span class="focus">Plane</span>
+<h3>OSS + self-host + air-gap-ready + BYO-ключи = регулируемый сегмент</h3>
+<p>Plane AI (Ask/Build/Assign) + Slack-агент (Claude Sonnet 4.0) + open-source MCP на 55 инструментов. Plane Compose для GitOps. Prime CLI + God Mode для self-hosted enterprise. Fortune 10 + Правительство Литвы + République Française как proof points.</p>
+<div class="why">
+<strong>Почему</strong>
+Тезис Vamsi Kurama о «steerable systems». Цель — сегмент, который остальные 6 конкурентов структурно обслужить не могут: регулируемые отрасли, государство, defense-adjacent. Seed-раунд $4M от OSS Capital задаёт ограничение: строить дёшево, поставлять open, выиграть moat в своём сегменте.
+</div>
+</div>
+
+<div class="vector-card asana">
+<span class="focus">Asana</span>
+<h3>GA AI Teammates в Q1 FY27 — катализатор переоценки на публичном рынке</h3>
+<p>21 prebuilt AI Teammate (7 Marketing + 6 Ops/PMO + 5 IT + 3 Product/Eng). Sales-led GA в конце Q1 FY27 (≈ май 2026); self-serve во второй половине FY27. Кредитные тарифы AI Studio (50K/100K/5M в квартал). Work Graph + Memory Associations. Asana Gov (зима 2026). Гайденс FY27: выручка $850M-$858M с <strong>15% net new ARR от AI-продуктов</strong>.</p>
+<div class="why">
+<strong>Почему</strong>
+Акции ASAN упали ~50% YTD, ~92% от ATH. Для Dan Rogers нарратив GA Teammates критичен: он должен сработать к отчёту за Q1 FY27 (≈ авг. 2026) и переоценить компанию. Это одна концентрированная ставка — нет MCP, нет OSS, нет широты маркетплейса — только AI Teammates + Work Graph + governance-бренд.
+</div>
+</div>
+
+</div>
+
+<div class="callout" style="margin-top:32px">
+<strong>Паттерн.</strong> Пять конкурентов ставят на <em>широту</em> (Jira, ClickUp, monday, Notion, Asana). Двое ставят на <em>чёткую позицию</em> (Linear: интерфейс для dev-агентов; Plane: open + self-host). Ставки с чёткой позицией — те, за которыми стоит следить: им не нужно выигрывать весь рынок, только свою долю.
+</div>
+
+<div class="footer">
+Извлечено из <a href="cross_competitor_synthesis_rus.html">кросс-конкурентного синтеза</a> · полный контекст и рекомендации см. там.
+</div>
+
+</div>
+</body>
+</html>

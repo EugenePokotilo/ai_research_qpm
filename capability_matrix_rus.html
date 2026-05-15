@@ -89,8 +89,6 @@ tr:hover td{background:#fbfaf7}
 <th class="col-plane">Plane</th>
 <th class="col-asana">Asana</th>
 <th>Технологическая основа</th>
-<th class="col-qpm">Есть у QPM?</th>
-<th class="col-qpm">План QPM?</th>
 <th style="width:140px">Комментарий</th>
 </tr>
 </thead>
@@ -106,8 +104,6 @@ tr:hover td{background:#fbfaf7}
 <td>Plane AI – режим Ask <span class="tag yes">ноябрь 2025</span><span class="ex">напр. боковая панель Ask, workspace Q&amp;A на BYO Anthropic/OpenAI</span></td>
 <td>Asana AI <span class="tag yes">2023</span><span class="ex">напр. Smart Status, Smart Fields, Smart Summaries из Work Graph</span></td>
 <td>LLM + RAG по данным workspace</td>
-<td class="qpm-cell">TODO</td>
-<td class="qpm-cell">TODO</td>
 <td class="comment-cell">Table stakes. Есть у всех конкурентов. Дифференциация — в глубине контекста (строки 7-8 ниже).</td>
 </tr>
 
@@ -121,8 +117,6 @@ tr:hover td{background:#fbfaf7}
 <td>Plane AI – режим Assign <span class="tag yes">ноябрь 2025</span><span class="ex">напр. делегирование полного тикета AI, мульти-шаговое выполнение, lifecycle Agent Run</span></td>
 <td>AI Teammates <span class="tag partial">GA Q1 FY27</span><span class="ex">напр. AI Project Manager, AI Sprint Planner, AI Marketing Manager (21 prebuilt)</span></td>
 <td>Agent SDK + lifecycle webhooks + LLM tool-use</td>
-<td class="qpm-cell">TODO</td>
-<td class="qpm-cell">TODO</td>
 <td class="comment-cell">Notion лидирует по длительности runtime (20 мин). Linear лидирует по качеству SDK. Asana доходит до GA последней из всех.</td>
 </tr>
 
@@ -136,8 +130,6 @@ tr:hover td{background:#fbfaf7}
 <td>Plane AI – режим Build + ADK <span class="tag yes">ноябрь 2025</span><span class="ex">напр. Agent Development Kit, CLI scaffolding, определения промптов и инструментов</span></td>
 <td>AI Studio <span class="tag yes">2024</span><span class="ex">напр. drag-drop канвас, цепочки trigger→action, выполнение с тарификацией по кредитам</span></td>
 <td>Визуальный workflow-канвас + каталог LLM-инструментов</td>
-<td class="qpm-cell">TODO</td>
-<td class="qpm-cell">TODO</td>
 <td class="comment-cell">Linear намеренно это пропускает — ставит на внешнюю экосистему агентов. Смелый выбор.</td>
 </tr>
 
@@ -151,8 +143,6 @@ tr:hover td{background:#fbfaf7}
 <td>Agent Marketplace <span class="tag yes">2025</span><span class="ex">напр. open-source агенты, community-built, определения, доступные для форка</span></td>
 <td>21 prebuilt AI Teammates <span class="tag yes">2026</span><span class="ex">напр. 7 Marketing, 6 Ops/PMO, 5 IT, 3 Product/Eng (без 3rd-party)</span></td>
 <td>Инфраструктура маркетплейса + цена за агента</td>
-<td class="qpm-cell">TODO</td>
-<td class="qpm-cell">TODO</td>
 <td class="comment-cell">Agentalent от monday ($2K/мес/агент, AWS+Anthropic) — самая агрессивная монетизация. 21 prebuilt у Asana — самое курируемое.</td>
 </tr>
 
@@ -166,8 +156,6 @@ tr:hover td{background:#fbfaf7}
 <td>mcp.plane.so + Stdio <span class="tag yes">2025</span><span class="ex">напр. 55+ инструментов, транспорты HTTP+PAT+Stdio, open source, удобен для self-host</span></td>
 <td>— <span class="tag no">NO публичного MCP</span></td>
 <td>Протокол MCP (транспорты OAuth/PAT/Stdio)</td>
-<td class="qpm-cell">TODO</td>
-<td class="qpm-cell">TODO</td>
 <td class="comment-cell">Asana — единственный без MCP. Plane — единственный open-source. ClickUp намеренно без delete-инструментов.</td>
 </tr>
 
@@ -181,8 +169,6 @@ tr:hover td{background:#fbfaf7}
 <td>BYO Anthropic ИЛИ OpenAI <span class="tag yes">ноябрь 2025</span><span class="ex">напр. ключи провайдера напрямую, клиент платит провайдеру напрямую, обход через self-host</span></td>
 <td>OpenAI + Anthropic <span class="tag yes">2024</span><span class="ex">напр. оркестрация мульти-LLM, под управлением вендора, без customer picker</span></td>
 <td>Слой абстракции моделей</td>
-<td class="qpm-cell">TODO</td>
-<td class="qpm-cell">TODO</td>
 <td class="comment-cell">Plane уникален BYO-ключами напрямую к провайдеру. У ClickUp Brain MAX — самое широкое меню моделей.</td>
 </tr>
 
@@ -196,8 +182,6 @@ tr:hover td{background:#fbfaf7}
 <td>Контекст workspace <span class="tag yes">2025</span><span class="ex">напр. проекты + docs + pages, в рамках workspace, BYO context layer</span></td>
 <td>Work Graph® + Memory Associations <span class="tag yes">2024</span><span class="ex">напр. реляционный граф (Goals→Projects→Tasks), память text-fact (не вектор)</span></td>
 <td>Vector DB / graph DB / хранилище text-fact</td>
-<td class="qpm-cell">TODO</td>
-<td class="qpm-cell">TODO</td>
 <td class="comment-cell">Pages-as-memory у Notion — сильнейший естественный moat. Work Graph у Asana — самая явная формулировка «реляционный граф».</td>
 </tr>
 
@@ -211,8 +195,6 @@ tr:hover td{background:#fbfaf7}
 <td>В рамках workspace <span class="tag partial">ограничен</span></td>
 <td>AI Connectors <span class="tag yes">2025</span><span class="ex">напр. коннекторы OpenAI, Slack, Notion (Drive/GitHub пока нет)</span></td>
 <td>RAG по подключённым источникам + наследование прав</td>
-<td class="qpm-cell">TODO</td>
-<td class="qpm-cell">TODO</td>
 <td class="comment-cell">AI Connectors у Notion с наследованием прав — самая чистая enterprise-модель. ClickUp заплатил $25.4M за Qatalog, чтобы сюда добраться.</td>
 </tr>
 
@@ -226,8 +208,6 @@ tr:hover td{background:#fbfaf7}
 <td>@Plane в любом канале <span class="tag yes">15 нояб. 2025</span><span class="ex">напр. «AGI-like» агент, Claude Sonnet 4.0 по умолчанию, кросс-канальный приём</span></td>
 <td>Интеграция со Slack <span class="tag partial">базовая</span></td>
 <td>Agent runtime в чат-платформе + workspace OAuth</td>
-<td class="qpm-cell">TODO</td>
-<td class="qpm-cell">TODO</td>
 <td class="comment-cell">«AGI-like» Slack-агент у Plane — самый агрессивный в этой нише. Linear Asks — самый зрелый для intake.</td>
 </tr>
 
@@ -241,8 +221,6 @@ tr:hover td{background:#fbfaf7}
 <td>GitHub-интеграция + dev-фокус <span class="tag partial">core</span><span class="ex">напр. PR-линкинг, ссылки branch-issue, developer-DNA продукт</span></td>
 <td>3 Product/Eng teammates <span class="tag partial">узко</span><span class="ex">напр. AI Engineering Manager, AI QA, AI Release Manager (без IDE)</span></td>
 <td>Code-aware LLM + интеграция с IDE/агентами</td>
-<td class="qpm-cell">TODO</td>
-<td class="qpm-cell">TODO</td>
 <td class="comment-cell">Linear здесь доминирует. ClickUp купил Codegen с $10/10K кредитов. monday/Notion/Asana слабы в dev-инструментах.</td>
 </tr>
 
@@ -256,8 +234,6 @@ tr:hover td{background:#fbfaf7}
 <td>Air-gap + без хранения промптов <span class="tag yes">2025</span><span class="ex">напр. режим air-gap, нулевой outbound, промпты остаются у клиента</span></td>
 <td>«Context, checkpoints, controls» <span class="tag yes">2024</span><span class="ex">напр. требуется явное одобрение пользователя, audit log действий, тариф Asana Gov</span></td>
 <td>HITL-гейты + аудит + наследование прав</td>
-<td class="qpm-cell">TODO</td>
-<td class="qpm-cell">TODO</td>
 <td class="comment-cell">Asana владеет брендом. Plane владеет технической моделью. Цитаты Notion — уникальное преимущество по части доверия.</td>
 </tr>
 
@@ -271,8 +247,6 @@ tr:hover td{background:#fbfaf7}
 <td>Docker/K8s/air-gap, полный паритет AI <span class="tag yes">core</span><span class="ex">напр. Docker compose, Helm chart, air-gap installer, BYO LLM endpoint</span></td>
 <td>— <span class="tag no">NO</span></td>
 <td>Контейнерный деплой + BYO model keys</td>
-<td class="qpm-cell">TODO</td>
-<td class="qpm-cell">TODO</td>
 <td class="comment-cell">Plane — единственный SaaS-конкурент с полным AI-паритетом в self-hosted. Это moat регулируемого/гос-сегмента.</td>
 </tr>
 
@@ -286,8 +260,6 @@ tr:hover td{background:#fbfaf7}
 <td>AI на каждом плане + BYO-ключи <span class="tag yes">без наценки</span><span class="ex">напр. нулевая надбавка к месту за AI, в self-host клиент платит провайдеру напрямую</span></td>
 <td>Квартальные квоты AI Studio <span class="tag partial">кредиты</span><span class="ex">напр. 50K Starter / 100K Plus / 5M Pro кредитов в квартал по тарифам</span></td>
 <td>—</td>
-<td class="qpm-cell">TODO</td>
-<td class="qpm-cell">TODO</td>
 <td class="comment-cell">Plane и Linear — самые простые. Квартальные кредитные квоты Asana — самые enterprise-friendly. Per-credit у monday — самый гибкий по использованию.</td>
 </tr>
 
@@ -301,8 +273,6 @@ tr:hover td{background:#fbfaf7}
 <td>github.com/makeplane/plane <span class="tag yes">YES</span><span class="ex">напр. open-source ядро, доступен для форка, PR от сообщества, публичный roadmap</span></td>
 <td>— <span class="tag no">NO</span></td>
 <td>Source-available лицензия + контрибуции сообщества</td>
-<td class="qpm-cell">TODO</td>
-<td class="qpm-cell">TODO</td>
 <td class="comment-cell">Plane — структурно нестандартный игрок. Этот единственный выбор распространяется на все остальные направления.</td>
 </tr>
 
